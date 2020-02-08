@@ -8,13 +8,15 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>存储器 | 杜志旺的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="keywords" content="计算机组成原理">
+  <meta name="description" content="存储器重点 存储系统的层次结构 DRAM的读写和刷新 存储器的字位扩展，与CPU的连接 如何提高访存速度 Cache与主存之间的地址映射，替换策略，命中率等 存储校验汉明码、CRC 硬盘参数的计算  典型例题 概念解释   主存：主存储器，用于存放正在执行的程序和数据。CPU可以直接进行随机读写，访问速度较高。 辅存：辅助存储器，用于存放当前暂不执行的程序和数据，以及一些需要永久保存的信息。 ca">
+<meta name="keywords" content="计算机组成原理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="存储器">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;01&#x2F;%E5%AD%98%E5%82%A8%E5%99%A8&#x2F;index.html">
 <meta property="og:site_name" content="杜志旺的博客">
+<meta property="og:description" content="存储器重点 存储系统的层次结构 DRAM的读写和刷新 存储器的字位扩展，与CPU的连接 如何提高访存速度 Cache与主存之间的地址映射，替换策略，命中率等 存储校验汉明码、CRC 硬盘参数的计算  典型例题 概念解释   主存：主存储器，用于存放正在执行的程序和数据。CPU可以直接进行随机读写，访问速度较高。 辅存：辅助存储器，用于存放当前暂不执行的程序和数据，以及一些需要永久保存的信息。 ca">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-12-01T02:25:24.783Z">
+<meta property="og:updated_time" content="2019-12-06T03:58:26.391Z">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="杜志旺的博客" type="application/atom+xml">
@@ -171,7 +173,33 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h1 id="存储器"><a href="#存储器" class="headerlink" title="存储器"></a>存储器</h1><h2 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h2><ul>
+<li>存储系统的层次结构</li>
+<li>DRAM的读写和刷新</li>
+<li>存储器的字位扩展，与CPU的连接</li>
+<li>如何提高访存速度</li>
+<li>Cache与主存之间的地址映射，替换策略，命中率等</li>
+<li>存储校验汉明码、CRC</li>
+<li>硬盘参数的计算</li>
+</ul>
+<h2 id="典型例题"><a href="#典型例题" class="headerlink" title="典型例题"></a>典型例题</h2><ol>
+<li>概念解释</li>
+</ol>
+<ul>
+<li>主存：主存储器，用于存放正在执行的程序和数据。CPU可以直接进行随机读写，访问速度较高。</li>
+<li>辅存：辅助存储器，用于存放当前暂不执行的程序和数据，以及一些需要永久保存的信息。</li>
+<li>cache：高速缓冲存储器，介于CPU和主存之间，用于解决CPU和主存之间速度不匹配的问题。</li>
+<li>RAM：半导体随机存取器，主要用作计算机中的主存。</li>
+<li>SRAM：静态半导体随机存储器。</li>
+<li>DRAM：动态半导体随机存储器。</li>
+<li>ROM：掩膜式半导体只读存储器。由芯片制造商在制造时写入内容，以后只能读出而不能写入。</li>
+<li>PROM：可编程只读存储器，由用户根据需要确定写入内容，只能写入一次。</li>
+<li>EPROM：紫外线可擦写可编程只读存储器。需要修改内容时，先将其全部内容擦除，然后再编程。擦除依靠紫外线使浮动栅极上的电荷泄漏实现。</li>
+<li>EERPM：电擦写可编程只读寄存器。</li>
+<li>CDROM：只读型光盘。</li>
+<li>Flash Memory：闪速存储器，或称快擦型存储器。</li>
+</ul>
+
       
 
       
@@ -275,6 +303,15 @@
   
 <nav id="article-nav">
   
+    <a href="/2019/12/06/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          输入输出
+        
+      </div>
+    </a>
+  
   
     <a href="/2019/11/30/%E7%B3%BB%E7%BB%9F%E6%80%BB%E7%BA%BF/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-title">系统总线</div>
@@ -320,7 +357,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2019 杜志旺
+    		&copy; 2020 杜志旺
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -403,15 +440,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">jvm</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">计算机组成原理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">Docker</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">深入理解Java虚拟机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">计算机组成原理</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -423,11 +460,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">jvm</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">debug方法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">计算机网络</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">数据库连接</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -435,11 +476,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">计算机网络</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">java</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">mybatis</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">macOS小问题</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">FPGA计组课设</a>
               </li>
              
               <li class="article-tag-list-item">

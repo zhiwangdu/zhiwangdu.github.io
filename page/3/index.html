@@ -151,182 +151,32 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-3-4可靠数据传输" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-应用层" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/10/17/3-4%E5%8F%AF%E9%9D%A0%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93/">3.4 可靠数据传输的基本原理</a>
+      <a class="article-title" href="/2019/11/15/%E5%BA%94%E7%94%A8%E5%B1%82/">应用层</a>
     </h1>
   
 
         
-        <a href="/2019/10/17/3-4%E5%8F%AF%E9%9D%A0%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93/" class="archive-article-date">
-  	<time datetime="2019-10-17T09:54:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-17</time>
+        <a href="/2019/11/15/%E5%BA%94%E7%94%A8%E5%B1%82/" class="archive-article-date">
+  	<time datetime="2019-11-15T11:50:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-15</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>渐进地设计可靠数据传输协议的发送方和接收方<br>只考虑单项数据传输<br>利用状态机刻画传输协议</p>
-<h2 id="rdt1-0-可靠信道上的可靠数据传输"><a href="#rdt1-0-可靠信道上的可靠数据传输" class="headerlink" title="rdt1.0:可靠信道上的可靠数据传输"></a>rdt1.0:可靠信道上的可靠数据传输</h2><p>底层信道完全可靠：不会发生错误，不会丢失分组 </br><br>发送方和接受方的FSM独立</p>
-<h2 id="rdt2-0-产生位错误的信道"><a href="#rdt2-0-产生位错误的信道" class="headerlink" title="rdt2.0:产生位错误的信道"></a>rdt2.0:产生位错误的信道</h2><p>引入新的机制：<br>差错检验、确认机制、重传</p>
-<h4 id="错误校验"><a href="#错误校验" class="headerlink" title="错误校验"></a>错误校验</h4><p>利用校验和检测为错误</p>
-<h4 id="如何从错误中恢复？"><a href="#如何从错误中恢复？" class="headerlink" title="如何从错误中恢复？"></a>如何从错误中恢复？</h4><ul>
-<li>确认机制（Acknowledegments,ACK）：接收方显式地告诉发送方分组已经正确接受</li>
-<li>NAK：接收方显式地告知发送方分组有错误</li>
-<li>发送方接收到NAK后，重传分组<br>基于这种重传机制的rdt协议称为ARQ（Automatic Repeat reQuest）协议 </br></li>
-</ul>
-<h2 id="rdt2-1和2-2"><a href="#rdt2-1和2-2" class="headerlink" title="rdt2.1和2.2"></a>rdt2.1和2.2</h2><p>rdt2.0的缺陷：ACK和NAK可能发生错误。 </p>
-<h2 id="rdt3-0：信道既可能发生错误，也可能丢失分组。"><a href="#rdt3-0：信道既可能发生错误，也可能丢失分组。" class="headerlink" title="rdt3.0：信道既可能发生错误，也可能丢失分组。"></a>rdt3.0：信道既可能发生错误，也可能丢失分组。</h2><p>发送方等待合理时间，如果没收到ACK，重传；如果只是延迟而不是丢了，序列号机制能解决。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/10/17/3-4%E5%8F%AF%E9%9D%A0%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Java内存区域与内存溢出异常" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/10/02/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/">Java内存区域与内存溢出异常</a>
-    </h1>
-  
-
-        
-        <a href="/2019/10/02/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/" class="archive-article-date">
-  	<time datetime="2019-10-02T11:46:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">深入理解Java虚拟机</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/10/02/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-面试-1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/09/29/%E9%9D%A2%E8%AF%95-1/">剑指offer-面试题三</a>
-    </h1>
-  
-
-        
-        <a href="/2019/09/29/%E9%9D%A2%E8%AF%95-1/" class="archive-article-date">
-  	<time datetime="2019-09-29T09:34:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-29</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="题目一：找出数组中的数字"><a href="#题目一：找出数组中的数字" class="headerlink" title="题目一：找出数组中的数字"></a>题目一：找出数组中的数字</h2><p>在一个长度为n的数组里所有的数组都在0~n-1的范围内。数组中某些数字是重复的，但不知道有几个数字重复了，也不知道每个数字重复了几次。请找出数组中任意一个重复的数字。例如，如果输入长度为7的数组{2,3,1,0,2,5,3}，那么对应的输出是重复的数字2或者3。</p>
-<h3 id="方法一：先把数组排序，再进行扫描"><a href="#方法一：先把数组排序，再进行扫描" class="headerlink" title="方法一：先把数组排序，再进行扫描"></a>方法一：先把数组排序，再进行扫描</h3><p>排序一个长度为n的数组需要：O(nlogn) 的时间</p>
-<h3 id="方法二：利用哈希表解决此问题"><a href="#方法二：利用哈希表解决此问题" class="headerlink" title="方法二：利用哈希表解决此问题"></a>方法二：利用哈希表解决此问题</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment">     * 通过哈希表找出重复数字，时间复杂度为 O(n)，代价是需要一个大小为O(n)的哈希表来实现</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment">     * <span class="doctag">@param</span> a</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="comment">     */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ArrayList&lt;Integer&gt; <span class="title">duplicate1</span><span class="params">(<span class="keyword">int</span>[] a)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">        Map&lt;Integer, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">        ArrayList&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; a.length; i++) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">if</span> (map.containsValue(a[i])) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">                <span class="comment">//如果不存在该值，则将其存入哈希表</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">                list.add(a[i]);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">            &#125; <span class="keyword">else</span> &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">                <span class="comment">//若哈希表中存在此值，说明重复</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">                map.put(i, a[i]);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">            &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">return</span> list;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr></table></figure>
-
-<h3 id="方法三-：通过对比下标进行查找"><a href="#方法三-：通过对比下标进行查找" class="headerlink" title="方法三 ：通过对比下标进行查找"></a>方法三 ：通过对比下标进行查找</h3><p>数组中的数字都在 0~n-1 的范围内。如果数组中没有重复的数字，那么数字排序后数字i将出现在下标为i的位置。利用此特性可以进行查找重复元素。</p>
-<p>首先从头到尾依次扫描传入的数组，</p>
-<p>如果 i = a[i] ，那么扫描下一个数字，</p>
-<p>否则将 a[i] 与 下标为 a[i] 的数字比较，若不相等则将二者交换，将 a[i] 放到属于它的位置；若相等则找到重复数字。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">duplicate2</span><span class="params">(<span class="keyword">int</span>[] a)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">if</span> (a == <span class="keyword">null</span> || a.length &lt;= <span class="number">0</span>) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; a.length; i++) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">if</span> (a[i] &gt; a.length || a[i] &lt; <span class="number">0</span>) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">                <span class="keyword">return</span> -<span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">            &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">int</span> temp = <span class="number">0</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; a.length; i++) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">while</span> (i != a[i]) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">                <span class="keyword">if</span> (a[i] != a[a[i]]) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">                    temp = a[i];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">                    a[i] = a[a[i]];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">                    a[temp] = temp;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">                &#125; <span class="keyword">else</span> &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">                    <span class="keyword">return</span> a[i];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">                &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">            &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr></table></figure>
-
+        <h2 id="应用层的功能"><a href="#应用层的功能" class="headerlink" title="应用层的功能"></a>应用层的功能</h2><p>文件传输、访问和管理；电子邮件；虚拟终端；查询和远程作业登陆；</p>
+<h2 id="应用层的重要协议"><a href="#应用层的重要协议" class="headerlink" title="应用层的重要协议"></a>应用层的重要协议</h2><p>FTP；SMTP、POP3；HTTP；DNS</p>
+<h2 id="网络应用模型"><a href="#网络应用模型" class="headerlink" title="网络应用模型"></a>网络应用模型</h2><p>客户服务器模型（Client/Server）；P2P模型（Peer-to-Peer）</p>
+<h2 id="文件传送协议FTP（File-Transfer-Protocol）"><a href="#文件传送协议FTP（File-Transfer-Protocol）" class="headerlink" title="文件传送协议FTP（File Transfer Protocol）"></a>文件传送协议FTP（File Transfer Protocol）</h2><ol>
+<li>FTP的工作原理</br><br>在进行文件传输时，FTP的客户和服务器之间要建立两个并行的TCP连接：控制连接和数据连接。控制连接在整个会话期间会一直保持打开，FTP客户所发出的传送请求，通过控制连接发送给服务器端的控制进程，但控制连接并不用来传送文件。实际用于传送文件的是数据连接。服务器端的控制进程在收到FTP客户端发送来的文件传输请求后就创建数据传送进程和数据连接，用来连接客户端和服务器端的数据传送进程。</li>
+</ol>
 
       
 
@@ -340,7 +190,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color3">剑指offer</a>
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">计算机网络</a>
         		</li>
       		
 		</ul>
@@ -350,7 +200,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2019/09/29/%E9%9D%A2%E8%AF%95-1/">展开全文 >></a>
+          <a class="article-more-a" href="/2019/11/15/%E5%BA%94%E7%94%A8%E5%B1%82/">展开全文 >></a>
         </p>
       
 
@@ -380,199 +230,33 @@
 
 
   
-    <article id="post-idea快捷键" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-数据链路层" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/09/29/idea%E5%BF%AB%E6%8D%B7%E9%94%AE/">idea快捷键 For Windows</a>
+      <a class="article-title" href="/2019/11/12/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/">数据链路层</a>
     </h1>
   
 
         
-        <a href="/2019/09/29/idea%E5%BF%AB%E6%8D%B7%E9%94%AE/" class="archive-article-date">
-  	<time datetime="2019-09-29T09:04:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-29</time>
+        <a href="/2019/11/12/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/" class="archive-article-date">
+  	<time datetime="2019-11-12T06:37:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-12</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="官方文档"><a href="#官方文档" class="headerlink" title="官方文档"></a>官方文档</h2><p>工具栏 –&gt; help –&gt; Keymap Reference</p>
-<h2 id="常用快捷键"><a href="#常用快捷键" class="headerlink" title="常用快捷键"></a>常用快捷键</h2><p><strong>一键格式化代碼：Ctrl+Alt+L</strong></p>
-<p><strong>全局搜索替换：ctrl+shift+r</strong></p>
-<p><strong>强大的搜索功能，shift+shift (搜啥都能找到)</strong></p>
-<p><strong>ctrl+shift+R：搜索类   CTRL+N：按照类名搜索类</strong></p>
-<h1 id="以下为转载文章"><a href="#以下为转载文章" class="headerlink" title="以下为转载文章"></a>以下为转载文章</h1><p><strong>自动代码</strong></p>
-<p>常用的有fori/sout/psvm+Tab即可生成循环、System.out、main方法等boilerplate样板代码 。</p>
-<p><em>例如要输入for(User user : users)只需输入user.for+Tab ；</em></p>
-<p><em>再比如，要输入Date birthday = user.getBirthday()只需输入user.getBirthday().var+Tab即可。</em></p>
-<p>代码标签输入完成后，按Tab，生成代码。</p>
-<ol>
-<li>Ctrl+Alt+O 优化导入的类和包 </li>
-<li>Alt+Insert 生成代码(如get,set方法,构造函数等)   或者右键（Generate） </li>
-<li>fori/sout/psvm + Tab  </li>
-<li>Ctrl+Alt+T  生成try catch  或者 Alt+enter </li>
-<li>CTRL+ALT+T  把选中的代码放在 TRY{} IF{} ELSE{} 里 </li>
-<li>Ctrl + O 重写方法  </li>
-<li>Ctrl + I 实现方法 </li>
-<li>Ctr+shift+U 大小写转化  </li>
-<li>ALT+回车    导入包,自动修正  </li>
-<li>ALT+/       代码提示 </li>
-<li>CTRL+J      自动代码  </li>
-<li>Ctrl+Shift+J，整合两行为一行 </li>
-<li>CTRL+空格   代码提示  </li>
-<li>CTRL+SHIFT+SPACE 自动补全代码  </li>
-<li>CTRL+ALT+L  格式化代码  </li>
-<li>CTRL+ALT+I  自动缩进  </li>
-<li>CTRL+ALT+O  优化导入的类和包  </li>
-<li>ALT+INSERT  生成代码(如GET,SET方法,构造函数等)  </li>
-<li>CTRL+E      最近更改的代码  </li>
-<li>CTRL+ALT+SPACE  类名或接口名提示  </li>
-<li>CTRL+P   方法参数提示  </li>
-<li>CTRL+Q，可以看到当前方法的声明 </li>
-<li>Shift+F6  重构-重命名 (包、类、方法、变量、甚至注释等) </li>
-<li>Ctrl+Alt+V 提取变量 </li>
+        <h2 id="数据链路层服务"><a href="#数据链路层服务" class="headerlink" title="数据链路层服务"></a>数据链路层服务</h2><ol>
+<li>流量控制</li>
+<li>差错检测</li>
+<li>差错纠正</li>
+<li>全双工和半双工通信控制</li>
+<li></li>
 </ol>
-<p><strong>查询快捷键</strong></p>
-<ol>
-<li>Ctrl＋Shift＋Backspace可以跳转到上次编辑的地 </li>
-<li>CTRL+ALT+ left/right 前后导航编辑过的地方 </li>
-<li>ALT+7  靠左窗口显示当前文件的结构 </li>
-<li>Ctrl+F12 浮动显示当前文件的结构 </li>
-<li>ALT+F7 找到你的函数或者变量或者类的所有引用到的地方 </li>
-<li>CTRL+ALT+F7  找到你的函数或者变量或者类的所有引用到的地方 </li>
-<li>Ctrl+Shift+Alt+N 查找类中的方法或变量 </li>
-<li>双击SHIFT 在项目的所有目录查找文件 </li>
-<li>Ctrl+N   查找类 </li>
-<li>Ctrl+Shift+N 查找文件 </li>
-<li>CTRL+G   定位行  </li>
-<li>CTRL+F   在当前窗口查找文本  </li>
-<li>CTRL+SHIFT+F  在指定窗口查找文本  </li>
-<li>CTRL+R   在 当前窗口替换文本  </li>
-<li>CTRL+SHIFT+R  在指定窗口替换文本  </li>
-<li>ALT+SHIFT+C  查找修改的文件  </li>
-<li>CTRL+E   最近打开的文件  </li>
-<li>F3   向下查找关键字出现位置  </li>
-<li>SHIFT+F3  向上一个关键字出现位置  </li>
-<li>选中文本，按Alt+F3 ，高亮相同文本，F3逐个往下查找相同文本 </li>
-<li>F4   查找变量来源  </li>
-<li>CTRL+SHIFT+O  弹出显示查找内容 </li>
-<li>Ctrl+W 选中代码，连续按会有其他效果 </li>
-<li>F2 或Shift+F2 高亮错误或警告快速定位 </li>
-<li>Ctrl+Up/Down 光标跳转到第一行或最后一行下 </li>
-<li>Ctrl+B 快速打开光标处的类或方法  </li>
-<li>CTRL+ALT+B  找所有的子类  </li>
-<li>CTRL+SHIFT+B  找变量的类  </li>
-<li>Ctrl+Shift+上下键  上下移动代码 </li>
-<li>Ctrl+Alt+ left/right 返回至上次浏览的位置 </li>
-<li>Ctrl+X 删除行 </li>
-<li>Ctrl+D 复制行 </li>
-<li>Ctrl+/ 或 Ctrl+Shift+/  注释（// 或者/<em>…</em>/ ） </li>
-<li>Ctrl+H 显示类结构图 </li>
-<li>Ctrl+Q 显示注释文档 </li>
-<li>Alt+F1 查找代码所在位置 </li>
-<li>Alt+1 快速打开或隐藏工程面板 </li>
-<li>Alt+ left/right 切换代码视图 </li>
-<li>ALT+ ↑/↓  在方法间快速移动定位  </li>
-<li>CTRL+ALT+ left/right 前后导航编辑过的地方 </li>
-<li>Ctrl＋Shift＋Backspace可以跳转到上次编辑的地 </li>
-<li>Alt+6    查找TODO </li>
-</ol>
-<p><strong>其他快捷键</strong></p>
-<ol>
-<li>SHIFT+ENTER 另起一行 </li>
-<li>CTRL+Z   倒退(撤销) </li>
-<li>CTRL+SHIFT+Z  向前(取消撤销) </li>
-<li>CTRL+ALT+F12  资源管理器打开文件夹  </li>
-<li>ALT+F1   查找文件所在目录位置  </li>
-<li>SHIFT+ALT+INSERT 竖编辑模式  </li>
-<li>CTRL+F4  关闭当前窗口 </li>
-<li>Ctrl+Alt+V，可以引入变量。例如：new String(); 自动导入变量定义 </li>
-<li>Ctrl+~，快速切换方案（界面外观、代码风格、快捷键映射等菜单） </li>
-</ol>
-<p><strong>svn快捷键</strong></p>
-<ol>
-<li>ctrl+k 提交代码到SVN </li>
-<li>ctrl+t 更新代码 </li>
-</ol>
-<p><strong>调试快捷键</strong></p>
-<p>其实常用的 就是F8 F7 F9 最值得一提的就是Drop Frame 可以让运行过的代码从头再来。推荐：<a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247487756&idx=2&sn=2d63cbeb48629f8c210ae96e27543c91&chksm=eb53943adc241d2cb2739248d6391bacfad3d582729a6b1551e8cb7ba3e944fb95f093f3b278&scene=21#wechat_redirect" target="_blank" rel="noopener">Intellij IDEA Debug 调试技巧</a>。</p>
-<ol>
-<li>alt+F8    debug时选中查看值 </li>
-<li>Alt+Shift+F9，选择 Debug </li>
-<li>Alt+Shift+F10，选择 Run </li>
-<li>Ctrl+Shift+F9，编译 </li>
-<li>Ctrl+Shift+F8，查看断点 </li>
-<li>F7，步入 </li>
-<li>Shift+F7，智能步入 </li>
-<li>Alt+Shift+F7，强制步入 </li>
-<li>F8，步过 </li>
-<li>Shift+F8，步出 </li>
-<li>Alt+Shift+F8，强制步过 </li>
-<li>Alt+F9，运行至光标处 </li>
-<li>Ctrl+Alt+F9，强制运行至光标处 </li>
-<li>F9，恢复程序 </li>
-<li>Alt+F10，定位到断点 </li>
-</ol>
-<p><strong>重构</strong></p>
-<ol>
-<li>Ctrl+Alt+Shift+T，弹出重构菜单 </li>
-<li>Shift+F6，重命名 </li>
-<li>F6，移动 </li>
-<li>F5，复制 </li>
-<li>Alt+Delete，安全删除 </li>
-<li>Ctrl+Alt+N，内联 </li>
-</ol>
-<p><strong>十大Intellij IDEA快捷键</strong> </p>
-<p>Intellij IDEA中有很多快捷键让人爱不释手，stackoverflow上也有一些有趣的讨论。每个人都有自己的最爱，想排出个理想的榜单还真是困难。 </p>
-<p>以前也整理过Intellij的快捷键，这次就按照我日常开发时的使用频率，简单分类列一下我最喜欢的十大快捷-神-键吧。 </p>
-<p><strong>1 智能提示:</strong> </p>
-<p>Intellij首当其冲的当然就是Intelligence智能！基本的代码提示用Ctrl+Space，还有更智能地按类型信息提示Ctrl+Shift+Space，但因为Intellij总是随着我们敲击而自动提示，所以很多时候都不会手动敲这两个快捷键(除非提示框消失了)。推荐：<a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247484370&idx=1&sn=8a091d43b1af8cae35256be22ff44193&chksm=eb5386e4dc240ff2834261929d96402822a29919a8a2098063ccb74513296d13f05e768ea496&scene=21#wechat_redirect" target="_blank" rel="noopener">Intellij Idea非常6的10个姿势！</a></p>
-<p>用F2/ Shift+F2移动到有错误的代码，Alt+Enter快速修复(即Eclipse中的Quick Fix功能)。当智能提示为我们自动补全方法名时，我们通常要自己补上行尾的反括号和分号，当括号嵌套很多层时会很麻烦，这时我们只需敲Ctrl+Shift+Enter就能自动补全末尾的字符。而且不只是括号，例如敲完if/for时也可以自动补上{}花括号。 </p>
-<p>最后要说一点，Intellij能够智能感知Spring、Hibernate等主流框架的配置文件和类，以静制动，在看似“静态”的外表下，智能地扫描理解你的项目是如何构造和配置的。 </p>
-<p><strong>2 重构:</strong> </p>
-<p>Intellij重构是另一完爆Eclipse的功能，其智能程度令人瞠目结舌，比如提取变量时自动检查到所有匹配同时提取成一个变量等。尤其看过《重构-改善既有代码设计》之后，有了Intellij的配合简直是令人大呼过瘾！也正是强大的智能和重构功能，使Intellij下的TDD开发非常顺畅。推荐： <a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247486192&idx=1&sn=27040ef95c8dfcd72f1ecb1136d288a5&chksm=eb538fc6dc2406d0f1e34e6d53f21dc1949fc1f09f1d52eba107c7d6cbf1e80dda75036e773a&scene=21#wechat_redirect" target="_blank" rel="noopener">Intellij IDEA 那些隐藏好用的小技巧</a></p>
-<p>切入正题，先说一个无敌的重构功能大汇总快捷键Ctrl+Shift+Alt+T，叫做Refactor This。按法有点复杂，但也符合Intellij的风格，很多快捷键都要双手完成，而不像Eclipse不少最有用的快捷键可以潇洒地单手完成(不知道算不算Eclipse的一大优点)，但各位用过Emacs的话就会觉得也没什么了(非Emacs黑)。</p>
-<p>此外，还有些最常用的重构技巧，因为太常用了，若每次都在Refactor This菜单里选的话效率有些低。比如Shift+F6直接就是改名，Ctrl+Alt+V则是提取变量。关注Java技术栈微信公众号，在后台回复关键字：IDEA，可以获取一份栈长整理的 IDEA 最新技术干货。 </p>
-<p><strong>3 代码生成：</strong> </p>
-<p>这一点类似Eclipse，虽不是独到之处，但因为日常使用频率极高，所以还是罗列在榜单前面。常用的有fori/sout/psvm+Tab即可生成循环、System.out、main方法等boilerplate样板代码，用Ctrl+J可以查看所有模板。</p>
-<p>后面“辅助”一节中将会讲到Alt+Insert，在编辑窗口中点击可以生成构造函数、toString、getter/setter、重写父类方法等。这两个技巧实在太常用了，几乎每天都要生成一堆main、System.out和getter/setter。 </p>
-<p>另外，Intellij IDEA 13中加入了后缀自动补全功能(Postfix Completion)，比模板生成更加灵活和强大。例如要输入for(User user : users)只需输入user.for+Tab。再比如，要输入Date birthday = user.getBirthday();只需输入user.getBirthday().var+Tab即可。 </p>
-<p><strong>4 编辑：</strong> </p>
-<p>编辑中不得不说的一大神键就是能够自动按语法选中代码的Ctrl+W以及反向的Ctrl+Shift+W了。此外，Ctrl+Left/Right移动光标到前/后单词，Ctrl+[/]移动到前/后代码块，这些类Vim风格的光标移动也是一大亮点。以上Ctrl+Left/Right/[]加上Shift的话就能选中跳跃范围内的代码。Alt+Forward/Backward移动到前/后方法。还有些非常普通的像Ctrl+Y删除行、Ctrl+D复制行、Ctrl+折叠代码就不多说了。 </p>
-<p>关于光标移动再多扩展一点，除了Intellij本身已提供的功能外，我们还可以安装ideaVim或者emacsIDEAs享受到Vim的快速移动和Emacs的AceJump功能(超爽！)。</p>
-<p>另外，Intellij的书签功能也是不错的，用Ctrl+Shift+Num定义1-10书签(再次按这组快捷键则是删除书签)，然后通过Ctrl+Num跳转。这避免了多次使用前/下一编辑位置Ctrl+Left/Right来回跳转的麻烦，而且此快捷键默认与Windows热键冲突(默认多了Alt，与Windows改变显示器显示方向冲突，一不小心显示器就变成倒着显式的了，冏啊)。 推荐：<a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247489396&idx=1&sn=8ce60c31200303fc55a2737ef7b4dc2d&chksm=eb539242dc241b54b422797aa720ea8ce1d3e45c6424ca0c7b774bc49df689fd4d476b6ce457&scene=21#wechat_redirect" target="_blank" rel="noopener">Intellij IDEA 撸码最头大的问题。。</a></p>
-<p><strong>5 查找打开：</strong> </p>
-<p>类似Eclipse，Intellij的Ctrl+N/Ctrl+Shift+N可以打开类或资源，但Intellij更加智能一些，我们输入的任何字符都将看作模糊匹配，省却了Eclipse中还有输入*的麻烦。最新版本的IDEA还加入了Search Everywhere功能，只需按Shift+Shift即可在一个弹出框中搜索任何东西，包括类、资源、配置项、方法等等。 </p>
-<p>类的继承关系则可用Ctrl+H打开类层次窗口，在继承层次上跳转则用Ctrl+B/Ctrl+Alt+B分别对应父类或父方法定义和子类或子方法实现，查看当前类的所有方法用Ctrl+F12。 </p>
-<p>要找类或方法的使用也很简单，Alt+F7。要查找文本的出现位置就用Ctrl+F/Ctrl+Shift+F在当前窗口或全工程中查找，再配合F3/Shift+F3前后移动到下一匹配处。 </p>
-<p>Intellij更加智能的又一佐证是在任意菜单或显示窗口，都可以直接输入你要找的单词，Intellij就会自动为你过滤。 关注Java技术栈微信公众号，在后台回复关键字：IDEA，可以获取一份栈长整理的 IDEA 最新技术干货。 </p>
-<p><strong>6 其他辅助：</strong> </p>
-<p>以上这些神键配上一些辅助快捷键，即可让你的双手90%以上的时间摆脱鼠标，专注于键盘仿佛在进行钢琴表演。这些不起眼却是至关重要的最后一块拼图有：</p>
-<p>Ø  命令：Ctrl+Shift+A可以查找所有Intellij的命令，并且每个命令后面还有其快捷键。所以它不仅是一大神键，也是查找学习快捷键的工具。 </p>
-<p>Ø  新建：Alt+Insert可以新建类、方法等任何东西。 </p>
-<p>Ø  格式化代码：格式化import列表Ctrl+Alt+O，格式化代码Ctrl+Alt+L。 </p>
-<p>Ø  切换窗口：Alt+Num，常用的有1-项目结构，3-搜索结果，4/5-运行调试。Ctrl+Tab切换标签页，Ctrl+E/Ctrl+Shift+E打开最近打开过的或编辑过的文件。 </p>
-<p>Ø  单元测试：Ctrl+Alt+T创建单元测试用例。 </p>
-<p>Ø  运行：Alt+Shift+F10运行程序，Shift+F9启动调试，Ctrl+F2停止。 </p>
-<p>Ø  调试：F7/F8/F9分别对应Step into，Step over，Continue。 </p>
-<p><em>此外还有些我自定义的，例如水平分屏Ctrl+|等，和一些神奇的小功能Ctrl+Shift+V粘贴很早以前拷贝过的，Alt+Shift+Insert进入到列模式进行按列选中。</em> </p>
-<p>Ø  Top #10切来切去：Ctrl+Tab</p>
-<p>Ø  Top #9选你所想：Ctrl+W</p>
-<p>Ø  Top #8代码生成：Template/Postfix +Tab</p>
-<p>Ø  Top #7发号施令：Ctrl+Shift+A</p>
-<p>Ø  Top #6无处藏身：Shift+Shift</p>
-<p>Ø  Top #5自动完成：Ctrl+Shift+Enter</p>
-<p>Ø  Top #4创造万物：Alt+Insert</p>
-<p><em>太难割舍，前三名并列吧！</em> </p>
-<p>Ø  Top #1智能补全：Ctrl+Shift+Space</p>
-<p>Ø  Top #1自我修复：Alt+Enter</p>
-<p>Ø  Top #1重构一切：Ctrl+Shift+Alt+T</p>
-<p><em>CTRL+ALT+ left/right 前后导航编辑过的地方</em> <em>Ctrl＋Shift＋Backspace可以跳转到上次编辑的地方</em></p>
-<p>转载自：<a href="https://mp.weixin.qq.com/s/r70Q0eqy5-R1CrwihREeQA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/r70Q0eqy5-R1CrwihREeQA</a></p>
 
       
 
@@ -586,7 +270,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color4">快捷键</a>
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">计算机网络</a>
         		</li>
       		
 		</ul>
@@ -596,7 +280,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2019/09/29/idea%E5%BF%AB%E6%8D%B7%E9%94%AE/">展开全文 >></a>
+          <a class="article-more-a" href="/2019/11/12/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/">展开全文 >></a>
         </p>
       
 
@@ -626,35 +310,84 @@
 
 
   
-    <article id="post-debug" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-计算机网络课后题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/09/26/debug/">idea debug方法</a>
+      <a class="article-title" href="/2019/11/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E5%90%8E%E9%A2%98/">计算机网络历年试卷</a>
     </h1>
   
 
         
-        <a href="/2019/09/26/debug/" class="archive-article-date">
-  	<time datetime="2019-09-26T08:50:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-26</time>
+        <a href="/2019/11/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E5%90%8E%E9%A2%98/" class="archive-article-date">
+  	<time datetime="2019-11-10T10:58:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-10</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.添加断点</p>
-<p>2.点击debug按钮，程序运行，停留在断点处。</p>
-<p>3.进行调试</p>
+        <h2 id="2016年A卷"><a href="#2016年A卷" class="headerlink" title="2016年A卷"></a>2016年A卷</h2><h3 id="简答题"><a href="#简答题" class="headerlink" title="简答题"></a>简答题</h3><ol>
+<li>计算机网络的性能指标是哪四个？指标的含义是什么？</li>
+</ol>
 <ul>
-<li>f8：逐行执行程序</li>
-<li>f7：进入方法中</li>
-<li>shift+f8：跳出方法</li>
-<li>ctrl+f2：退出debug模式，停止程序</li>
-<li>Console：切换到控制台</li>
+<li>带宽：指数据信道上能传送的最高数据率，单位是b/s</li>
+<li>延迟：</li>
+<li>丢包率：</li>
+<li>吞吐量：数据在网络信道上的传输速率</li>
+</ul>
+<ol start="2">
+<li><p>目前互联网的体系结构都包含那几层？其局限性或面临的挑战包含那几方面？</br><br>物理层，数据链路层，网络层，传输层，应用层</p>
+</li>
+<li><p>在1948年，信息论的创始人香农（Shannon）推导出了著名的香农公式，请写出该公式并解释该公式的意义。</p>
+</li>
+<li><p>端口地址、IP地址、硬件地址三者的主要区别是什么？</br><br>端口地址用于传输层，应用层寻址；IP地址用于网络层互联网中IP数据包寻址；硬件地址用于数据链路层，局域网中帧寻址。</p>
+</li>
+<li><p>划分子网的意义何在，举例说明。</br><br>三级地址结构，提高主机地址空间的利用率，减少地址的开销</p>
+</li>
+<li><p>TCP流量控制机制和拥塞控制机制分别是什么？</br><br>流量控制：滑动窗口机制</br><br>拥塞控制：慢开始和拥塞避免</br></p>
+</li>
+<li><p>FTP的工作原理是什么？</br><br>在进行文件传输时，FTP的客户和服务器之间要建立两个并行的TCP连接：控制连接和数据连接。控制连接在整个会话期间会一直保持打开，FTP客户所发出的传送请求，通过控制连接发送给服务器端的控制进程，但控制连接并不用来传送文件。实际用于传送文件的是数据连接。服务器端的控制进程在收到FTP客户端发送来的文件传输请求后就创建数据传送进程和数据连接，用来连接客户端和服务器端的数据传送进程。</p>
+</li>
+<li><p>防火墙的工作原理是什么？<br>在一个网点和网络的其余部分之间安装一个特殊编程的路由器，用来实施访问控制策略，从而禁止不必要的通信。</p>
+</li>
+<li><p>移动IP的工作原理是什么？</p>
+</li>
+<li><p>入侵检测系统的工作原理是什么？</p>
+</li>
+</ol>
+<ul>
+<li>基于特征的IDS：通过维护一个所有已知攻击标志性特征的数据库。</li>
+<li>基于异常的IDS：通过观察学习正常的网络流量，当网络流量中某统计特征异常时，则可能发生了入侵。</li>
+</ul>
+<ol start="11">
+<li><p>从IPv4项IPv6过渡的两种技术特点是什么？</p>
+</li>
+<li><p>三层交换机和两层交换机的主要区别是什么？</p>
+</li>
+<li><p>从不同的角度考虑，计算机网络会有不同的分类结果，你知道从作用范围角度可将计算机网络分为那几类？Internet和它们是什么关系？<br>局域网，都市网，广域网；Internet时他们的集合。</p>
+</li>
+<li><p>TCP/IP协议族设置物理层的主要意义是什么？物理层具体表现为明确与传输媒体的接口有关的若干特性，你知道都有那几个特性？<br>1)物理层考虑媒体的比特流传输，通过屏蔽底层的差异，为数据链路层提供统一平台。<br>2）机械特性，电气特性，功能特性，过程特性。</p>
+</li>
+<li><p>数据链路层的意义在于控制物理层数据的传输，其本身是有结构的数据传输，试描述常见的局域网以太网的帧的结构（包括帧中各字段的组成和相应字节的长度，其中类型字段的含义是什么？<br>1）源MAC地址和目的MAC地址各6字节，类型字段各2字节，数据字段46-1500字节，FCS字段4字节</br><br>2）类型字段用来标识上一层使用的协议种类，以准确提交数据。</p>
+</li>
+<li><p>以太网的MTU值是多少？假设一IP数据报长度为4100字节（固定首部长度）。现在经过一个以太网网络传送，问（1）该IP数据报应当划分为几个分片？（2）分别写出各数据报分片的数据字段长度、片偏移字段和MF标志的数值？<br>以太网的MTU值为1500字节。</br><br>3个</br></p>
+</li>
+<li><p>简述访问WWW的工作过程</p>
+</li>
+</ol>
+<ul>
+<li>浏览器分歧超链接指向页面的URL</li>
+<li>浏览器向DNS请求解析<a href="http://www.neuq.edu.cn的IP地址" target="_blank" rel="noopener">www.neuq.edu.cn的IP地址</a></li>
+<li>DNS解析出IP地址为202.206.16.3</li>
+<li>浏览器与服务器建立TCP连接</li>
+<li>浏览器发出取文件命令</li>
+<li>服务器给出相应</li>
+<li>TCP释放连接</li>
+<li>浏览器显示<a href="http://www.neuq.edu.cn文件index.html中的所有文本" target="_blank" rel="noopener">www.neuq.edu.cn文件index.html中的所有文本</a></li>
 </ul>
 
       
@@ -669,7 +402,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color3">debug方法</a>
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">计算机网络</a>
         		</li>
       		
 		</ul>
@@ -679,7 +412,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2019/09/26/debug/">展开全文 >></a>
+          <a class="article-more-a" href="/2019/11/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E5%90%8E%E9%A2%98/">展开全文 >></a>
         </p>
       
 
@@ -709,20 +442,103 @@
 
 
   
-    <article id="post-redis-1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-macOS清除启动台中残余的图标" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/09/21/redis-1/">redis-1</a>
+      <a class="article-title" href="/2019/11/07/macOS%E6%B8%85%E9%99%A4%E5%90%AF%E5%8A%A8%E5%8F%B0%E4%B8%AD%E6%AE%8B%E4%BD%99%E7%9A%84%E5%9B%BE%E6%A0%87/">macOS清除启动台中残余的图标</a>
     </h1>
   
 
         
-        <a href="/2019/09/21/redis-1/" class="archive-article-date">
-  	<time datetime="2019-09-21T03:11:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-21</time>
+        <a href="/2019/11/07/macOS%E6%B8%85%E9%99%A4%E5%90%AF%E5%8A%A8%E5%8F%B0%E4%B8%AD%E6%AE%8B%E4%BD%99%E7%9A%84%E5%9B%BE%E6%A0%87/" class="archive-article-date">
+  	<time datetime="2019-11-07T15:38:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>经常会不通过appstore下载软件，也就是从网页中下载dmg，自己安装，但是当我不再想要这个软件，然后把它卸载掉之后就会发现，launchpad里还是遗留了这个软件的图标，而且删不掉。这个时候，就可以下面的办法就管用啦！</p>
+<p>思路：找到存放launchpad中图标的数据库，对数据库进行操作直接删除对于的图标。<br>第一步找到comappledocklaunchpad文件夹<br>第二步找到数据库获取其路径<br>第三步开始对数据库进行操作<br>第一步：找到com.apple.dock.launchpad文件夹：</p>
+<p>打开一个folder，按command+shift+G，在前往当中输入地址/private/var/folders，然后在里边自己尝试找到com.apple.dock.launchpad这个文件夹，我的路径是/private/var/folders/8v/…/0/com.apple.dock.launchpad，省略号处应该大家都不一样，所以慢慢找，总之最后找到名为com.apple.dock.launchpad的文件夹。</p>
+<p>第二步：找到数据库，获取其路径：</p>
+<p>打开com.apple.dock.launchpad 文件夹<br>之后有一个db文件夹，再点进去有一个文件叫db,它就是我们要找的数据库（如图）。 </p>
+<p>右击它，选择显示简介，将位置信息拷贝到剪切板，注意从private开始（如图）。 </p>
+<p>第三步：开始对数据库进行操作</p>
+<p>打开终端：cd到刚才拷贝的路径<br>然后输入：<br>sqlite3 db “delete from apps where title=’应用名称’;”&amp;&amp;killall Dock<br>注意要将应用名称处替换成你要删除的图标的名称，然后回车即可。</p>
+<p>再回到launchpad看看，没有啦！</p>
+<p>————————————————<br>版权声明：本文为CSDN博主「ohyeahhhh」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a href="https://blog.csdn.net/ohyeahhhh/article/details/53168753" target="_blank" rel="noopener">https://blog.csdn.net/ohyeahhhh/article/details/53168753</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color4">macOS小问题</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/11/07/macOS%E6%B8%85%E9%99%A4%E5%90%AF%E5%8A%A8%E5%8F%B0%E4%B8%AD%E6%AE%8B%E4%BD%99%E7%9A%84%E5%9B%BE%E6%A0%87/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-内存管理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/06/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">内存管理</a>
+    </h1>
+  
+
+        
+        <a href="/2019/11/06/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" class="archive-article-date">
+  	<time datetime="2019-11-06T06:27:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-06</time>
 </a>
         
       </header>
@@ -737,11 +553,22 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color5">操作系统</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2019/09/21/redis-1/">展开全文 >></a>
+          <a class="article-more-a" href="/2019/11/06/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">展开全文 >></a>
         </p>
       
 
@@ -771,209 +598,228 @@
 
 
   
-    <article id="post-SSM-Invalid-bound-statement-not-found" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-CPU" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/09/19/SSM-Invalid-bound-statement-not-found/">SSM-Invalid bound statement (not found)</a>
+      <a class="article-title" href="/2019/11/06/CPU/">CPU</a>
     </h1>
   
 
         
-        <a href="/2019/09/19/SSM-Invalid-bound-statement-not-found/" class="archive-article-date">
-  	<time datetime="2019-09-19T07:34:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-19</time>
+        <a href="/2019/11/06/CPU/" class="archive-article-date">
+  	<time datetime="2019-11-06T06:27:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-06</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="Invalid-bound-statement-not-found"><a href="#Invalid-bound-statement-not-found" class="headerlink" title="Invalid bound statement (not found)"></a>Invalid bound statement (not found)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">org.apache.ibatis.binding.BindingException: Invalid bound statement (not found): com.shopssm.dao.IShopDao.insertShop</span></pre></td></tr></table></figure>
+        <h2 id="CPU的功能"><a href="#CPU的功能" class="headerlink" title="CPU的功能"></a>CPU的功能</h2><ol>
+<li>指令控制</li>
+<li>操作控制</li>
+<li>时间控制</li>
+</ol>
+<h2 id="CPU运算器和控制器的功能"><a href="#CPU运算器和控制器的功能" class="headerlink" title="CPU运算器和控制器的功能"></a>CPU运算器和控制器的功能</h2><ol>
+<li>运算器：对数据进行加工。</li>
+<li>控制器：协调并控制计算机各个部件执行程序的指令序列，基本功能包括取指令、分析指令、执行指令、中断处理。</li>
+</ol>
+<h2 id="运算器的基本结构"><a href="#运算器的基本结构" class="headerlink" title="运算器的基本结构"></a>运算器的基本结构</h2><ol>
+<li>算术逻辑单元：主要功能是进行算术、逻辑运算。</li>
+<li>通用寄存器组：用于存放操作数和各种地址信息等。</li>
+</ol>
 
-<h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><ul>
-<li>SQL语句有没有写错，没有问题。</li>
-<li>方法名称与映射器接口是否一致，没有问题。</li>
-<li>配置文件中的路径，发现映射器配置出错。</li>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color3">计算机组成原理</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/11/06/CPU/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-接口的初始化规则" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/05/%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A7%84%E5%88%99/">接口的初始化规则</a>
+    </h1>
+  
+
+        
+        <a href="/2019/11/05/%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A7%84%E5%88%99/" class="archive-article-date">
+  	<time datetime="2019-11-05T08:38:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-05</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color4">jvm</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/11/05/%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A7%84%E5%88%99/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-网络层" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/04/%E7%BD%91%E7%BB%9C%E5%B1%82/">网络层</a>
+    </h1>
+  
+
+        
+        <a href="/2019/11/04/%E7%BD%91%E7%BB%9C%E5%B1%82/" class="archive-article-date">
+  	<time datetime="2019-11-04T08:03:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="IP数据报格式"><a href="#IP数据报格式" class="headerlink" title="IP数据报格式"></a>IP数据报格式</h2><p>长度 = 固定部分20B+可变部分</p>
+<h3 id="固定部分"><a href="#固定部分" class="headerlink" title="固定部分"></a>固定部分</h3><ul>
+<li>版本：IPv4或者IPv6</li>
+<li>首部长度：单位是4B，最小为5</li>
+<li>区分服务：指期望获得那种类型的服务</li>
+<li>总长度：首部+数据的总长度，单位是1B</li>
+<li>标识、标志、片偏移：</li>
+<li>生存时间：TTL，IP数据报的保质期，每经过一个路由器就-1，变成0则丢弃</li>
+<li>协议：传输层传下来的报文使用的协议，TCP-6或UDP-17 </li>
+<li>首部检验和：只检验首部</li>
+<li>源地址：32位</li>
+<li>目的地址：32位</li>
+<li>可选字段：长度可变，0～40B，用来支持排错，测量以及安全等措施</li>
+<li>填充：全0，把首部补成4B的整数倍。</li>
 </ul>
-<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>将sping-dao.xml中的配置进行更正</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--映射器--&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapperLocations"</span> <span class="attr">value</span>=<span class="string">"classpath:mapper/AreaMapper.xml"</span>/&gt;</span></span></pre></td></tr></table></figure>
-
-<p>改为</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--映射器--&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapperLocations"</span> <span class="attr">value</span>=<span class="string">"classpath:mapper/*Mapper.xml"</span>/&gt;</span></span></pre></td></tr></table></figure>
-
-<p>问题解决。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">SSM框架</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/09/19/SSM-Invalid-bound-statement-not-found/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Spring-Boot-2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/09/14/Spring-Boot-2/">Spring Boot学习笔记②：SpringBootApplication注解</a>
-    </h1>
-  
-
-        
-        <a href="/2019/09/14/Spring-Boot-2/" class="archive-article-date">
-  	<time datetime="2019-09-14T12:03:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-14</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="SpringBootApplication注解"><a href="#SpringBootApplication注解" class="headerlink" title="SpringBootApplication注解"></a>SpringBootApplication注解</h1><h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> * Indicates a &#123;<span class="doctag">@link</span> Configuration configuration&#125; class that declares one or more</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> Bean <span class="doctag">@Bean</span>&#125; methods and also triggers &#123;<span class="doctag">@link</span> EnableAutoConfiguration</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> * auto-configuration&#125; and &#123;<span class="doctag">@link</span> ComponentScan component scanning&#125;. This is a convenience</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> * annotation that is equivalent to declaring &#123;<span class="doctag">@code</span> <span class="doctag">@Configuration</span>&#125;,</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> * &#123;<span class="doctag">@code</span> <span class="doctag">@EnableAutoConfiguration</span>&#125; and &#123;<span class="doctag">@code</span> <span class="doctag">@ComponentScan</span>&#125;.</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> *</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> * <span class="doctag">@author</span> Phillip Webb</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> * <span class="doctag">@author</span> Stephane Nicoll</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> * <span class="doctag">@since</span> 1.2.0</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"><span class="comment"> */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Inherited</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootConfiguration</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@EnableAutoConfiguration</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@ComponentScan</span>(excludeFilters = &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">		<span class="meta">@Filter</span>(type = FilterType.CUSTOM, classes = TypeExcludeFilter<span class="class">.<span class="keyword">class</span>),</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line"><span class="class">		@<span class="title">Filter</span>(<span class="title">type</span> </span>= FilterType.CUSTOM, classes = AutoConfigurationExcludeFilter<span class="class">.<span class="keyword">class</span>) &#125;)</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="title">public</span> @<span class="title">interface</span> <span class="title">SpringBootApplication</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">	<span class="comment">/**</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line"><span class="comment">	 * Exclude specific auto-configuration classes such that they will never be applied.</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the classes to exclude</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line"><span class="comment">	 */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">	<span class="meta">@AliasFor</span>(annotation = EnableAutoConfiguration<span class="class">.<span class="keyword">class</span>)</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">	Class&lt;?&gt;[] exclude() default &#123;&#125;;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">30</span></pre></td><td class="code"><pre><span class="line">	<span class="comment">/**</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">31</span></pre></td><td class="code"><pre><span class="line"><span class="comment">	 * Exclude specific auto-configuration class names such that they will never be</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">32</span></pre></td><td class="code"><pre><span class="line"><span class="comment">	 * applied.</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">33</span></pre></td><td class="code"><pre><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the class names to exclude</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">34</span></pre></td><td class="code"><pre><span class="line"><span class="comment">	 * <span class="doctag">@since</span> 1.3.0</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">35</span></pre></td><td class="code"><pre><span class="line"><span class="comment">	 */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">36</span></pre></td><td class="code"><pre><span class="line">	<span class="meta">@AliasFor</span>(annotation = EnableAutoConfiguration<span class="class">.<span class="keyword">class</span>)</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">37</span></pre></td><td class="code"><pre><span class="line">	String[] excludeName() default &#123;&#125;;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">38</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">39</span></pre></td><td class="code"><pre><span class="line">	<span class="comment">/**</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">40</span></pre></td><td class="code"><pre><span class="line"><span class="comment">	 * Base packages to scan for annotated components. Use &#123;<span class="doctag">@link</span> #scanBasePackageClasses&#125;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">41</span></pre></td><td class="code"><pre><span class="line"><span class="comment">	 * for a type-safe alternative to String-based package names.</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">42</span></pre></td><td class="code"><pre><span class="line"><span class="comment">	 * <span class="doctag">@return</span> base packages to scan</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">43</span></pre></td><td class="code"><pre><span class="line"><span class="comment">	 * <span class="doctag">@since</span> 1.3.0</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">44</span></pre></td><td class="code"><pre><span class="line"><span class="comment">	 */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">45</span></pre></td><td class="code"><pre><span class="line">	<span class="meta">@AliasFor</span>(annotation = ComponentScan<span class="class">.<span class="keyword">class</span>, <span class="title">attribute</span> </span>= <span class="string">"basePackages"</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">46</span></pre></td><td class="code"><pre><span class="line">	String[] scanBasePackages() <span class="keyword">default</span> &#123;&#125;;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">47</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">48</span></pre></td><td class="code"><pre><span class="line">	<span class="comment">/**</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">49</span></pre></td><td class="code"><pre><span class="line"><span class="comment">	 * Type-safe alternative to &#123;<span class="doctag">@link</span> #scanBasePackages&#125; for specifying the packages to</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">50</span></pre></td><td class="code"><pre><span class="line"><span class="comment">	 * scan for annotated components. The package of each class specified will be scanned.</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">51</span></pre></td><td class="code"><pre><span class="line"><span class="comment">	 * &lt;p&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">52</span></pre></td><td class="code"><pre><span class="line"><span class="comment">	 * Consider creating a special no-op marker class or interface in each package that</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">53</span></pre></td><td class="code"><pre><span class="line"><span class="comment">	 * serves no purpose other than being referenced by this attribute.</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">54</span></pre></td><td class="code"><pre><span class="line"><span class="comment">	 * <span class="doctag">@return</span> base packages to scan</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">55</span></pre></td><td class="code"><pre><span class="line"><span class="comment">	 * <span class="doctag">@since</span> 1.3.0</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">56</span></pre></td><td class="code"><pre><span class="line"><span class="comment">	 */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">57</span></pre></td><td class="code"><pre><span class="line">	<span class="meta">@AliasFor</span>(annotation = ComponentScan<span class="class">.<span class="keyword">class</span>, <span class="title">attribute</span> </span>= <span class="string">"basePackageClasses"</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">58</span></pre></td><td class="code"><pre><span class="line">	Class&lt;?&gt;[] scanBasePackageClasses() <span class="keyword">default</span> &#123;&#125;;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">59</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">60</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
-
-<h2 id="SpringBootConfiguration"><a href="#SpringBootConfiguration" class="headerlink" title="@SpringBootConfiguration"></a>@SpringBootConfiguration</h2><h2 id="EnableAutoConfiguration"><a href="#EnableAutoConfiguration" class="headerlink" title="@EnableAutoConfiguration"></a>@EnableAutoConfiguration</h2><h2 id="ComponentScan"><a href="#ComponentScan" class="headerlink" title="@ComponentScan"></a>@ComponentScan</h2>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">Spring Boot</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/09/14/Spring-Boot-2/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Spring-Boot-1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/09/13/Spring-Boot-1/">Spring Boot学习笔记①：属性注入</a>
-    </h1>
-  
-
-        
-        <a href="/2019/09/13/Spring-Boot-1/" class="archive-article-date">
-  	<time datetime="2019-09-13T14:50:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-13</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Spring-Boot属性注入"><a href="#Spring-Boot属性注入" class="headerlink" title="Spring Boot属性注入"></a>Spring Boot属性注入</h1><h2 id="第一种方式"><a href="#第一种方式" class="headerlink" title="第一种方式"></a>第一种方式</h2><h2 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configeration</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@EableConfigurationProperties</span>()</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@ConfigurationProperties</span>(profix = <span class="string">""</span><span class="comment">//前缀名)</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="comment">//@Getter和@Setter等注解的组合，他可以自动生成get、set、hashcode、toString、构造，在编译的时候就产生，而不是在运行的时候才会声称这些方法</span></span></pre></td></tr></table></figure>
-
-<h2 id="配置文件application-properties"><a href="#配置文件application-properties" class="headerlink" title="配置文件application.properties"></a>配置文件application.properties</h2><ul>
-<li>必须命名为application</li>
+<h2 id="IP地址"><a href="#IP地址" class="headerlink" title="IP地址"></a>IP地址</h2><h2 id="网络地址转换-NAT"><a href="#网络地址转换-NAT" class="headerlink" title="网络地址转换(NAT)"></a>网络地址转换(NAT)</h2><h2 id="传输单元名词辨析"><a href="#传输单元名词辨析" class="headerlink" title="传输单元名词辨析"></a>传输单元名词辨析</h2><p>应用层：报文<br><br>传输层：报文段<br><br>网络层：IP数据报，分组<br><br>链路层：帧，IP网络层传来的分组加头加尾<br><br>物理层：比特流</p>
+<h2 id="数据报"><a href="#数据报" class="headerlink" title="数据报"></a>数据报</h2><p>无连接服务：不事先为分组的传输确定传输路径，每个分组独立确定传输路径，不同分组传输路径可能不同；<br></p>
+<h2 id="IP数据报格式-1"><a href="#IP数据报格式-1" class="headerlink" title="IP数据报格式"></a>IP数据报格式</h2><p>总长度单位是1B，片偏移单位是8B，首部长度是4B。</p>
+<h2 id="IP数据报分片"><a href="#IP数据报分片" class="headerlink" title="IP数据报分片"></a>IP数据报分片</h2><ul>
+<li>标识：同一数据报的分片使用同一标识。</li>
+<li>标志：三位中只有两位有意义 X _ _</br><br>中间位DF（Don’t Fragment），DF=1禁止分片，DF=0允许分片。</br><br>最低位MF（More Fragment），MF=1后面还有分片，MF=0代表最后一片。</li>
+<li>片偏移：指出较长分组分片后，某片在原分组中的相对位置。以8B为单位。据此，除了最后一个分片，每个分片的长度一定是 <em>8B的整数倍</em>。</li>
 </ul>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">jdbc.driver</span>=<span class="string">com.mysql.jdbc.Driver</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="meta">jdbc.url</span>=<span class="string">jdbc:mysql://localhost:3306/o2o</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="meta">jdbc.username</span>=<span class="string">root</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="meta">jdbc.password</span>=<span class="string">root</span></span></pre></td></tr></table></figure>
-<p>或者</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="attr">jdbc:</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">driver:</span> <span class="string">com.mysql.jdbc.Driver</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">url:</span> <span class="string">jdbc:mysql://localhost:3306/o2o</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">username:</span> <span class="string">root</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">password:</span> <span class="string">root</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">	<span class="string">//可以定义集合</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">user:</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">		<span class="attr">name:</span> <span class="string">jack</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">		<span class="attr">age:</span> <span class="number">21</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">		<span class="attr">language:</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">			<span class="bullet">-</span> <span class="string">java</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">			<span class="bullet">-</span> <span class="string">php</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">			<span class="bullet">-</span> <span class="string">ios</span></span></pre></td></tr></table></figure>
-
-<p><strong>如果两个文件都有，取它们的并集，如果有冲突，以properties为准</strong></p>
-<h2 id="类JdbcProperties-java配置属性"><a href="#类JdbcProperties-java配置属性" class="headerlink" title="类JdbcProperties.java配置属性"></a>类JdbcProperties.java配置属性</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> lombok.Data;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.boot.context.properties.ConfigurationProperties;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@ConfigurationProperties</span>(prefix = <span class="string">"jdbc"</span>)<span class="comment">//配置前缀名为jdbc的属性，给类中有set方法的属性赋值</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span> <span class="comment">//自动生成get，set，tostring，构造方法</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JdbcProperties</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    String url;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    String driver;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    String username;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    String password;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
-
-<h2 id="类JdbcConfigure-java使用属性"><a href="#类JdbcConfigure-java使用属性" class="headerlink" title="类JdbcConfigure.java使用属性"></a>类JdbcConfigure.java使用属性</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.alibaba.druid.pool.DruidDataSource;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.boot.context.properties.ConfigurationProperties;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.boot.context.properties.EnableConfigurationProperties;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.sql.DataSource;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@EnableConfigurationProperties</span>(JdbcProperties<span class="class">.<span class="keyword">class</span>)、</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"><span class="class">//注入配置属性，使用括号中的类中的属性</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line"><span class="class">//注入之后在此类中的任何位置都可以使用</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">JdbcConfig</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">    <span class="meta">@Bean</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> DataSource <span class="title">dataSource</span><span class="params">(JdbcProperties prop)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">        DruidDataSource druidDataSource = <span class="keyword">new</span> DruidDataSource();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">        druidDataSource.setDriverClassName(prop.getDriver());</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">        druidDataSource.setUrl(prop.getUrl());</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">        druidDataSource.setUsername(prop.getUsername());</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">        druidDataSource.setPassword(prop.getPassword());</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">return</span> druidDataSource;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
-
-<h2 id="第二种方式"><a href="#第二种方式" class="headerlink" title="第二种方式"></a>第二种方式</h2><ul>
-<li>不需要JdbcProperties.java</li>
-<li>第二种方式要注意application.yaml中的属性名称要和规定的一样，不能自己定义</li>
-</ul>
-<h2 id="类JdbcConfigure-java使用属性-1"><a href="#类JdbcConfigure-java使用属性-1" class="headerlink" title="类JdbcConfigure.java使用属性"></a>类JdbcConfigure.java使用属性</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.alibaba.druid.pool.DruidDataSource;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.boot.context.properties.ConfigurationProperties;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.boot.context.properties.EnableConfigurationProperties;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.sql.DataSource;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JdbcConfig</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    <span class="comment">/**</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line"><span class="comment">    <span class="doctag">@Bean</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"><span class="comment">    public DataSource dataSource(JdbcProperties prop) &#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"><span class="comment">        DruidDataSource druidDataSource = new DruidDataSource();</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line"><span class="comment">        druidDataSource.setDriverClassName(prop.getDriver());</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line"><span class="comment">        druidDataSource.setUrl(prop.getUrl());</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line"><span class="comment">        druidDataSource.setUsername(prop.getUsername());</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line"><span class="comment">        druidDataSource.setPassword(prop.getPassword());</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line"><span class="comment"></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line"><span class="comment">        return druidDataSource;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line"><span class="comment">    &#125;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line"><span class="comment">    **/</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">    <span class="meta">@Bean</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">    <span class="meta">@ConfigurationProperties</span>(profix = <span class="string">"jdbc"</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> DataSource <span class="title">dataSource</span><span class="params">(JdbcProperties prop)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> DruidDataSource();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
-
-
+<h2 id="网络地址转换（NAT）"><a href="#网络地址转换（NAT）" class="headerlink" title="网络地址转换（NAT）"></a>网络地址转换（NAT）</h2><h2 id="子网划分和子网掩码"><a href="#子网划分和子网掩码" class="headerlink" title="子网划分和子网掩码"></a>子网划分和子网掩码</h2><h2 id="CRID"><a href="#CRID" class="headerlink" title="CRID"></a>CRID</h2><h2 id="ICMP协议"><a href="#ICMP协议" class="headerlink" title="ICMP协议"></a>ICMP协议</h2><h3 id="ICMP差错报告报文"><a href="#ICMP差错报告报文" class="headerlink" title="ICMP差错报告报文"></a>ICMP差错报告报文</h3><ol>
+<li>终点不可达</li>
+<li>源点抑制（基本不再使用）</li>
+<li>时间超过</li>
+<li>参数问题</li>
+<li>改变路由（重定向）</li>
+</ol>
+<h3 id="不应发送ICMP差错报文的情况"><a href="#不应发送ICMP差错报文的情况" class="headerlink" title="不应发送ICMP差错报文的情况"></a>不应发送ICMP差错报文的情况</h3><ol>
+<li>对ICMP差错报告报文</li>
+<li>对第一个分片的数据报片的所有后续数据报片</li>
+<li>对具有组播地址的数据报</li>
+<li>对具有特殊地址（如127.0.0.0或0.0.0.0）</li>
+</ol>
+<h3 id="ICMP询问报文"><a href="#ICMP询问报文" class="headerlink" title="ICMP询问报文"></a>ICMP询问报文</h3><h2 id="IPv4和IPv6"><a href="#IPv4和IPv6" class="headerlink" title="IPv4和IPv6"></a>IPv4和IPv6</h2><h3 id="IPv6向IPv6的过渡"><a href="#IPv6向IPv6的过渡" class="headerlink" title="IPv6向IPv6的过渡"></a>IPv6向IPv6的过渡</h3><ol>
+<li>双栈协议</li>
+<li>隧道通信</li>
+</ol>
+<h2 id="路由算法"><a href="#路由算法" class="headerlink" title="路由算法"></a>路由算法</h2><h3 id="静态路由算法（非自适应路由算法）"><a href="#静态路由算法（非自适应路由算法）" class="headerlink" title="静态路由算法（非自适应路由算法）"></a>静态路由算法（非自适应路由算法）</h3><p>管理员手工配置路由信息</br><br>优点：简便、可靠，在符合稳定、拓扑变化不大的网络中运行效果很好，广泛用于高度安全性的军事网络和较小的商业网络。</br><br>缺点：路由更新慢，不适用于大型网络。</p>
+<h3 id="动态路由算法（自适应路由算法）"><a href="#动态路由算法（自适应路由算法）" class="headerlink" title="动态路由算法（自适应路由算法）"></a>动态路由算法（自适应路由算法）</h3><p>路由器间彼此交换信息，按照路由算法优化出路由表项</br><br>优点：路由更新快，适用于大型网络，及时响应链路费用或网络拓扑变化。</br><br>缺点：算法复杂，增加网络负担。</p>
+<h4 id="全局性"><a href="#全局性" class="headerlink" title="全局性"></a>全局性</h4><h4 id="分散性"><a href="#分散性" class="headerlink" title="分散性"></a>分散性</h4>
       
 
       
@@ -986,7 +832,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">Spring Boot</a>
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">计算机网络</a>
         		</li>
       		
 		</ul>
@@ -996,7 +842,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2019/09/13/Spring-Boot-1/">展开全文 >></a>
+          <a class="article-more-a" href="/2019/11/04/%E7%BD%91%E7%BB%9C%E5%B1%82/">展开全文 >></a>
         </p>
       
 
@@ -1026,64 +872,89 @@
 
 
   
-    <article id="post-SSM框架正确性验证" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-常量的本质" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/08/17/SSM%E6%A1%86%E6%9E%B6%E6%AD%A3%E7%A1%AE%E6%80%A7%E9%AA%8C%E8%AF%81/">2.SSM框架正确性验证</a>
+      <a class="article-title" href="/2019/11/04/%E5%B8%B8%E9%87%8F%E7%9A%84%E6%9C%AC%E8%B4%A8/">常量的本质</a>
     </h1>
   
 
         
-        <a href="/2019/08/17/SSM%E6%A1%86%E6%9E%B6%E6%AD%A3%E7%A1%AE%E6%80%A7%E9%AA%8C%E8%AF%81/" class="archive-article-date">
-  	<time datetime="2019-08-17T11:43:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-17</time>
+        <a href="/2019/11/04/%E5%B8%B8%E9%87%8F%E7%9A%84%E6%9C%AC%E8%B4%A8/" class="archive-article-date">
+  	<time datetime="2019-11-04T01:07:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-04</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="SSM框架搭建完成检验是否正确"><a href="#SSM框架搭建完成检验是否正确" class="headerlink" title="SSM框架搭建完成检验是否正确"></a>SSM框架搭建完成检验是否正确</h2><p>目前数据库中的数据：Area表</p>
-<p>id    name  priority        create_time                last_edit_time</p>
-<p>1    东苑    12    2017-06-04 19:12:58    2017-06-04 19:12:58<br>2    南苑    10    2017-06-04 19:13:09    2017-06-04 19:13:09<br>3    西苑    9    2017-06-04 19:13:18    2017-06-04 19:13:18<br>4    北苑    7    2017-06-04 19:13:29    2017-06-04 19:13:29</p>
-<h3 id="准备工作：resource-java目录下："><a href="#准备工作：resource-java目录下：" class="headerlink" title="准备工作：resource java目录下："></a>准备工作：resource java目录下：</h3><p>com.abc.pojo.Area</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Area</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">private</span> Integer areaId; <span class="comment">//ID</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">private</span> String areaName; <span class="comment">//名称</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">private</span> Integer priority; <span class="comment">//权重</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">private</span> Date createTime; <span class="comment">//创建时间</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">	<span class="keyword">private</span> Date lastEditTime; <span class="comment">//更新时间</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Area</span><span class="params">()</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">	&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Area</span><span class="params">(Integer areaId, String areaName, Integer priority, Date createTime, Date lastEditTime)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">		<span class="keyword">this</span>.areaId = areaId;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">		<span class="keyword">this</span>.areaName = areaName;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">		<span class="keyword">this</span>.priority = priority;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">		<span class="keyword">this</span>.createTime = createTime;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">		<span class="keyword">this</span>.lastEditTime = lastEditTime;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">	&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">	<span class="function"><span class="keyword">public</span> Integer <span class="title">getAreaId</span><span class="params">()</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">		<span class="keyword">return</span> areaId;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">	&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAreaId</span><span class="params">(Integer areaId)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">		<span class="keyword">this</span>.areaId = areaId;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">	&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getAreaName</span><span class="params">()</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">		<span class="keyword">return</span> areaName;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">	&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">30</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">31</span></pre></td><td class="code"><pre><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAreaName</span><span class="params">(String areaName)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">32</span></pre></td><td class="code"><pre><span class="line">		<span class="keyword">this</span>.areaName = areaName;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">33</span></pre></td><td class="code"><pre><span class="line">	&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">34</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">35</span></pre></td><td class="code"><pre><span class="line">	<span class="function"><span class="keyword">public</span> Integer <span class="title">getPriority</span><span class="params">()</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">36</span></pre></td><td class="code"><pre><span class="line">		<span class="keyword">return</span> priority;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">37</span></pre></td><td class="code"><pre><span class="line">	&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">38</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">39</span></pre></td><td class="code"><pre><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPriority</span><span class="params">(Integer priority)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">40</span></pre></td><td class="code"><pre><span class="line">		<span class="keyword">this</span>.priority = priority;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">41</span></pre></td><td class="code"><pre><span class="line">	&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">42</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">43</span></pre></td><td class="code"><pre><span class="line">	<span class="function"><span class="keyword">public</span> Date <span class="title">getCreateTime</span><span class="params">()</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">44</span></pre></td><td class="code"><pre><span class="line">		<span class="keyword">return</span> createTime;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">45</span></pre></td><td class="code"><pre><span class="line">	&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">46</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">47</span></pre></td><td class="code"><pre><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCreateTime</span><span class="params">(Date createTime)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">48</span></pre></td><td class="code"><pre><span class="line">		<span class="keyword">this</span>.createTime = createTime;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">49</span></pre></td><td class="code"><pre><span class="line">	&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">50</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">51</span></pre></td><td class="code"><pre><span class="line">	<span class="function"><span class="keyword">public</span> Date <span class="title">getLastEditTime</span><span class="params">()</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">52</span></pre></td><td class="code"><pre><span class="line">		<span class="keyword">return</span> lastEditTime;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">53</span></pre></td><td class="code"><pre><span class="line">	&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">54</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">55</span></pre></td><td class="code"><pre><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLastEditTime</span><span class="params">(Date lastEditTime)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">56</span></pre></td><td class="code"><pre><span class="line">		<span class="keyword">this</span>.lastEditTime = lastEditTime;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">57</span></pre></td><td class="code"><pre><span class="line">	&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">58</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">59</span></pre></td><td class="code"><pre><span class="line">	<span class="meta">@Override</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">60</span></pre></td><td class="code"><pre><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">61</span></pre></td><td class="code"><pre><span class="line">		<span class="keyword">return</span> <span class="string">"Area&#123;"</span> +</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">62</span></pre></td><td class="code"><pre><span class="line">				<span class="string">"areaId="</span> + areaId +</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">63</span></pre></td><td class="code"><pre><span class="line">				<span class="string">", areaName='"</span> + areaName + <span class="string">'\''</span> +</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">64</span></pre></td><td class="code"><pre><span class="line">				<span class="string">", priority="</span> + priority +</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">65</span></pre></td><td class="code"><pre><span class="line">				<span class="string">", createTime="</span> + createTime +</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">66</span></pre></td><td class="code"><pre><span class="line">				<span class="string">", lastEditTime="</span> + lastEditTime +</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">67</span></pre></td><td class="code"><pre><span class="line">				<span class="string">'&#125;'</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">68</span></pre></td><td class="code"><pre><span class="line">	&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">69</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+        
+      
 
-<p>com.abc.dao.IAreaDao</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IAreaDao</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    <span class="function">List&lt;Area&gt; <span class="title">testDao</span><span class="params">()</span></span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
 
-<p>com.abc.service.AreaService</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">AreaService</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    <span class="function">List&lt;Area&gt; <span class="title">getAreas</span><span class="params">()</span></span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/11/04/%E5%B8%B8%E9%87%8F%E7%9A%84%E6%9C%AC%E8%B4%A8/">展开全文 >></a>
+        </p>
+      
 
-<p>com.abc.service.impl.AreaServiceImpl</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AreaServiceImpl</span> <span class="keyword">implements</span> <span class="title">AreaService</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    <span class="meta">@Autowired</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">private</span> IAreaDao iAreaDao;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;Area&gt; <span class="title">getAreas</span><span class="params">()</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">return</span> iAreaDao.testDao();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
 
-<p>com.abc.controller.AreaController</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AreaController</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    <span class="comment">//logger用于测试logback是否配置成功</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    Logger logger = LoggerFactory.getLogger(AreaController<span class="class">.<span class="keyword">class</span>)</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    <span class="meta">@Autowired</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">private</span> AreaService areaServiceImpl;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/getarea"</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    <span class="meta">@ResponseBody</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> Map&lt;String, Object&gt; <span class="title">getAllArea</span><span class="params">(HttpServletRequest request)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">        logger.info(<span class="string">"===start==="</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">long</span> starttime = System.currentTimeMillis();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">        Map&lt;String, Object&gt; map = <span class="keyword">new</span> HashMap&lt;String, Object&gt;();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">        List&lt;Area&gt; list = <span class="keyword">new</span> ArrayList&lt;Area&gt;();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">        list = areaServiceImpl.getAreas();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">        map.put(<span class="string">"rows"</span>, list);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">        map.put(<span class="string">"total"</span>, list.size());</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">long</span> endtime = System.currentTimeMillis();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">        logger.info(<span class="string">"costtime:[&#123;&#125;]ms"</span>, endtime - starttime);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">        logger.info(<span class="string">"===end==="</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">return</span> map;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
 
-<p>resource中的AreaMapper.xml</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">"com.abc.dao.IAreaDao"</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">   <span class="comment">&lt;!--查询所有的area--&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"testDao"</span> <span class="attr">resultType</span>=<span class="string">"Area"</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">        select * from tb_area</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span></pre></td></tr></table></figure>
-
-<h2 id="test-java目录下"><a href="#test-java目录下" class="headerlink" title="test java目录下"></a>test java目录下</h2><p>com.abc.BaseTest</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment">* 配置spring和junit整合，junit启动时加载springIOC容器</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment">* */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith</span>(SpringJUnit4ClassRunner<span class="class">.<span class="keyword">class</span>)</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="class">//告诉<span class="title">junit</span> <span class="title">spring</span>配置文件的位置</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="class">@<span class="title">ContextConfiguration</span>(</span>&#123;<span class="string">"classpath:spring/spring-dao.xml"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">                        <span class="string">"classpath:spring/spring-service.xml"</span>&#125;)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BaseTest</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
 
 
 
-<h2 id="开始测试-test-java目录下"><a href="#开始测试-test-java目录下" class="headerlink" title="开始测试  test java目录下"></a>开始测试  test java目录下</h2><p>验证dao：</p>
-<p>com.abc.dao.AreaDaotest，输出正确即为验证成功</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AreaDaoTest</span> <span class="keyword">extends</span> <span class="title">BaseTest</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    <span class="meta">@Autowired</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">private</span> IAreaDao iAreaDao;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    <span class="meta">@Test</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">        List&lt;Area&gt; list = iAreaDao.testDao();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">        System.out.println(list.toString());</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+  
+    <article id="post-java常用API" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/03/java%E5%B8%B8%E7%94%A8API/">java常用API</a>
+    </h1>
+  
 
-
-
-<p>验证service：</p>
-<p>com.abc.service.AreaService，输出正确即为验证成功</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">public class AreaServiceTest extends BaseTest &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    @Autowired</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    private AreaService areaServiceImpl;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    @Test</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    public void getareas() &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">        List&lt;Area&gt; list &#x3D; areaServiceImpl.getAreas();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">        System.out.println(list.toString());</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
-
-<p>验证test：由于source java目录下已经写好controller类，所以直接配置tomcat运行查看前端页面的值是否正确即可，logback也同时进行了验证。</p>
-
+        
+        <a href="/2019/11/03/java%E5%B8%B8%E7%94%A8API/" class="archive-article-date">
+  	<time datetime="2019-11-03T07:36:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-03</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Scanner类"><a href="#Scanner类" class="headerlink" title="Scanner类"></a>Scanner类</h1>
       
 
       
@@ -1096,7 +967,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">SSM框架</a>
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color5">java</a>
         		</li>
       		
 		</ul>
@@ -1106,7 +977,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2019/08/17/SSM%E6%A1%86%E6%9E%B6%E6%AD%A3%E7%A1%AE%E6%80%A7%E9%AA%8C%E8%AF%81/">展开全文 >></a>
+          <a class="article-more-a" href="/2019/11/03/java%E5%B8%B8%E7%94%A8API/">展开全文 >></a>
         </p>
       
 
@@ -1138,7 +1009,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/2/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">Next &amp;raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/2/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">Next &amp;raquo;</a>
     </nav>
   
 
@@ -1150,7 +1021,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2019 杜志旺
+    		&copy; 2020 杜志旺
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -1233,15 +1104,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">jvm</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">计算机组成原理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">Docker</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">深入理解Java虚拟机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">计算机组成原理</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1253,11 +1124,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">jvm</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">debug方法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">计算机网络</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">数据库连接</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1265,11 +1140,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">计算机网络</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">java</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">mybatis</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">macOS小问题</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">FPGA计组课设</a>
               </li>
              
               <li class="article-tag-list-item">
