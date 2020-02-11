@@ -183,17 +183,17 @@
 <li>吞吐量：数据在网络信道上的传输速率</li>
 </ul>
 <ol start="2">
-<li><p>目前互联网的体系结构都包含那几层？其局限性或面临的挑战包含那几方面？</br><br>物理层，数据链路层，网络层，传输层，应用层</p>
+<li><p>目前互联网的体系结构都包含那几层？其局限性或面临的挑战包含那几方面？<br><br>物理层，数据链路层，网络层，传输层，应用层</p>
 </li>
 <li><p>在1948年，信息论的创始人香农（Shannon）推导出了著名的香农公式，请写出该公式并解释该公式的意义。</p>
 </li>
-<li><p>端口地址、IP地址、硬件地址三者的主要区别是什么？</br><br>端口地址用于传输层，应用层寻址；IP地址用于网络层互联网中IP数据包寻址；硬件地址用于数据链路层，局域网中帧寻址。</p>
+<li><p>端口地址、IP地址、硬件地址三者的主要区别是什么？<br><br>端口地址用于传输层，应用层寻址；IP地址用于网络层互联网中IP数据包寻址；硬件地址用于数据链路层，局域网中帧寻址。</p>
 </li>
-<li><p>划分子网的意义何在，举例说明。</br><br>三级地址结构，提高主机地址空间的利用率，减少地址的开销</p>
+<li><p>划分子网的意义何在，举例说明。<br><br>三级地址结构，提高主机地址空间的利用率，减少地址的开销</p>
 </li>
-<li><p>TCP流量控制机制和拥塞控制机制分别是什么？</br><br>流量控制：滑动窗口机制</br><br>拥塞控制：慢开始和拥塞避免</br></p>
+<li><p>TCP流量控制机制和拥塞控制机制分别是什么？<br><br>流量控制：滑动窗口机制<br><br>拥塞控制：慢开始和拥塞避免<br></p>
 </li>
-<li><p>FTP的工作原理是什么？</br><br>在进行文件传输时，FTP的客户和服务器之间要建立两个并行的TCP连接：控制连接和数据连接。控制连接在整个会话期间会一直保持打开，FTP客户所发出的传送请求，通过控制连接发送给服务器端的控制进程，但控制连接并不用来传送文件。实际用于传送文件的是数据连接。服务器端的控制进程在收到FTP客户端发送来的文件传输请求后就创建数据传送进程和数据连接，用来连接客户端和服务器端的数据传送进程。</p>
+<li><p>FTP的工作原理是什么？<br><br>在进行文件传输时，FTP的客户和服务器之间要建立两个并行的TCP连接：控制连接和数据连接。控制连接在整个会话期间会一直保持打开，FTP客户所发出的传送请求，通过控制连接发送给服务器端的控制进程，但控制连接并不用来传送文件。实际用于传送文件的是数据连接。服务器端的控制进程在收到FTP客户端发送来的文件传输请求后就创建数据传送进程和数据连接，用来连接客户端和服务器端的数据传送进程。</p>
 </li>
 <li><p>防火墙的工作原理是什么？<br>在一个网点和网络的其余部分之间安装一个特殊编程的路由器，用来实施访问控制策略，从而禁止不必要的通信。</p>
 </li>
@@ -215,9 +215,9 @@
 </li>
 <li><p>TCP/IP协议族设置物理层的主要意义是什么？物理层具体表现为明确与传输媒体的接口有关的若干特性，你知道都有那几个特性？<br>1)物理层考虑媒体的比特流传输，通过屏蔽底层的差异，为数据链路层提供统一平台。<br>2）机械特性，电气特性，功能特性，过程特性。</p>
 </li>
-<li><p>数据链路层的意义在于控制物理层数据的传输，其本身是有结构的数据传输，试描述常见的局域网以太网的帧的结构（包括帧中各字段的组成和相应字节的长度，其中类型字段的含义是什么？<br>1）源MAC地址和目的MAC地址各6字节，类型字段各2字节，数据字段46-1500字节，FCS字段4字节</br><br>2）类型字段用来标识上一层使用的协议种类，以准确提交数据。</p>
+<li><p>数据链路层的意义在于控制物理层数据的传输，其本身是有结构的数据传输，试描述常见的局域网以太网的帧的结构（包括帧中各字段的组成和相应字节的长度，其中类型字段的含义是什么？<br>1）源MAC地址和目的MAC地址各6字节，类型字段各2字节，数据字段46-1500字节，FCS字段4字节<br><br>2）类型字段用来标识上一层使用的协议种类，以准确提交数据。</p>
 </li>
-<li><p>以太网的MTU值是多少？假设一IP数据报长度为4100字节（固定首部长度）。现在经过一个以太网网络传送，问（1）该IP数据报应当划分为几个分片？（2）分别写出各数据报分片的数据字段长度、片偏移字段和MF标志的数值？<br>以太网的MTU值为1500字节。</br><br>3个</br></p>
+<li><p>以太网的MTU值是多少？假设一IP数据报长度为4100字节（固定首部长度）。现在经过一个以太网网络传送，问（1）该IP数据报应当划分为几个分片？（2）分别写出各数据报分片的数据字段长度、片偏移字段和MF标志的数值？<br>以太网的MTU值为1500字节。<br><br>3个<br></p>
 </li>
 <li><p>简述访问WWW的工作过程</p>
 </li>
@@ -473,19 +473,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">Docker</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">计算机组成原理</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">redis</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">Docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">jvm</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">深入理解Java虚拟机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">redis</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -497,7 +501,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">jvm</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">数据库连接</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -505,15 +509,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">数据库连接</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">计算机网络</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -521,11 +517,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">mybatis</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">macOS小问题</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">macOS小问题</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">mybatis</a>
               </li>
              
               <li class="article-tag-list-item">

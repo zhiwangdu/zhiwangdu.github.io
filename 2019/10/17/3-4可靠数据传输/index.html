@@ -173,13 +173,13 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>渐进地设计可靠数据传输协议的发送方和接收方<br>只考虑单项数据传输<br>利用状态机刻画传输协议</p>
-<h2 id="rdt1-0-可靠信道上的可靠数据传输"><a href="#rdt1-0-可靠信道上的可靠数据传输" class="headerlink" title="rdt1.0:可靠信道上的可靠数据传输"></a>rdt1.0:可靠信道上的可靠数据传输</h2><p>底层信道完全可靠：不会发生错误，不会丢失分组 </br><br>发送方和接受方的FSM独立</p>
+<h2 id="rdt1-0-可靠信道上的可靠数据传输"><a href="#rdt1-0-可靠信道上的可靠数据传输" class="headerlink" title="rdt1.0:可靠信道上的可靠数据传输"></a>rdt1.0:可靠信道上的可靠数据传输</h2><p>底层信道完全可靠：不会发生错误，不会丢失分组 <br><br>发送方和接受方的FSM独立</p>
 <h2 id="rdt2-0-产生位错误的信道"><a href="#rdt2-0-产生位错误的信道" class="headerlink" title="rdt2.0:产生位错误的信道"></a>rdt2.0:产生位错误的信道</h2><p>引入新的机制：<br>差错检验、确认机制、重传</p>
 <h4 id="错误校验"><a href="#错误校验" class="headerlink" title="错误校验"></a>错误校验</h4><p>利用校验和检测为错误</p>
 <h4 id="如何从错误中恢复？"><a href="#如何从错误中恢复？" class="headerlink" title="如何从错误中恢复？"></a>如何从错误中恢复？</h4><ul>
 <li>确认机制（Acknowledegments,ACK）：接收方显式地告诉发送方分组已经正确接受</li>
 <li>NAK：接收方显式地告知发送方分组有错误</li>
-<li>发送方接收到NAK后，重传分组<br>基于这种重传机制的rdt协议称为ARQ（Automatic Repeat reQuest）协议 </br></li>
+<li>发送方接收到NAK后，重传分组<br>基于这种重传机制的rdt协议称为ARQ（Automatic Repeat reQuest）协议 <br></li>
 </ul>
 <h2 id="rdt2-1和2-2"><a href="#rdt2-1和2-2" class="headerlink" title="rdt2.1和2.2"></a>rdt2.1和2.2</h2><p>rdt2.0的缺陷：ACK和NAK可能发生错误。 </p>
 <h2 id="rdt3-0：信道既可能发生错误，也可能丢失分组。"><a href="#rdt3-0：信道既可能发生错误，也可能丢失分组。" class="headerlink" title="rdt3.0：信道既可能发生错误，也可能丢失分组。"></a>rdt3.0：信道既可能发生错误，也可能丢失分组。</h2><p>发送方等待合理时间，如果没收到ACK，重传；如果只是延迟而不是丢了，序列号机制能解决。</p>
@@ -413,19 +413,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">Docker</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">计算机组成原理</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">redis</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">Docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">jvm</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">深入理解Java虚拟机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">redis</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -437,7 +441,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">jvm</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">数据库连接</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -445,15 +449,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">数据库连接</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">计算机网络</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -461,11 +457,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">mybatis</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">macOS小问题</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">macOS小问题</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">mybatis</a>
               </li>
              
               <li class="article-tag-list-item">

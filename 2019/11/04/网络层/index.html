@@ -193,7 +193,7 @@
 <h2 id="IP数据报格式-1"><a href="#IP数据报格式-1" class="headerlink" title="IP数据报格式"></a>IP数据报格式</h2><p>总长度单位是1B，片偏移单位是8B，首部长度是4B。</p>
 <h2 id="IP数据报分片"><a href="#IP数据报分片" class="headerlink" title="IP数据报分片"></a>IP数据报分片</h2><ul>
 <li>标识：同一数据报的分片使用同一标识。</li>
-<li>标志：三位中只有两位有意义 X _ _</br><br>中间位DF（Don’t Fragment），DF=1禁止分片，DF=0允许分片。</br><br>最低位MF（More Fragment），MF=1后面还有分片，MF=0代表最后一片。</li>
+<li>标志：三位中只有两位有意义 X _ _<br><br>中间位DF（Don’t Fragment），DF=1禁止分片，DF=0允许分片。<br><br>最低位MF（More Fragment），MF=1后面还有分片，MF=0代表最后一片。</li>
 <li>片偏移：指出较长分组分片后，某片在原分组中的相对位置。以8B为单位。据此，除了最后一个分片，每个分片的长度一定是 <em>8B的整数倍</em>。</li>
 </ul>
 <h2 id="网络地址转换（NAT）"><a href="#网络地址转换（NAT）" class="headerlink" title="网络地址转换（NAT）"></a>网络地址转换（NAT）</h2><h2 id="子网划分和子网掩码"><a href="#子网划分和子网掩码" class="headerlink" title="子网划分和子网掩码"></a>子网划分和子网掩码</h2><h2 id="CRID"><a href="#CRID" class="headerlink" title="CRID"></a>CRID</h2><h2 id="ICMP协议"><a href="#ICMP协议" class="headerlink" title="ICMP协议"></a>ICMP协议</h2><h3 id="ICMP差错报告报文"><a href="#ICMP差错报告报文" class="headerlink" title="ICMP差错报告报文"></a>ICMP差错报告报文</h3><ol>
@@ -213,8 +213,8 @@
 <li>双栈协议</li>
 <li>隧道通信</li>
 </ol>
-<h2 id="路由算法"><a href="#路由算法" class="headerlink" title="路由算法"></a>路由算法</h2><h3 id="静态路由算法（非自适应路由算法）"><a href="#静态路由算法（非自适应路由算法）" class="headerlink" title="静态路由算法（非自适应路由算法）"></a>静态路由算法（非自适应路由算法）</h3><p>管理员手工配置路由信息</br><br>优点：简便、可靠，在符合稳定、拓扑变化不大的网络中运行效果很好，广泛用于高度安全性的军事网络和较小的商业网络。</br><br>缺点：路由更新慢，不适用于大型网络。</p>
-<h3 id="动态路由算法（自适应路由算法）"><a href="#动态路由算法（自适应路由算法）" class="headerlink" title="动态路由算法（自适应路由算法）"></a>动态路由算法（自适应路由算法）</h3><p>路由器间彼此交换信息，按照路由算法优化出路由表项</br><br>优点：路由更新快，适用于大型网络，及时响应链路费用或网络拓扑变化。</br><br>缺点：算法复杂，增加网络负担。</p>
+<h2 id="路由算法"><a href="#路由算法" class="headerlink" title="路由算法"></a>路由算法</h2><h3 id="静态路由算法（非自适应路由算法）"><a href="#静态路由算法（非自适应路由算法）" class="headerlink" title="静态路由算法（非自适应路由算法）"></a>静态路由算法（非自适应路由算法）</h3><p>管理员手工配置路由信息<br><br>优点：简便、可靠，在符合稳定、拓扑变化不大的网络中运行效果很好，广泛用于高度安全性的军事网络和较小的商业网络。<br><br>缺点：路由更新慢，不适用于大型网络。</p>
+<h3 id="动态路由算法（自适应路由算法）"><a href="#动态路由算法（自适应路由算法）" class="headerlink" title="动态路由算法（自适应路由算法）"></a>动态路由算法（自适应路由算法）</h3><p>路由器间彼此交换信息，按照路由算法优化出路由表项<br><br>优点：路由更新快，适用于大型网络，及时响应链路费用或网络拓扑变化。<br><br>缺点：算法复杂，增加网络负担。</p>
 <h4 id="全局性"><a href="#全局性" class="headerlink" title="全局性"></a>全局性</h4><h4 id="分散性"><a href="#分散性" class="headerlink" title="分散性"></a>分散性</h4>
       
 
@@ -456,19 +456,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">Docker</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">计算机组成原理</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">redis</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">Docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">jvm</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">深入理解Java虚拟机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">redis</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -480,7 +484,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">jvm</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">数据库连接</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -488,15 +492,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">数据库连接</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">计算机网络</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -504,11 +500,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">mybatis</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">macOS小问题</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">macOS小问题</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">mybatis</a>
               </li>
              
               <li class="article-tag-list-item">
