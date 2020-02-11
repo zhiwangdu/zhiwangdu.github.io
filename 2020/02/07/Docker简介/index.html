@@ -8,19 +8,20 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>Docker简介 | 杜志旺的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1 Docker简介1.1 什么是虚拟化​    在计算机中，虚拟化（英语：Virtualization）是一种资源管理技术，是将计算机的各种实体资源，如服务器、网络、内存及存储等，予以抽象、转换后呈现出来，打破实体结构间的不可切割的障碍，使用户可以比原本的组态更好的方式来应用这些资源。这些资源的新虚拟部份是不受现有资源的架设方式，地域或物理组态所限制。一般所指的虚拟化资源包括计算能力和资料存储。">
+  <meta name="description" content="1 Docker简介 1.1 什么是虚拟化​    在计算机中，虚拟化（英语：Virtualization）是一种资源管理技术，是将计算机的各种实体资源，如服务器、网络、内存及存储等，予以抽象、转换后呈现出来，打破实体结构间的不可切割的障碍，使用户可以比原本的组态更好的方式来应用这些资源。这些资源的新虚拟部份是不受现有资源的架设方式，地域或物理组态所限制。一般所指的虚拟化资源包括计算能力和资料存储">
 <meta name="keywords" content="Docker">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Docker简介">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;07&#x2F;Docker%E7%AE%80%E4%BB%8B&#x2F;index.html">
 <meta property="og:site_name" content="杜志旺的博客">
-<meta property="og:description" content="1 Docker简介1.1 什么是虚拟化​    在计算机中，虚拟化（英语：Virtualization）是一种资源管理技术，是将计算机的各种实体资源，如服务器、网络、内存及存储等，予以抽象、转换后呈现出来，打破实体结构间的不可切割的障碍，使用户可以比原本的组态更好的方式来应用这些资源。这些资源的新虚拟部份是不受现有资源的架设方式，地域或物理组态所限制。一般所指的虚拟化资源包括计算能力和资料存储。">
+<meta property="og:description" content="1 Docker简介 1.1 什么是虚拟化​    在计算机中，虚拟化（英语：Virtualization）是一种资源管理技术，是将计算机的各种实体资源，如服务器、网络、内存及存储等，予以抽象、转换后呈现出来，打破实体结构间的不可切割的障碍，使用户可以比原本的组态更好的方式来应用这些资源。这些资源的新虚拟部份是不受现有资源的架设方式，地域或物理组态所限制。一般所指的虚拟化资源包括计算能力和资料存储">
 <meta property="og:locale" content="en">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;07&#x2F;Docker%E7%AE%80%E4%BB%8B&#x2F;docker&#x2F;1-3.png">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;Volumes&#x2F;%E6%9D%9C%E5%BF%97%E6%97%BA&#x2F;Disk&#x2F;%E5%AD%A6%E4%B9%A0&#x2F;java%E5%B0%B1%E4%B8%9A&#x2F;01-java%E5%9F%BA%E7%A1%80+%E5%B0%B1%E4%B8%9A%E7%8F%AD(idea%E6%95%99%E7%A8%8B)&#x2F;19-Docker%E5%AE%B9%E5%99%A8%E5%8C%96&#x2F;%E8%AE%B2%E4%B9%89&#x2F;image&#x2F;1-3.png">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;Volumes&#x2F;%E6%9D%9C%E5%BF%97%E6%97%BA&#x2F;Disk&#x2F;%E5%AD%A6%E4%B9%A0&#x2F;java%E5%B0%B1%E4%B8%9A&#x2F;01-java%E5%9F%BA%E7%A1%80+%E5%B0%B1%E4%B8%9A%E7%8F%AD(idea%E6%95%99%E7%A8%8B)&#x2F;19-Docker%E5%AE%B9%E5%99%A8%E5%8C%96&#x2F;%E8%AE%B2%E4%B9%89&#x2F;image&#x2F;1-2.png">
-<meta property="og:updated_time" content="2020-02-07T11:55:18.385Z">
+<meta property="og:updated_time" content="2020-02-11T08:38:34.143Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;Volumes&#x2F;%E6%9D%9C%E5%BF%97%E6%97%BA&#x2F;Disk&#x2F;%E5%AD%A6%E4%B9%A0&#x2F;java%E5%B0%B1%E4%B8%9A&#x2F;01-java%E5%9F%BA%E7%A1%80+%E5%B0%B1%E4%B8%9A%E7%8F%AD(idea%E6%95%99%E7%A8%8B)&#x2F;19-Docker%E5%AE%B9%E5%99%A8%E5%8C%96&#x2F;%E8%AE%B2%E4%B9%89&#x2F;image&#x2F;1-3.png">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;07&#x2F;Docker%E7%AE%80%E4%BB%8B&#x2F;docker&#x2F;1-3.png">
   
     <link rel="alternative" href="/atom.xml" title="杜志旺的博客" type="application/atom+xml">
   
@@ -176,7 +177,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="1-Docker简介"><a href="#1-Docker简介" class="headerlink" title="1 Docker简介"></a>1 Docker简介</h1><h2 id="1-1-什么是虚拟化"><a href="#1-1-什么是虚拟化" class="headerlink" title="1.1 什么是虚拟化"></a>1.1 什么是虚拟化</h2><p>​    在计算机中，虚拟化（英语：Virtualization）是一种资源管理技术，是将计算机的各种实体资源，如服务器、网络、内存及存储等，予以抽象、转换后呈现出来，打破实体结构间的不可切割的障碍，使用户可以比原本的组态更好的方式来应用这些资源。这些资源的新虚拟部份是不受现有资源的架设方式，地域或物理组态所限制。一般所指的虚拟化资源包括计算能力和资料存储。</p>
+        <h1 id="1-Docker简介"><a href="#1-Docker简介" class="headerlink" title="1 Docker简介"></a>1 Docker简介</h1><p><img src="docker/1-3.png" alt=""></p>
+<h2 id="1-1-什么是虚拟化"><a href="#1-1-什么是虚拟化" class="headerlink" title="1.1 什么是虚拟化"></a>1.1 什么是虚拟化</h2><p>​    在计算机中，虚拟化（英语：Virtualization）是一种资源管理技术，是将计算机的各种实体资源，如服务器、网络、内存及存储等，予以抽象、转换后呈现出来，打破实体结构间的不可切割的障碍，使用户可以比原本的组态更好的方式来应用这些资源。这些资源的新虚拟部份是不受现有资源的架设方式，地域或物理组态所限制。一般所指的虚拟化资源包括计算能力和资料存储。</p>
 <p>​    在实际的生产环境中，虚拟化技术主要用来解决高性能的物理硬件产能过剩和老的旧的硬件产能过低的重组重用，透明化底层物理硬件，从而最大化的利用物理硬件   对资源充分利用</p>
 <p>​    虚拟化技术种类很多，例如：软件虚拟化、硬件虚拟化、内存虚拟化、网络虚拟化(vip)、桌面虚拟化、服务虚拟化、虚拟机等等。</p>
 <h2 id="1-2-什么是Docker"><a href="#1-2-什么是Docker" class="headerlink" title="1.2 什么是Docker"></a>1.2 什么是Docker</h2><p>​    Docker 是一个开源项目，诞生于 2013 年初，最初是 dotCloud 公司内部的一个业余项目。它基于 Google 公司推出的 Go 语言实现。 项目后来加入了 Linux 基金会，遵从了 Apache 2.0 协议，项目代码在 <a href="https://github.com/docker/docker" target="_blank" rel="noopener">GitHub</a> 上进行维护。</p>
@@ -450,15 +452,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">深入理解Java虚拟机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">redis</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">jvm</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">深入理解Java虚拟机</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -470,7 +468,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">数据库连接</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">jvm</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -478,15 +476,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">数据库连接</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">计算机网络</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">java</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">java</a>
               </li>
              
               <li class="article-tag-list-item">
