@@ -151,19 +151,702 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-Docker私有仓库" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-ElasticSearch" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/08/Docker%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/">Docker私有仓库</a>
+      <a class="article-title" href="/2020/02/17/ElasticSearch/">ElasticSearch</a>
     </h1>
   
 
         
-        <a href="/2020/02/08/Docker%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/" class="archive-article-date">
+        <a href="/2020/02/17/ElasticSearch/" class="archive-article-date">
+  	<time datetime="2020-02-17T13:37:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#ElasticSearch简介</p>
+<h2 id="1-什么是ElasticSearch"><a href="#1-什么是ElasticSearch" class="headerlink" title="1. 什么是ElasticSearch"></a>1. 什么是ElasticSearch</h2><p><strong>Elasticsearch</strong>是一个基于<a href="https://zh.wikipedia.org/wiki/Lucene" target="_blank" rel="noopener">Lucene</a>库的<a href="https://zh.wikipedia.org/wiki/搜索引擎" target="_blank" rel="noopener">搜索引擎</a>。它提供了一个分布式、支持多租户的<a href="https://zh.wikipedia.org/wiki/全文檢索" target="_blank" rel="noopener">全文搜索</a>引擎，具有<a href="https://zh.wikipedia.org/wiki/HTTP" target="_blank" rel="noopener">HTTP</a> Web接口和无模式<a href="https://zh.wikipedia.org/wiki/JSON" target="_blank" rel="noopener">JSON</a>文档。Elasticsearch是用<a href="https://zh.wikipedia.org/wiki/Java" target="_blank" rel="noopener">Java</a>开发的，并在<a href="https://zh.wikipedia.org/wiki/Apache许可证" target="_blank" rel="noopener">Apache许可证</a>下作为开源软件发布。官方客户端在<a href="https://zh.wikipedia.org/wiki/Java" target="_blank" rel="noopener">Java</a>、<a href="https://zh.wikipedia.org/wiki/.NET框架" target="_blank" rel="noopener">.NET</a>（<a href="https://zh.wikipedia.org/wiki/C♯" target="_blank" rel="noopener">C#</a>）、<a href="https://zh.wikipedia.org/wiki/PHP" target="_blank" rel="noopener">PHP</a>、<a href="https://zh.wikipedia.org/wiki/Python" target="_blank" rel="noopener">Python</a>、<a href="https://zh.wikipedia.org/wiki/Groovy" target="_blank" rel="noopener">Apache Groovy</a>、<a href="https://zh.wikipedia.org/wiki/Ruby" target="_blank" rel="noopener">Ruby</a>和许多其他语言中都是可用的。<a href="https://zh.wikipedia.org/wiki/Elasticsearch#cite_note-offizsite-5" target="_blank" rel="noopener">[5]</a>根据DB-Engines的排名显示，Elasticsearch是最受欢迎的企业搜索引擎，其次是<a href="https://zh.wikipedia.org/wiki/Apache_Solr" target="_blank" rel="noopener">Apache Solr</a>，也是基于Lucene。</p>
+<p>Elasticsearch可以用于搜索各种文档。它提供可扩展的搜索，具有接近实时的搜索，并支持多租户。<a href="https://zh.wikipedia.org/wiki/Elasticsearch#cite_note-offizsite-5" target="_blank" rel="noopener">[5]</a>”Elasticsearch是分布式的，这意味着索引可以被分成分片，每个分片可以有0个或多个副本。每个节点托管一个或多个分片，并充当协调器将操作委托给正确的分片。再平衡和路由是自动完成的。“<a href="https://zh.wikipedia.org/wiki/Elasticsearch#cite_note-offizsite-5" target="_blank" rel="noopener">[5]</a>相关数据通常存储在同一个索引中，该索引由一个或多个主分片和零个或多个复制分片组成。一旦创建了索引，就不能更改主分片的数量。</p>
+<p>##2. ElasticSearch特点</p>
+<p>(1) 可以作为一个大型分布式集群(数百台服务器)技术，处理PB级数据，服务大公</p>
+<p>司;也可以运行在单机上</p>
+<p>(2) 将全文检索、数据分析以及分布式技术，合并在了一起，才形成了独一无二的ES; </p>
+<p>(3) 开箱即用的，部署简单 </p>
+<p>(4)全文检索，同义词处理，相关度排名，复杂数据分析，海量数据的近实时处理</p>
+<h1 id="走进ElasticSearch"><a href="#走进ElasticSearch" class="headerlink" title="走进ElasticSearch"></a>走进ElasticSearch</h1><p>##1. ElasticSearch部署与启动</p>
+<p>官网下载ElasticSearch，无需安装，解压安装包后即可使用</p>
+<p>在命令提示符下，进入ElasticSearch安装目录下的bin目录,执行命令(macOS环境)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">.&#x2F;elasticsearch</span></pre></td></tr></table></figure>
+
+<p>即可启动。</p>
+<p>打开浏览器，在地址栏输入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">localhost:9200</span></pre></td></tr></table></figure>
+
+<p>即可看到输出结果</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">name: "Ds-MacBook-Pro.local",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">cluster_name: "elasticsearch",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">cluster_uuid: "y-QBAI5_QtW69ip5g8tZbA",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">version: &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">number: "7.6.0",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">build_flavor: "default",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">build_type: "tar",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">build_hash: "7f634e9f44834fbc12724506cc1da681b0c3b1e3",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">build_date: "2020-02-06T00:09:00.449973Z",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">build_snapshot: false,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">lucene_version: "8.4.0",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">minimum_wire_compatibility_version: "6.8.0",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">minimum_index_compatibility_version: "6.0.0-beta1"</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">&#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">tagline: "You Know, for Search"</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<h2 id="2-Postman调用RestAPI"><a href="#2-Postman调用RestAPI" class="headerlink" title="2. Postman调用RestAPI"></a>2. Postman调用RestAPI</h2><h3 id="1-新建索引"><a href="#1-新建索引" class="headerlink" title="1. 新建索引"></a>1. 新建索引</h3><p>例如要创建一个叫test的索引 ,就以put方式提交:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost:9200&#x2F;test&#x2F;</span></pre></td></tr></table></figure>
+
+<h3 id="2-新建文档"><a href="#2-新建文档" class="headerlink" title="2. 新建文档"></a>2. 新建文档</h3><p>新建article文档，以post方式提交</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost:9200&#x2F;test&#x2F;article</span></pre></td></tr></table></figure>
+
+<p>Body:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">"title"</span>:<span class="string">"SpringBoot2.0"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">"content"</span>:<span class="string">"发布啦"</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p>返回结果为：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    <span class="attr">"_index"</span>: <span class="string">"test"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    <span class="attr">"_type"</span>: <span class="string">"article"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    <span class="attr">"_id"</span>: <span class="string">"GHyBVnAB4PDPv2i4fr5Q"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    <span class="attr">"_version"</span>: <span class="number">1</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    <span class="attr">"result"</span>: <span class="string">"created"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    <span class="attr">"_shards"</span>: &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">        <span class="attr">"total"</span>: <span class="number">2</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">        <span class="attr">"successful"</span>: <span class="number">1</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">        <span class="attr">"failed"</span>: <span class="number">0</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    &#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    <span class="attr">"_seq_no"</span>: <span class="number">0</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">    <span class="attr">"_primary_term"</span>: <span class="number">1</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p>_id是由系统自动生成的。 </p>
+<h3 id="3-查询全部文档"><a href="#3-查询全部文档" class="headerlink" title="3. 查询全部文档"></a>3. 查询全部文档</h3><p>查询某索引某类型的全部数据，以get方式请求 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost:9200&#x2F;test&#x2F;article&#x2F;_search</span></pre></td></tr></table></figure>
+
+<p>返回结果如下:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">"took"</span>: <span class="number">605</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">"timed_out"</span>: <span class="literal">false</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">"_shards"</span>: &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">		<span class="attr">"total"</span>: <span class="number">1</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">		<span class="attr">"successful"</span>: <span class="number">1</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">		<span class="attr">"skipped"</span>: <span class="number">0</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">		<span class="attr">"failed"</span>: <span class="number">0</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">	&#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">"hits"</span>: &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">		<span class="attr">"total"</span>: &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">			<span class="attr">"value"</span>: <span class="number">1</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">			<span class="attr">"relation"</span>: <span class="string">"eq"</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">		&#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">		<span class="attr">"max_score"</span>: <span class="number">1.0</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">		<span class="attr">"hits"</span>: [</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">			&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">				<span class="attr">"_index"</span>: <span class="string">"test"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">				<span class="attr">"_type"</span>: <span class="string">"article"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">				<span class="attr">"_id"</span>: <span class="string">"GHyBVnAB4PDPv2i4fr5Q"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">				<span class="attr">"_score"</span>: <span class="number">1.0</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">				<span class="attr">"_source"</span>: &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">					<span class="attr">"title"</span>: <span class="string">"SpringBoot2.0"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">					<span class="attr">"content"</span>: <span class="string">"发布啦"</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">				&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">			&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">		]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">	&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<h3 id="4-修改文档"><a href="#4-修改文档" class="headerlink" title="4. 修改文档"></a>4. 修改文档</h3><p>以put形式提交以下地址：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost:9200&#x2F;test&#x2F;article&#x2F;GHyBVnAB4PDPv2i4fr5Q</span></pre></td></tr></table></figure>
+
+<p>Body:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">"title"</span>:<span class="string">"SpringBoot3.0"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">"content"</span>:<span class="string">"发布了吗"</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p>返回结果如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    <span class="attr">"_index"</span>: <span class="string">"test"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    <span class="attr">"_type"</span>: <span class="string">"article"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    <span class="attr">"_id"</span>: <span class="string">"GHyBVnAB4PDPv2i4fr5Q"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    <span class="attr">"_version"</span>: <span class="number">2</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    <span class="attr">"result"</span>: <span class="string">"updated"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    <span class="attr">"_shards"</span>: &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">        <span class="attr">"total"</span>: <span class="number">2</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">        <span class="attr">"successful"</span>: <span class="number">1</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">        <span class="attr">"failed"</span>: <span class="number">0</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    &#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    <span class="attr">"_seq_no"</span>: <span class="number">1</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">    <span class="attr">"_primary_term"</span>: <span class="number">1</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p>如果地址中所填的id不存在，则会创建新文档。</p>
+<h3 id="5-按ID查询文档"><a href="#5-按ID查询文档" class="headerlink" title="5. 按ID查询文档"></a>5. 按ID查询文档</h3><p>GET方式请求：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost:9200&#x2F;test&#x2F;article&#x2F;GHyBVnAB4PDPv2i4fr5Q</span></pre></td></tr></table></figure>
+
+<p>###6. 基本匹配查询</p>
+<p>根据某列进行查询，GET方式提交下列地址：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost:9200&#x2F;test&#x2F;article&#x2F;_search?q&#x3D;content:框</span></pre></td></tr></table></figure>
+
+<p>返回结果：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">"took"</span>: <span class="number">2</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">"timed_out"</span>: <span class="literal">false</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">"_shards"</span>: &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">		<span class="attr">"total"</span>: <span class="number">1</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">		<span class="attr">"successful"</span>: <span class="number">1</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">		<span class="attr">"skipped"</span>: <span class="number">0</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">		<span class="attr">"failed"</span>: <span class="number">0</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">	&#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">"hits"</span>: &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">		<span class="attr">"total"</span>: &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">			<span class="attr">"value"</span>: <span class="number">1</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">			<span class="attr">"relation"</span>: <span class="string">"eq"</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">		&#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">		<span class="attr">"max_score"</span>: <span class="number">0.9529822</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">		<span class="attr">"hits"</span>: [</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">			&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">				<span class="attr">"_index"</span>: <span class="string">"test"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">				<span class="attr">"_type"</span>: <span class="string">"article"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">				<span class="attr">"_id"</span>: <span class="string">"1"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">				<span class="attr">"_score"</span>: <span class="number">0.9529822</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">				<span class="attr">"_source"</span>: &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">					<span class="attr">"title"</span>: <span class="string">"spring教程"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">					<span class="attr">"content"</span>: <span class="string">"spring框架教程"</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">				&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">			&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">		]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">	&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p>###7. 模糊查询</p>
+<p>用*代表任意字符:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost:9200&#x2F;test&#x2F;article&#x2F;_search?q&#x3D;title:*pr*</span></pre></td></tr></table></figure>
+
+<h3 id="8-删除"><a href="#8-删除" class="headerlink" title="8. 删除"></a>8. 删除</h3><p>根据ID删除文档,删除ID为1的文档</p>
+<p>DELETE方式提交</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost:9200&#x2F;test&#x2F;article&#x2F;1</span></pre></td></tr></table></figure>
+
+<h2 id="使用head插件进行索引库的操作"><a href="#使用head插件进行索引库的操作" class="headerlink" title="使用head插件进行索引库的操作"></a>使用head插件进行索引库的操作</h2><h1 id="ik分词器的使用"><a href="#ik分词器的使用" class="headerlink" title="ik分词器的使用"></a>ik分词器的使用</h1><h2 id="什么是IK分词器"><a href="#什么是IK分词器" class="headerlink" title="什么是IK分词器"></a>什么是IK分词器</h2><p>我们在浏览器地址栏输入</p>
+<p><a href="http://127.0.0.1:9200/_analyze?analyzer=chinese&amp;pretty=true&amp;text=我是中国人" target="_blank" rel="noopener">http://127.0.0.1:9200/_analyze?analyzer=chinese&amp;pretty=true&amp;text=我是中国人</a></p>
+<p>（ES7.x版本不能直接在地址栏输入，可以使用GET或者POST方法，但是分词器和查询词需要以json的形式写在body里。）</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">"analyzer"</span>:<span class="string">"chinese"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">"text"</span>: <span class="string">"我是中国人"</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+
+
+<p>浏览器显示效果如下</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">  <span class="attr">"tokens"</span>: [</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"token"</span>: <span class="string">"我"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">0</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">1</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"type"</span>: <span class="string">"&lt;IDEOGRAPHIC&gt;"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"position"</span>: <span class="number">0</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    &#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"token"</span>: <span class="string">"是"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">1</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">2</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"type"</span>: <span class="string">"&lt;IDEOGRAPHIC&gt;"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"position"</span>: <span class="number">1</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">    &#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">    &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"token"</span>: <span class="string">"中"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">2</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">3</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"type"</span>: <span class="string">"&lt;IDEOGRAPHIC&gt;"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"position"</span>: <span class="number">2</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">    &#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">    &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"token"</span>: <span class="string">"国"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">3</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">4</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"type"</span>: <span class="string">"&lt;IDEOGRAPHIC&gt;"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"position"</span>: <span class="number">3</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">30</span></pre></td><td class="code"><pre><span class="line">    &#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">31</span></pre></td><td class="code"><pre><span class="line">    &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">32</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"token"</span>: <span class="string">"人"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">33</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">4</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">34</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">5</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">35</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"type"</span>: <span class="string">"&lt;IDEOGRAPHIC&gt;"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">36</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"position"</span>: <span class="number">4</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">37</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">38</span></pre></td><td class="code"><pre><span class="line">  ]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">39</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p>默认的中文分词是将每个字看成一个词，这显然是不符合要求的，所以我们需要安装中 文分词器来解决这个问题。</p>
+<p>IK分词是一款国人开发的相对简单的中文分词器。虽然开发者自2012年之后就不在维护 了，但在工程应用中IK算是比较流行的一款!我们今天就介绍一下IK中文分词器的使用。</p>
+<h3 id="IK分词器的安装"><a href="#IK分词器的安装" class="headerlink" title="IK分词器的安装"></a>IK分词器的安装</h3><p>下载地址:<a href="https://github.com/medcl/elasticsearch-analysis-ik/releases" target="_blank" rel="noopener">https://github.com/medcl/elasticsearch-analysis-ik/releases</a></p>
+<ol>
+<li>先将其解压，将解压后的elasticsearch文件夹重命名文件夹为ik </li>
+<li>将ik文件夹拷贝到elasticsearch/plugins 目录下。 </li>
+<li>重新启动，即可加载IK分词器</li>
+</ol>
+<h2 id="IK分词器测试"><a href="#IK分词器测试" class="headerlink" title="IK分词器测试"></a>IK分词器测试</h2><p>IK提供了两个分词算法ik_smart 和 ik_max_word，<br>其中 ik_smart 为最少切分，ik_max_word为最细粒度划分</p>
+<h3 id="最小切分"><a href="#最小切分" class="headerlink" title="最小切分"></a>最小切分</h3><p>地址栏输入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost:9200&#x2F;_analyze?pretty&#x3D;true</span></pre></td></tr></table></figure>
+
+<p>以get或post方式，body中的json数据是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	&quot;analyzer&quot;:&quot;ik_smart&quot;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">	&quot;text&quot;: &quot;我是中国人&quot;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p>结果为：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">  <span class="attr">"tokens"</span>: [</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"token"</span>: <span class="string">"我"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">0</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">1</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"type"</span>: <span class="string">"CN_CHAR"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"position"</span>: <span class="number">0</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    &#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"token"</span>: <span class="string">"是"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">1</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">2</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"type"</span>: <span class="string">"CN_CHAR"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"position"</span>: <span class="number">1</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">    &#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">    &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"token"</span>: <span class="string">"中国人"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">2</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">5</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"type"</span>: <span class="string">"CN_WORD"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"position"</span>: <span class="number">2</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">  ]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<h3 id="最细切分"><a href="#最细切分" class="headerlink" title="最细切分"></a>最细切分</h3><p>地址栏输入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost:9200&#x2F;_analyze?pretty&#x3D;true</span></pre></td></tr></table></figure>
+
+<p>以get或post方式，body中的json数据是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	&quot;analyzer&quot;:&quot;ik_max_word&quot;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">	&quot;text&quot;: &quot;我是中国人&quot;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p>结果为：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">  <span class="attr">"tokens"</span>: [</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"token"</span>: <span class="string">"我"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">0</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">1</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"type"</span>: <span class="string">"CN_CHAR"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"position"</span>: <span class="number">0</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    &#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"token"</span>: <span class="string">"是"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">1</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">2</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"type"</span>: <span class="string">"CN_CHAR"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"position"</span>: <span class="number">1</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">    &#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">    &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"token"</span>: <span class="string">"中国人"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">2</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">5</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"type"</span>: <span class="string">"CN_WORD"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"position"</span>: <span class="number">2</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">    &#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">    &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"token"</span>: <span class="string">"中国"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">2</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">4</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"type"</span>: <span class="string">"CN_WORD"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"position"</span>: <span class="number">3</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">30</span></pre></td><td class="code"><pre><span class="line">    &#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">31</span></pre></td><td class="code"><pre><span class="line">    &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">32</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"token"</span>: <span class="string">"国人"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">33</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">3</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">34</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">5</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">35</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"type"</span>: <span class="string">"CN_WORD"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">36</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"position"</span>: <span class="number">4</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">37</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">38</span></pre></td><td class="code"><pre><span class="line">  ]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">39</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<h2 id="自定义词库"><a href="#自定义词库" class="headerlink" title="自定义词库"></a>自定义词库</h2><p>步骤：</p>
+<ol>
+<li>进入elasticsearch/plugins/ik/config目录</li>
+<li>新建一个my.dic文件，编辑内容:</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">课啊兽</span></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>修改IKAnalyzer.cfg.xml(在ik/config目录下)</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">      <span class="tag">&lt;<span class="name">comment</span>&gt;</span>IK Analyzer 扩展配置<span class="tag">&lt;/<span class="name">comment</span>&gt;</span> </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">      <span class="tag">&lt;<span class="name">!‐‐用户可以在这里配置自己的扩展字典</span> ‐‐&gt;</span> </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">      <span class="tag">&lt;<span class="name">entry</span> <span class="attr">key</span>=<span class="string">"ext_dict"</span>&gt;</span>my.dic<span class="tag">&lt;/<span class="name">entry</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">      <span class="tag">&lt;<span class="name">!‐‐用户可以在这里配置自己的扩展停止词字典‐‐</span>&gt;</span> </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">      <span class="tag">&lt;<span class="name">entry</span> <span class="attr">key</span>=<span class="string">"ext_stopwords"</span>&gt;</span><span class="tag">&lt;/<span class="name">entry</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>重新启动elasticsearch,通过浏览器测试分词效果</li>
+</ol>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">  <span class="attr">"tokens"</span>: [</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"token"</span>: <span class="string">"我"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">0</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">1</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"type"</span>: <span class="string">"CN_CHAR"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"position"</span>: <span class="number">0</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    &#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"token"</span>: <span class="string">"是"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">1</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">2</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"type"</span>: <span class="string">"CN_CHAR"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"position"</span>: <span class="number">1</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">    &#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">    &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"token"</span>: <span class="string">"课啊兽"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"start_offset"</span>: <span class="number">2</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"end_offset"</span>: <span class="number">5</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"type"</span>: <span class="string">"CN_WORD"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">      <span class="attr">"position"</span>: <span class="number">2</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">  ]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color4">ElasticSearch</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/02/17/ElasticSearch/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-SpringBoot-Jpa" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/17/SpringBoot-Jpa/">SpringBootJpa</a>
+    </h1>
+  
+
+        
+        <a href="/2020/02/17/SpringBoot-Jpa/" class="archive-article-date">
+  	<time datetime="2020-02-17T10:48:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/02/17/SpringBoot-Jpa/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-mongoDB" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/17/mongoDB/">MongoDB</a>
+    </h1>
+  
+
+        
+        <a href="/2020/02/17/mongoDB/" class="archive-article-date">
+  	<time datetime="2020-02-17T03:45:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="MongoDB简介"><a href="#MongoDB简介" class="headerlink" title="MongoDB简介"></a>MongoDB简介</h1><h2 id="数据特点"><a href="#数据特点" class="headerlink" title="数据特点"></a>数据特点</h2><ul>
+<li>数据量大</li>
+<li>写入操作频繁</li>
+<li>价值较低</li>
+</ul>
+<p>这样的数据，更适合使用MongoDB来储存。</p>
+<h2 id="什么是MongoDB"><a href="#什么是MongoDB" class="headerlink" title="什么是MongoDB"></a>什么是MongoDB</h2><p>MongoDB 是一个基于分布式文件存储的数据库。由 C++ 语言编写。旨在为 WEB 应用提供可扩展的高性能数据存储解决方案。</p>
+<p>MongoDB 是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中功能最丰富，最像关系数据库的。</p>
+<h2 id="MongoDB特点"><a href="#MongoDB特点" class="headerlink" title="MongoDB特点"></a>MongoDB特点</h2><ul>
+<li>面向集合储存，易于存储对象类型的数据</li>
+<li>模式自由</li>
+<li>支持动态查询</li>
+<li>支持完全索引，包含内部对象</li>
+<li>支持复制和故障恢复</li>
+<li>使用高效的二进制数据存储，包括大型对象</li>
+<li>自动处理碎片，以支持云计算层次的扩展性</li>
+<li>支持多语言</li>
+<li>文件存储格式为BSON（一中JSON的扩展）</li>
+</ul>
+<h2 id="MongoDB体系结构"><a href="#MongoDB体系结构" class="headerlink" title="MongoDB体系结构"></a>MongoDB体系结构</h2><table>
+<thead>
+<tr>
+<th>MongoDB</th>
+<th>关系型数据库</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据库（databases）</td>
+<td>数据库（databases）</td>
+</tr>
+<tr>
+<td>集合（collections）</td>
+<td>表（table）</td>
+</tr>
+<tr>
+<td>文档（document）</td>
+<td>行（row）</td>
+</tr>
+</tbody></table>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p><strong>基本数据类型</strong></p>
+<ul>
+<li><p>null:用于表示空值或者不存在的字段，{“x”:null} 布尔型:布尔类型有两个值true和false，{“x”:true}</p>
+</li>
+<li><p>数值:shell默认使用64为浮点型数值。{“x”:3.14}或{“x”:3}。对于整型值，可以使用 NumberInt(4字节符号整数)或NumberLong(8字节符号整数)， {“x”:NumberInt(“3”)}{“x”:NumberLong(“3”)}</p>
+</li>
+<li><p>字符串:UTF-8字符串都可以表示为字符串类型的数据，{“x”:“呵呵”} 日期:日期被存储为自新纪元依赖经过的毫秒数，不存储时区，{“x”:new Date()}</p>
+</li>
+<li><p>正则表达式:查询时，使用正则表达式作为限定条件，语法与JavaScript的正则表达式相 同，{“x”:/[abc]/}</p>
+</li>
+<li><p>数组:数据列表或数据集可以表示为数组，{“x”: [“a“，“b”,”c”]}</p>
+</li>
+<li><p>内嵌文档:文档可以嵌套其他文档，被嵌套的文档作为值来处理，{“x”:{“y”:3 }}</p>
+</li>
+<li><p>对象Id:对象id是一个12字节的字符串，是文档的唯一标识，{“x”: objectId() }</p>
+</li>
+<li><p>二进制数据:二进制数据是一个任意字节的字符串。它不能直接在shell中使用。如果要 将非utf-字符保存到数据库中，二进制数据是唯一的方式。</p>
+</li>
+<li><p>代码:查询和文档中可以包括任何JavaScript代码，{“x”:function(){/…/}}</p>
+</li>
+</ul>
+<h1 id="mongoDB常用命令"><a href="#mongoDB常用命令" class="headerlink" title="mongoDB常用命令"></a>mongoDB常用命令</h1><h2 id="1-选择和创建数据库"><a href="#1-选择和创建数据库" class="headerlink" title="1. 选择和创建数据库"></a>1. 选择和创建数据库</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">use 数据库名称</span></pre></td></tr></table></figure>
+
+<h2 id="2-插入与查询文档"><a href="#2-插入与查询文档" class="headerlink" title="2. 插入与查询文档"></a>2. 插入与查询文档</h2><h3 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">db.集合名称.insert(数据);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">db.spit.insert(&#123;content:&quot;听说十次方课程很给力呀&quot;,userid:&quot;1011&quot;,nickname:&quot;小 雅&quot;,visits:NumberInt(902)&#125;)</span></pre></td></tr></table></figure>
+
+<h2 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">db.集合名称.find();</span></pre></td></tr></table></figure>
+
+<p>如果我想按一定条件来查询，比如我想查询userid为1013的记录，怎么办?很简单!只 要在find()中添加参数即可，参数也是json格式，如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">db.spit.find(&#123;userid:&#39;1013&#39;&#125;)</span></pre></td></tr></table></figure>
+
+<p>如果你只需要返回符合条件的第一条数据，我们可以使用findOne命令来实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">db.spit.findOne(&#123;userid:&#39;1013&#39;&#125;)</span></pre></td></tr></table></figure>
+
+<p>如果你想返回指定条数的记录，可以在find方法后调用limit来返回结果，例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">db.spit.find().limit(3)</span></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-修改与删除文档"><a href="#3-修改与删除文档" class="headerlink" title="3. 修改与删除文档"></a>3. 修改与删除文档</h2><h3 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">db.集合名称.update(条件,修改后的数据);</span></pre></td></tr></table></figure>
+
+<p>例如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">db.spit.update(&#123;_id:&quot;1&quot;&#125;,&#123;visits:NumberInt(1000)&#125;)</span></pre></td></tr></table></figure>
+
+<p>执行后，我们会发现，这条文档除了visits字段其它字段都不见了，为了解决这个问题， 我们需要使用修改器$set来实现，命令如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">db.spit.update(&#123;_id:&quot;2&quot;&#125;,&#123;$set:&#123;visits:NumberInt(2000)&#125;&#125;)</span></pre></td></tr></table></figure>
+
+<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">db.集合名称.remove(条件)</span></pre></td></tr></table></figure>
+
+<p>以下语句可以将数据全部删除，请慎用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">db.spit.remove(&#123;&#125;)</span></pre></td></tr></table></figure>
+
+<p>如果删除visits=1000的记录，输入以下语句</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">db.spit.remove(&#123;visits:1000&#125;)</span></pre></td></tr></table></figure>
+
+<h2 id="4-统计条数"><a href="#4-统计条数" class="headerlink" title="4. 统计条数"></a>4. 统计条数</h2><p>统计记录条件使用count()方法。</p>
+<p>统计spit集合的记录数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">db.spit.count()</span></pre></td></tr></table></figure>
+
+<p>按条件统计，统计userid为1013的记录条数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">db.spit.count(&#123;userid:&quot;1013&quot;&#125;)</span></pre></td></tr></table></figure>
+
+<h2 id="模糊查询"><a href="#模糊查询" class="headerlink" title="模糊查询"></a>模糊查询</h2><p>MongoDB的模糊查询是通过正则表达式的方式实现的。格式为:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#x2F;模糊查询字段&#x2F;</span></pre></td></tr></table></figure>
+
+<p>例如，要查询内容包含“流量”的所有文档：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">db.spit.find(&#123;content:&#x2F;流量&#x2F;&#125;)</span></pre></td></tr></table></figure>
+
+<p>如果要查询内容包含以“加班”开头的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">db.spit.find(&#123;content:&#x2F;^加班&#x2F;&#125;)</span></pre></td></tr></table></figure>
+
+<h2 id="大于，小于，不等于"><a href="#大于，小于，不等于" class="headerlink" title="大于，小于，不等于"></a>大于，小于，不等于</h2><p>&lt;, &lt;=, &gt;, &gt;= 这个操作符也是很常用的，格式如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">db.集合名称.find(&#123; &quot;field&quot; : &#123; $gt: value &#125;&#125;) &#x2F;&#x2F; 大于: field &gt; value </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">db.集合名称.find(&#123; &quot;field&quot; : &#123; $lt: value &#125;&#125;) &#x2F;&#x2F; 小于: field &lt; value </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">db.集合名称.find(&#123; &quot;field&quot; : &#123; $gte: value &#125;&#125;) &#x2F;&#x2F; 大于等于: field &gt;&#x3D; value </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">db.集合名称.find(&#123; &quot;field&quot; : &#123; $lte: value &#125;&#125;) &#x2F;&#x2F; 小于等于: field &lt;&#x3D; value </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">db.集合名称.find(&#123; &quot;field&quot; : &#123; $ne: value &#125;&#125;) &#x2F;&#x2F; 不等于: field !&#x3D; value</span></pre></td></tr></table></figure>
+
+<h2 id="包含与不包含"><a href="#包含与不包含" class="headerlink" title="包含与不包含"></a>包含与不包含</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">db.spit.find(&#123;userid:&#123;$in:[&quot;1013&quot;,&quot;1014&quot;]&#125;&#125;) &#x2F;&#x2F;包含用$in</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">db.spit.find(&#123;userid:&#123;$nin:[&quot;1013&quot;,&quot;1014&quot;]&#125;&#125;) &#x2F;&#x2F;不包含用$nin</span></pre></td></tr></table></figure>
+
+<h2 id="条件连接"><a href="#条件连接" class="headerlink" title="条件连接"></a>条件连接</h2><p>如果需要查询同时满足两个以上条件，需要使用$and操作符将条件进行关联。(相</p>
+<p>当于SQL的and)，格式为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$and:[ &#123;  &#125;,&#123;  &#125;,&#123; &#125; ]</span></pre></td></tr></table></figure>
+
+<p>如果两个以上条件之间是或者的关系，我们使用 操作符进行关联，与前面and的使用方式相同：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$or:[&#123; &#125;,&#123; &#125;,&#123; &#125;]</span></pre></td></tr></table></figure>
+
+<h2 id="列值增长"><a href="#列值增长" class="headerlink" title="列值增长"></a>列值增长</h2><p>如果我们想实现对某列值在原有值的基础上进行增加或减少，可以使用$inc运算符来实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">db.spit.update(&#123;_id:&quot;2&quot;&#125;,&#123;$inc:&#123;visits:NumberInt(1)&#125;&#125; )</span></pre></td></tr></table></figure>
+
+<h1 id="Java操作mongoDB"><a href="#Java操作mongoDB" class="headerlink" title="Java操作mongoDB"></a>Java操作mongoDB</h1><h2 id="1-mongodb-driver"><a href="#1-mongodb-driver" class="headerlink" title="1. mongodb-driver"></a>1. mongodb-driver</h2><ol>
+<li>引入依赖</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mongodb<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mongodb-driver<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.12.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>测试类</li>
+</ol>
+<ul>
+<li>查询</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.mongodb.BasicDBObject;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.mongodb.MongoClient;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.mongodb.client.FindIterable;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.mongodb.client.MongoCollection;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.mongodb.client.MongoDatabase;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.bson.Document;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MongoDBtest</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">        <span class="comment">//连接mango服务器</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">        MongoClient client = <span class="keyword">new</span> MongoClient(<span class="string">"10.211.55.14"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">        <span class="comment">//得到要操作的数据库</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">        MongoDatabase spitdb = client.getDatabase(<span class="string">"spitdb"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">        <span class="comment">//得到要操作的集合</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">        MongoCollection&lt;Document&gt; spit = spitdb.getCollection(<span class="string">"spit"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">        <span class="comment">//新建查询条件</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">        BasicDBObject bson=<span class="keyword">new</span> BasicDBObject(<span class="string">"userid"</span>,<span class="string">"1013"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">        <span class="comment">//根据条件查询</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">        FindIterable&lt;Document&gt; documents = spit.find(bson);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">        <span class="comment">//遍历</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">for</span> (Document d :</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">                documents) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">            System.out.println(<span class="string">"内容： "</span> + d.getString(<span class="string">"content"</span>));</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">            System.out.println(<span class="string">"userid： "</span> + d.getString(<span class="string">"userid"</span>));</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">            System.out.println(<span class="string">"访问量： "</span> + d.getString(<span class="string">"visits"</span>));</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">        client.close();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<ul>
+<li>插入</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">       <span class="comment">//连接mango服务器</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">       MongoClient client = <span class="keyword">new</span> MongoClient(<span class="string">"10.211.55.14"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">       <span class="comment">//得到要操作的数据库</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">       MongoDatabase spitdb = client.getDatabase(<span class="string">"spitdb"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">       <span class="comment">//得到要操作的集合</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">       MongoCollection&lt;Document&gt; spit = spitdb.getCollection(<span class="string">"spit"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">  			<span class="comment">//封装数据</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">       Map&lt;String,Object&gt; map=<span class="keyword">new</span> HashMap();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">       map.put(<span class="string">"content"</span>,<span class="string">"我要吐槽"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">       map.put(<span class="string">"userid"</span>,<span class="string">"9999"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">       map.put(<span class="string">"visits"</span>,<span class="number">123</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">       map.put(<span class="string">"publishtime"</span>,<span class="keyword">new</span> Date());</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">       Document document=<span class="keyword">new</span> Document(map);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">  			<span class="comment">//插入数据</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">       spit.insertOne(document);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">       client.close();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">   &#125;</span></pre></td></tr></table></figure>
+
+<h2 id="2-SpringDataMongoDB"><a href="#2-SpringDataMongoDB" class="headerlink" title="2. SpringDataMongoDB"></a>2. SpringDataMongoDB</h2><ul>
+<li>引入依赖</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-mongodb --&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-mongodb<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span></pre></td></tr></table></figure>
+
+<ul>
+<li>使用</li>
+</ul>
+<p>增删改查和springboot中的jpa使用方法相同</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.tensquare.spit.pojo.Spit;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.data.mongodb.repository.MongoRepository;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">SpitDao</span> <span class="keyword">extends</span> <span class="title">MongoRepository</span>&lt;<span class="title">Spit</span>, <span class="title">String</span>&gt; </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.tensquare.spit.service;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.tensquare.spit.dao.SpitDao;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.tensquare.spit.pojo.Spit;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.transaction.annotation.Transactional;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> util.IdWorker;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.List;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Transactional</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpitService</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">    <span class="meta">@Autowired</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">private</span> SpitDao spitDao;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">    <span class="meta">@Autowired</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">private</span> IdWorker idWorker;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">    <span class="comment">//增删改查</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;Spit&gt; <span class="title">findAll</span><span class="params">()</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">return</span> spitDao.findAll();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> Spit <span class="title">findById</span><span class="params">(String id)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">return</span> spitDao.findById(id).get();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">30</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">save</span><span class="params">(Spit spit)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">31</span></pre></td><td class="code"><pre><span class="line">        spit.set_id(idWorker.nextId() + <span class="string">""</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">32</span></pre></td><td class="code"><pre><span class="line">        spitDao.save(spit);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">33</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">34</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">35</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">(Spit spit)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">36</span></pre></td><td class="code"><pre><span class="line">        spitDao.save(spit);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">37</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">38</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">39</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteById</span><span class="params">(String id)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">40</span></pre></td><td class="code"><pre><span class="line">        spitDao.deleteById(id);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">41</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">42</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color3">MongoDB</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/02/17/mongoDB/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-正则表达式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/11/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+    </h1>
+  
+
+        
+        <a href="/2020/02/11/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" class="archive-article-date">
+  	<time datetime="2020-02-11T10:16:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-11</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1-1-什么是正则表达式"><a href="#1-1-什么是正则表达式" class="headerlink" title="1.1 什么是正则表达式"></a>1.1 什么是正则表达式</h1><p>正则表达式定义了字符串的模式。</p>
+<p>正则表达式可以用来搜索、编辑或处理文本。</p>
+<p>正则表达式并不仅限于某一种语言，但是在每种语言中有细微的差别。</p>
+<h1 id="1-2-正则表达式的编写规则"><a href="#1-2-正则表达式的编写规则" class="headerlink" title="1.2 正则表达式的编写规则"></a>1.2 正则表达式的编写规则</h1><h2 id="1-2-1-常见匹配符号"><a href="#1-2-1-常见匹配符号" class="headerlink" title="1.2.1 常见匹配符号"></a>1.2.1 常见匹配符号</h2><table>
+<thead>
+<tr>
+<th align="center">正则表达式</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>.</code></td>
+<td align="center">匹配所有单个字符，除换行符。</td>
+</tr>
+<tr>
+<td align="center"><code>^regex</code></td>
+<td align="center">正则必须匹配字符串结尾</td>
+</tr>
+<tr>
+<td align="center"><code>regex$</code></td>
+<td align="center">正则必须匹配字符串结尾</td>
+</tr>
+<tr>
+<td align="center"><code>[abc]</code></td>
+<td align="center">复选集定义，匹配字母a或b或c</td>
+</tr>
+<tr>
+<td align="center"><code>[abc][vz]</code></td>
+<td align="center">复选集定义，匹配匹配字母a或b或c，后面跟着v或z</td>
+</tr>
+<tr>
+<td align="center"><code>[^abc]</code></td>
+<td align="center">此模式匹配所有字符，除了 a 或 b 或 c</td>
+</tr>
+<tr>
+<td align="center"><code>[a-d1-7]</code></td>
+<td align="center">范围匹配，匹配字母 a 到 d 和数字从 1 到 7 之间，但不匹配 d1</td>
+</tr>
+<tr>
+<td align="center"><code>XZ</code></td>
+<td align="center">匹配 X 后直接跟着 Z</td>
+</tr>
+<tr>
+<td align="center"><code>X|Z</code></td>
+<td align="center">匹配 X 或 Z</td>
+</tr>
+</tbody></table>
+<h2 id="1-2-2-元字符"><a href="#1-2-2-元字符" class="headerlink" title="1.2.2 元字符"></a>1.2.2 元字符</h2><p>元字符是一个预定义的字符</p>
+<table>
+<thead>
+<tr>
+<th>正则表达式</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>\d</code></td>
+<td>匹配一个数字，是 <code>[0-9]</code> 的简写</td>
+</tr>
+<tr>
+<td><code>\D</code></td>
+<td>匹配一个非数字，是 <code>[^0-9]</code> 的简写</td>
+</tr>
+<tr>
+<td><code>\s</code></td>
+<td>匹配一个空格，是 <code>[ \t\n\x0b\r\f]</code> 的简写</td>
+</tr>
+<tr>
+<td><code>\S</code></td>
+<td>匹配一个非空格</td>
+</tr>
+<tr>
+<td><code>\w</code></td>
+<td>匹配一个单词字符（大小写字母、数字、下划线），是 <code>[a-zA-Z_0-9]</code> 的简写</td>
+</tr>
+<tr>
+<td><code>\W</code></td>
+<td>匹配一个非单词字符（除了大小写字母、数字、下划线之外的字符），等同于 <code>[^\w]</code></td>
+</tr>
+</tbody></table>
+<h2 id="1-2-3-限定符"><a href="#1-2-3-限定符" class="headerlink" title="1.2.3 限定符"></a>1.2.3 限定符</h2><p>限定符定义了一个元素可以发生的频率</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">正则表达式</td>
+<td align="center">描述</td>
+<td align="center">举例</td>
+</tr>
+<tr>
+<td align="center"><code>*</code></td>
+<td align="center">匹配 &gt;=0 个，是 <code>{0,}</code> 的简写</td>
+<td align="center"><code>X*</code> 表示匹配零个或多个字母 X，<code>.*</code> 表示匹配任何字符串</td>
+</tr>
+<tr>
+<td align="center"><code>+</code></td>
+<td align="center">匹配 &gt;=1 个，是 <code>{1,}</code> 的简写</td>
+<td align="center"><code>X+</code> 表示匹配一个或多个字母 X</td>
+</tr>
+<tr>
+<td align="center"><code>?</code></td>
+<td align="center">匹配 1 个或 0 个，是 <code>{0,1}</code> 的简写</td>
+<td align="center"><code>X?</code> 表示匹配 0 个或 1 个字母 X</td>
+</tr>
+<tr>
+<td align="center"><code>{X}</code></td>
+<td align="center">只匹配 X 个字符</td>
+<td align="center"><code>\d{3}</code> 表示匹配 3 个数字，<code>.{10}</code> 表示匹配任何长度是 10 的字符串</td>
+</tr>
+<tr>
+<td align="center"><code>{X,Y}</code></td>
+<td align="center">匹配 &gt;=X 且 &lt;=Y 个</td>
+<td align="center"><code>\d{1,4}</code> 表示匹配至少 1 个最多 4 个数字</td>
+</tr>
+<tr>
+<td align="center"><code>*?</code></td>
+<td align="center">如果 <code>?</code> 是限定符 <code>*</code> 或 <code>+</code> 或 <code>?</code> 或 <code>{}</code> 后面的第一个字符，那么表示<strong>非贪婪模式</strong>（尽可能少的匹配字符），而不是默认的<strong>贪婪模式</strong></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color5">Java正则表达式</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/02/11/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Docker-5私有仓库" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/08/Docker-5%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/">Docker私有仓库</a>
+    </h1>
+  
+
+        
+        <a href="/2020/02/08/Docker-5%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/" class="archive-article-date">
   	<time datetime="2020-02-08T08:52:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-08</time>
 </a>
         
@@ -220,7 +903,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/08/Docker%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/02/08/Docker-5%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/">展开全文 >></a>
         </p>
       
 
@@ -250,19 +933,19 @@
 
 
   
-    <article id="post-Dockfile" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-Docker-7Dockfile" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/08/Dockfile/">Dockfile</a>
+      <a class="article-title" href="/2020/02/08/Docker-7Dockfile/">Dockfile</a>
     </h1>
   
 
         
-        <a href="/2020/02/08/Dockfile/" class="archive-article-date">
+        <a href="/2020/02/08/Docker-7Dockfile/" class="archive-article-date">
   	<time datetime="2020-02-08T08:37:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-08</time>
 </a>
         
@@ -346,7 +1029,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/08/Dockfile/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/02/08/Docker-7Dockfile/">展开全文 >></a>
         </p>
       
 
@@ -376,19 +1059,19 @@
 
 
   
-    <article id="post-MacOS安装redis" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-MacOS-安装redis" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/08/MacOS%E5%AE%89%E8%A3%85redis/">MacOS安装redis</a>
+      <a class="article-title" href="/2020/02/08/MacOS-%E5%AE%89%E8%A3%85redis/">MacOS安装redis</a>
     </h1>
   
 
         
-        <a href="/2020/02/08/MacOS%E5%AE%89%E8%A3%85redis/" class="archive-article-date">
+        <a href="/2020/02/08/MacOS-%E5%AE%89%E8%A3%85redis/" class="archive-article-date">
   	<time datetime="2020-02-08T08:31:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-08</time>
 </a>
         
@@ -432,7 +1115,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/08/MacOS%E5%AE%89%E8%A3%85redis/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/02/08/MacOS-%E5%AE%89%E8%A3%85redis/">展开全文 >></a>
         </p>
       
 
@@ -462,19 +1145,19 @@
 
 
   
-    <article id="post-Docker迁移与备份" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-Docker-6迁移与备份" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/08/Docker%E8%BF%81%E7%A7%BB%E4%B8%8E%E5%A4%87%E4%BB%BD/">Docker迁移与备份</a>
+      <a class="article-title" href="/2020/02/08/Docker-6%E8%BF%81%E7%A7%BB%E4%B8%8E%E5%A4%87%E4%BB%BD/">Docker迁移与备份</a>
     </h1>
   
 
         
-        <a href="/2020/02/08/Docker%E8%BF%81%E7%A7%BB%E4%B8%8E%E5%A4%87%E4%BB%BD/" class="archive-article-date">
+        <a href="/2020/02/08/Docker-6%E8%BF%81%E7%A7%BB%E4%B8%8E%E5%A4%87%E4%BB%BD/" class="archive-article-date">
   	<time datetime="2020-02-08T08:28:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-08</time>
 </a>
         
@@ -516,7 +1199,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/08/Docker%E8%BF%81%E7%A7%BB%E4%B8%8E%E5%A4%87%E4%BB%BD/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/02/08/Docker-6%E8%BF%81%E7%A7%BB%E4%B8%8E%E5%A4%87%E4%BB%BD/">展开全文 >></a>
         </p>
       
 
@@ -546,19 +1229,19 @@
 
 
   
-    <article id="post-Docker应用部署" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-Docker-4应用部署" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/08/Docker%E5%BA%94%E7%94%A8%E9%83%A8%E7%BD%B2/">Docker应用部署</a>
+      <a class="article-title" href="/2020/02/08/Docker-4%E5%BA%94%E7%94%A8%E9%83%A8%E7%BD%B2/">Docker应用部署</a>
     </h1>
   
 
         
-        <a href="/2020/02/08/Docker%E5%BA%94%E7%94%A8%E9%83%A8%E7%BD%B2/" class="archive-article-date">
+        <a href="/2020/02/08/Docker-4%E5%BA%94%E7%94%A8%E9%83%A8%E7%BD%B2/" class="archive-article-date">
   	<time datetime="2020-02-08T07:24:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-08</time>
 </a>
         
@@ -618,7 +1301,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/08/Docker%E5%BA%94%E7%94%A8%E9%83%A8%E7%BD%B2/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/02/08/Docker-4%E5%BA%94%E7%94%A8%E9%83%A8%E7%BD%B2/">展开全文 >></a>
         </p>
       
 
@@ -648,19 +1331,19 @@
 
 
   
-    <article id="post-Docker常用命令" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-Docker-3常用命令" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/08/Docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">Docker常用命令</a>
+      <a class="article-title" href="/2020/02/08/Docker-3%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">Docker常用命令</a>
     </h1>
   
 
         
-        <a href="/2020/02/08/Docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="archive-article-date">
+        <a href="/2020/02/08/Docker-3%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="archive-article-date">
   	<time datetime="2020-02-08T04:57:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-08</time>
 </a>
         
@@ -778,380 +1461,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/08/Docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Docker安装" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/07/Docker%E5%AE%89%E8%A3%85/">Docker安装</a>
-    </h1>
-  
-
-        
-        <a href="/2020/02/07/Docker%E5%AE%89%E8%A3%85/" class="archive-article-date">
-  	<time datetime="2020-02-07T11:55:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Docker安装与启动"><a href="#Docker安装与启动" class="headerlink" title="Docker安装与启动"></a>Docker安装与启动</h1><h2 id="CentOS-安装Docker"><a href="#CentOS-安装Docker" class="headerlink" title="CentOS 安装Docker"></a>CentOS 安装Docker</h2><p>​    Docker官方建议在Ubuntu中安装，因为Docker是基于Ubuntu发布的，而且一般Docker出现的问题Ubuntu是最先更新或者打补丁的。在很多版本的CentOS中是不支持更新最新的一些补丁包的。</p>
-<p>（1）yum 包更新到最新</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">sudo yum update</span></pre></td></tr></table></figure>
-
-<p>（2）安装需要的软件包， yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">sudo yum install -y yum-utils device-mapper-persistent-data lvm2</span></pre></td></tr></table></figure>
-
-<p>（3）设置yum源为阿里云</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">sudo yum-config-manager --add-repo http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;docker-ce&#x2F;linux&#x2F;centos&#x2F;docker-ce.repo</span></pre></td></tr></table></figure>
-
-<p>（4）安装docker</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">sudo yum install docker-ce</span></pre></td></tr></table></figure>
-
-<p>（5）安装后查看docker版本</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker -v</span></pre></td></tr></table></figure>
-
-<h2 id="设置ustc的镜像"><a href="#设置ustc的镜像" class="headerlink" title="设置ustc的镜像"></a>设置ustc的镜像</h2><p>ustc是老牌的linux镜像服务提供者了，还在遥远的ubuntu 5.04版本的时候就在用。ustc的docker镜像加速器速度很快。ustc docker mirror的优势之一就是不需要注册，是真正的公共服务。</p>
-<p><a href="https://lug.ustc.edu.cn/wiki/mirrors/help/docker" target="_blank" rel="noopener">https://lug.ustc.edu.cn/wiki/mirrors/help/docker</a></p>
-<p>编辑该文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">vi &#x2F;etc&#x2F;docker&#x2F;daemon.json</span></pre></td></tr></table></figure>
-
-<p>在该文件中输入如下内容：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">&quot;registry-mirrors&quot;: [&quot;https:&#x2F;&#x2F;docker.mirrors.ustc.edu.cn&quot;]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
-
-<h2 id="Docker的启动与停止"><a href="#Docker的启动与停止" class="headerlink" title="Docker的启动与停止"></a>Docker的启动与停止</h2><p><strong>systemctl</strong>命令是系统服务管理器指令</p>
-<p>启动docker：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">systemctl start docker</span></pre></td></tr></table></figure>
-
-<p>停止docker：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">systemctl stop docker</span></pre></td></tr></table></figure>
-
-<p>重启docker：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">systemctl restart docker</span></pre></td></tr></table></figure>
-
-<p>查看docker状态：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">systemctl status docker</span></pre></td></tr></table></figure>
-
-<p>开机启动：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">systemctl enable docker</span></pre></td></tr></table></figure>
-
-<p>查看docker概要信息</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker info</span></pre></td></tr></table></figure>
-
-<p>查看docker帮助文档</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker --help</span></pre></td></tr></table></figure>
-
-<h1 id><a href="#" class="headerlink" title></a></h1>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">Docker</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/07/Docker%E5%AE%89%E8%A3%85/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-docker-1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/07/docker-1/">Docker简介</a>
-    </h1>
-  
-
-        
-        <a href="/2020/02/07/docker-1/" class="archive-article-date">
-  	<time datetime="2020-02-07T11:17:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><img src="/2020/02/07/docker-1/1-3.png" alt="1-3"></p>
-<h1 id="1-Docker简介"><a href="#1-Docker简介" class="headerlink" title="1 Docker简介"></a>1 Docker简介</h1><h2 id="1-1-什么是虚拟化"><a href="#1-1-什么是虚拟化" class="headerlink" title="1.1 什么是虚拟化"></a>1.1 什么是虚拟化</h2><p>​    在计算机中，虚拟化（英语：Virtualization）是一种资源管理技术，是将计算机的各种实体资源，如服务器、网络、内存及存储等，予以抽象、转换后呈现出来，打破实体结构间的不可切割的障碍，使用户可以比原本的组态更好的方式来应用这些资源。这些资源的新虚拟部份是不受现有资源的架设方式，地域或物理组态所限制。一般所指的虚拟化资源包括计算能力和资料存储。</p>
-<p>​    在实际的生产环境中，虚拟化技术主要用来解决高性能的物理硬件产能过剩和老的旧的硬件产能过低的重组重用，透明化底层物理硬件，从而最大化的利用物理硬件   对资源充分利用</p>
-<p>​    虚拟化技术种类很多，例如：软件虚拟化、硬件虚拟化、内存虚拟化、网络虚拟化(vip)、桌面虚拟化、服务虚拟化、虚拟机等等。</p>
-<h2 id="1-2-什么是Docker"><a href="#1-2-什么是Docker" class="headerlink" title="1.2 什么是Docker"></a>1.2 什么是Docker</h2><p>​    Docker 是一个开源项目，诞生于 2013 年初，最初是 dotCloud 公司内部的一个业余项目。它基于 Google 公司推出的 Go 语言实现。 项目后来加入了 Linux 基金会，遵从了 Apache 2.0 协议，项目代码在 <a href="https://github.com/docker/docker" target="_blank" rel="noopener">GitHub</a> 上进行维护。</p>
-<p>​    <img src="/2020/02/07/docker-1/%E6%9D%9C%E5%BF%97%E6%97%BA/Disk/%E5%AD%A6%E4%B9%A0/java%E5%B0%B1%E4%B8%9A/01-java%E5%9F%BA%E7%A1%80+%E5%B0%B1%E4%B8%9A%E7%8F%AD(idea%E6%95%99%E7%A8%8B)/19-Docker%E5%AE%B9%E5%99%A8%E5%8C%96/%E8%AE%B2%E4%B9%89/image/1-3.png" alt></p>
-<p>​    Docker 自开源后受到广泛的关注和讨论，以至于 dotCloud 公司后来都改名为 Docker Inc。Redhat 已经在其 RHEL6.5 中集中支持 Docker；Google 也在其 PaaS 产品中广泛应用。</p>
-<p>​    Docker 项目的目标是实现轻量级的操作系统虚拟化解决方案。 Docker 的基础是 Linux 容器（LXC）等技术。</p>
-<p>​    在 LXC 的基础上 Docker 进行了进一步的封装，让用户不需要去关心容器的管理，使得操作更为简便。用户操作 Docker 的容器就像操作一个快速轻量级的虚拟机一样简单。</p>
-<h2 id="1-3-Docker-组件"><a href="#1-3-Docker-组件" class="headerlink" title="1.3 Docker 组件"></a>1.3 Docker 组件</h2><h3 id="1-3-1-Docker服务器与客户端"><a href="#1-3-1-Docker服务器与客户端" class="headerlink" title="1.3.1 Docker服务器与客户端"></a>1.3.1 Docker服务器与客户端</h3><p>​    Docker是一个客户端-服务器（C/S）架构程序。Docker客户端只需要向Docker服务器或者守护进程发出请求，服务器或者守护进程将完成所有工作并返回结果。Docker提供了一个命令行工具Docker以及一整套RESTful API。你可以在同一台宿主机上运行Docker守护进程和客户端，也可以从本地的Docker客户端连接到运行在另一台宿主机上的远程Docker守护进程。</p>
-<p><img src="/2020/02/07/docker-1/%E6%9D%9C%E5%BF%97%E6%97%BA/Disk/%E5%AD%A6%E4%B9%A0/java%E5%B0%B1%E4%B8%9A/01-java%E5%9F%BA%E7%A1%80+%E5%B0%B1%E4%B8%9A%E7%8F%AD(idea%E6%95%99%E7%A8%8B)/19-Docker%E5%AE%B9%E5%99%A8%E5%8C%96/%E8%AE%B2%E4%B9%89/image/1-2.png" alt></p>
-<h3 id="1-3-2-Docker镜像与容器"><a href="#1-3-2-Docker镜像与容器" class="headerlink" title="1.3.2 Docker镜像与容器"></a>1.3.2 Docker镜像与容器</h3><p>镜像是构建Docker的基石。用户基于镜像来运行自己的容器。镜像也是Docker生命周期中的“构建”部分。镜像是基于联合文件系统的一种层式结构，由一系列指令一步一步构建出来。例如：</p>
-<p>添加一个文件；</p>
-<p>执行一个命令；</p>
-<p>打开一个窗口。</p>
-<p>也可以将镜像当作容器的“源代码”。镜像体积很小，非常“便携”，易于分享、存储和更新。</p>
-<p>​    Docker可以帮助你构建和部署容器，你只需要把自己的应用程序或者服务打包放进容器即可。容器是基于镜像启动起来的，容器中可以运行一个或多个进程。我们可以认为，镜像是Docker生命周期中的构建或者打包阶段，而容器则是启动或者执行阶段。  容器基于镜像启动，一旦容器启动完成后，我们就可以登录到容器中安装自己需要的软件或者服务。</p>
-<p>所以Docker容器就是：</p>
-<p>​    一个镜像格式；</p>
-<p>​    一些列标准操作；</p>
-<p>​    一个执行环境。</p>
-<p>​    Docker借鉴了标准集装箱的概念。标准集装箱将货物运往世界各地，Docker将这个模型运用到自己的设计中，唯一不同的是：集装箱运输货物，而Docker运输软件。</p>
-<pre><code>和集装箱一样，Docker在执行上述操作时，并不关心容器中到底装了什么，它不管是web服务器，还是数据库，或者是应用程序服务器什么的。所有的容器都按照相同的方式将内容“装载”进去。
-
-Docker也不关心你要把容器运到何方：我们可以在自己的笔记本中构建容器，上传到Registry，然后下载到一个物理的或者虚拟的服务器来测试，在把容器部署到具体的主机中。像标准集装箱一样，Docker容器方便替换，可以叠加，易于分发，并且尽量通用。</code></pre><h3 id="1-3-3-Registry（注册中心）"><a href="#1-3-3-Registry（注册中心）" class="headerlink" title="1.3.3 Registry（注册中心）"></a>1.3.3 Registry（注册中心）</h3><p>​    Docker用Registry来保存用户构建的镜像。Registry分为公共和私有两种。Docker公司运营公共的Registry叫做Docker Hub。用户可以在Docker Hub注册账号，分享并保存自己的镜像（说明：在Docker Hub下载镜像巨慢，可以自己构建私有的Registry）。</p>
-<p>​    <a href="https://hub.docker.com/" target="_blank" rel="noopener">https://hub.docker.com/</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">Docker</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/07/docker-1/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-SpringBootApplication注解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/04/SpringBootApplication%E6%B3%A8%E8%A7%A3/">@SpringBootApplication注解</a>
-    </h1>
-  
-
-        
-        <a href="/2020/02/04/SpringBootApplication%E6%B3%A8%E8%A7%A3/" class="archive-article-date">
-  	<time datetime="2020-02-04T06:38:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>org.springframework.boot @Target({ElementType.TYPE})<br>@Retention(RetentionPolicy.RUNTIME)<br>@Documented<br>@Configuration<br>public interface SpringBootConfiguration<br>extends annotation.Annotation</p>
-</blockquote>
-<blockquote>
-<p>Indicates a configuration class that declares one or more @Bean methods and also triggers auto-configuration and component scanning. This is a convenience annotation that is equivalent to declaring @Configuration, @EnableAutoConfiguration and @ComponentScan</p>
-</blockquote>
-<h2 id="SpringBootConfiguration"><a href="#SpringBootConfiguration" class="headerlink" title="@SpringBootConfiguration"></a>@SpringBootConfiguration</h2><blockquote>
-<p>org.springframework.boot @Target(ElementType.TYPE)<br>@Retention(RetentionPolicy.RUNTIME)<br>@Documented<br>@Configuration<br>public interface SpringBootConfiguration<br>extends annotation.Annotation</p>
-</blockquote>
-<blockquote>
-<p>Indicates that a class provides Spring Boot application @Configuration. Can be used as an alternative to the Spring’s standard @Configuration annotation so that configuration can be found automatically (for example in tests).<br>Application should only ever include one @SpringBootConfiguration and most idiomatic Spring Boot applications will inherit it from @SpringBootApplication.</p>
-</blockquote>
-<h3 id="Configuration"><a href="#Configuration" class="headerlink" title="@Configuration"></a>@Configuration</h3><blockquote>
-<p>Indicates that a class declares one or more @Bean methods and may be processed by the Spring container to generate bean definitions and service requests for those beans at runtime,</p>
-</blockquote>
-<p>for example </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">   <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AppConfig</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">       <span class="meta">@Bean</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">       <span class="function"><span class="keyword">public</span> MyBean <span class="title">myBean</span><span class="params">()</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">           <span class="comment">// instantiate, configure and return bean ...</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">       &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">   &#125;</span></pre></td></tr></table></figure>
-
-
-
-<h2 id="EnableAutoConfiguration"><a href="#EnableAutoConfiguration" class="headerlink" title="@EnableAutoConfiguration"></a>@EnableAutoConfiguration</h2><h2 id="ComponentScan"><a href="#ComponentScan" class="headerlink" title="@ComponentScan"></a>@ComponentScan</h2>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">Spring Boot</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/04/SpringBootApplication%E6%B3%A8%E8%A7%A3/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-testone-1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/01/23/testone-1/">testone</a>
-    </h1>
-  
-
-        
-        <a href="/2020/01/23/testone-1/" class="archive-article-date">
-  	<time datetime="2020-01-23T14:06:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-01-23</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/01/23/testone-1/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/02/08/Docker-3%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">展开全文 >></a>
         </p>
       
 
@@ -1183,7 +1493,7 @@ Docker也不关心你要把容器运到何方：我们可以在自己的笔记�
   
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
     </nav>
   
 
@@ -1278,10 +1588,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">计算机组成原理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">Docker</a>
               </li>
              
@@ -1294,23 +1600,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">redis</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">SSM框架</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">Spring Boot</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">数据库连接</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">计算机网络</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">redis</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1318,7 +1612,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">java</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">Spring Boot</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">计算机网络</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1326,27 +1624,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">mybatis</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">FPGA计组课设</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">操作系统</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">剑指offer</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">ElasticSearch</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">MongoDB</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">Java正则表达式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">计算机组成原理</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">编译原理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">剑指offer</a>
               </li>
             
             <div class="clearfix"></div>

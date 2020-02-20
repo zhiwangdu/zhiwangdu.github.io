@@ -151,702 +151,19 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-接口的初始化规则" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-JVM-指令" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/05/%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A7%84%E5%88%99/">接口的初始化规则</a>
+      <a class="article-title" href="/2019/10/24/JVM-%E6%8C%87%E4%BB%A4/">JVM指令</a>
     </h1>
   
 
         
-        <a href="/2019/11/05/%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A7%84%E5%88%99/" class="archive-article-date">
-  	<time datetime="2019-11-05T08:38:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-05</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color4">jvm</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/11/05/%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A7%84%E5%88%99/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-网络层" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/04/%E7%BD%91%E7%BB%9C%E5%B1%82/">网络层</a>
-    </h1>
-  
-
-        
-        <a href="/2019/11/04/%E7%BD%91%E7%BB%9C%E5%B1%82/" class="archive-article-date">
-  	<time datetime="2019-11-04T08:03:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="IP数据报格式"><a href="#IP数据报格式" class="headerlink" title="IP数据报格式"></a>IP数据报格式</h2><p>长度 = 固定部分20B+可变部分</p>
-<h3 id="固定部分"><a href="#固定部分" class="headerlink" title="固定部分"></a>固定部分</h3><ul>
-<li>版本：IPv4或者IPv6</li>
-<li>首部长度：单位是4B，最小为5</li>
-<li>区分服务：指期望获得那种类型的服务</li>
-<li>总长度：首部+数据的总长度，单位是1B</li>
-<li>标识、标志、片偏移：</li>
-<li>生存时间：TTL，IP数据报的保质期，每经过一个路由器就-1，变成0则丢弃</li>
-<li>协议：传输层传下来的报文使用的协议，TCP-6或UDP-17 </li>
-<li>首部检验和：只检验首部</li>
-<li>源地址：32位</li>
-<li>目的地址：32位</li>
-<li>可选字段：长度可变，0～40B，用来支持排错，测量以及安全等措施</li>
-<li>填充：全0，把首部补成4B的整数倍。</li>
-</ul>
-<h2 id="IP地址"><a href="#IP地址" class="headerlink" title="IP地址"></a>IP地址</h2><h2 id="网络地址转换-NAT"><a href="#网络地址转换-NAT" class="headerlink" title="网络地址转换(NAT)"></a>网络地址转换(NAT)</h2><h2 id="传输单元名词辨析"><a href="#传输单元名词辨析" class="headerlink" title="传输单元名词辨析"></a>传输单元名词辨析</h2><p>应用层：报文<br><br>传输层：报文段<br><br>网络层：IP数据报，分组<br><br>链路层：帧，IP网络层传来的分组加头加尾<br><br>物理层：比特流</p>
-<h2 id="数据报"><a href="#数据报" class="headerlink" title="数据报"></a>数据报</h2><p>无连接服务：不事先为分组的传输确定传输路径，每个分组独立确定传输路径，不同分组传输路径可能不同；<br></p>
-<h2 id="IP数据报格式-1"><a href="#IP数据报格式-1" class="headerlink" title="IP数据报格式"></a>IP数据报格式</h2><p>总长度单位是1B，片偏移单位是8B，首部长度是4B。</p>
-<h2 id="IP数据报分片"><a href="#IP数据报分片" class="headerlink" title="IP数据报分片"></a>IP数据报分片</h2><ul>
-<li>标识：同一数据报的分片使用同一标识。</li>
-<li>标志：三位中只有两位有意义 X _ _<br><br>中间位DF（Don’t Fragment），DF=1禁止分片，DF=0允许分片。<br><br>最低位MF（More Fragment），MF=1后面还有分片，MF=0代表最后一片。</li>
-<li>片偏移：指出较长分组分片后，某片在原分组中的相对位置。以8B为单位。据此，除了最后一个分片，每个分片的长度一定是 <em>8B的整数倍</em>。</li>
-</ul>
-<h2 id="网络地址转换（NAT）"><a href="#网络地址转换（NAT）" class="headerlink" title="网络地址转换（NAT）"></a>网络地址转换（NAT）</h2><h2 id="子网划分和子网掩码"><a href="#子网划分和子网掩码" class="headerlink" title="子网划分和子网掩码"></a>子网划分和子网掩码</h2><h2 id="CRID"><a href="#CRID" class="headerlink" title="CRID"></a>CRID</h2><h2 id="ICMP协议"><a href="#ICMP协议" class="headerlink" title="ICMP协议"></a>ICMP协议</h2><h3 id="ICMP差错报告报文"><a href="#ICMP差错报告报文" class="headerlink" title="ICMP差错报告报文"></a>ICMP差错报告报文</h3><ol>
-<li>终点不可达</li>
-<li>源点抑制（基本不再使用）</li>
-<li>时间超过</li>
-<li>参数问题</li>
-<li>改变路由（重定向）</li>
-</ol>
-<h3 id="不应发送ICMP差错报文的情况"><a href="#不应发送ICMP差错报文的情况" class="headerlink" title="不应发送ICMP差错报文的情况"></a>不应发送ICMP差错报文的情况</h3><ol>
-<li>对ICMP差错报告报文</li>
-<li>对第一个分片的数据报片的所有后续数据报片</li>
-<li>对具有组播地址的数据报</li>
-<li>对具有特殊地址（如127.0.0.0或0.0.0.0）</li>
-</ol>
-<h3 id="ICMP询问报文"><a href="#ICMP询问报文" class="headerlink" title="ICMP询问报文"></a>ICMP询问报文</h3><h2 id="IPv4和IPv6"><a href="#IPv4和IPv6" class="headerlink" title="IPv4和IPv6"></a>IPv4和IPv6</h2><h3 id="IPv6向IPv6的过渡"><a href="#IPv6向IPv6的过渡" class="headerlink" title="IPv6向IPv6的过渡"></a>IPv6向IPv6的过渡</h3><ol>
-<li>双栈协议</li>
-<li>隧道通信</li>
-</ol>
-<h2 id="路由算法"><a href="#路由算法" class="headerlink" title="路由算法"></a>路由算法</h2><h3 id="静态路由算法（非自适应路由算法）"><a href="#静态路由算法（非自适应路由算法）" class="headerlink" title="静态路由算法（非自适应路由算法）"></a>静态路由算法（非自适应路由算法）</h3><p>管理员手工配置路由信息<br><br>优点：简便、可靠，在符合稳定、拓扑变化不大的网络中运行效果很好，广泛用于高度安全性的军事网络和较小的商业网络。<br><br>缺点：路由更新慢，不适用于大型网络。</p>
-<h3 id="动态路由算法（自适应路由算法）"><a href="#动态路由算法（自适应路由算法）" class="headerlink" title="动态路由算法（自适应路由算法）"></a>动态路由算法（自适应路由算法）</h3><p>路由器间彼此交换信息，按照路由算法优化出路由表项<br><br>优点：路由更新快，适用于大型网络，及时响应链路费用或网络拓扑变化。<br><br>缺点：算法复杂，增加网络负担。</p>
-<h4 id="全局性"><a href="#全局性" class="headerlink" title="全局性"></a>全局性</h4><h4 id="分散性"><a href="#分散性" class="headerlink" title="分散性"></a>分散性</h4>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">计算机网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/11/04/%E7%BD%91%E7%BB%9C%E5%B1%82/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-常量的本质" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/04/%E5%B8%B8%E9%87%8F%E7%9A%84%E6%9C%AC%E8%B4%A8/">常量的本质</a>
-    </h1>
-  
-
-        
-        <a href="/2019/11/04/%E5%B8%B8%E9%87%8F%E7%9A%84%E6%9C%AC%E8%B4%A8/" class="archive-article-date">
-  	<time datetime="2019-11-04T01:07:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/11/04/%E5%B8%B8%E9%87%8F%E7%9A%84%E6%9C%AC%E8%B4%A8/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-java常用API" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/03/java%E5%B8%B8%E7%94%A8API/">java常用API</a>
-    </h1>
-  
-
-        
-        <a href="/2019/11/03/java%E5%B8%B8%E7%94%A8API/" class="archive-article-date">
-  	<time datetime="2019-11-03T07:36:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-03</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Scanner类"><a href="#Scanner类" class="headerlink" title="Scanner类"></a>Scanner类</h1>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color5">java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/11/03/java%E5%B8%B8%E7%94%A8API/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-TCP三次握手四次挥手" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/02/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/">TCP协议</a>
-    </h1>
-  
-
-        
-        <a href="/2019/11/02/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/" class="archive-article-date">
-  	<time datetime="2019-11-02T11:42:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="TCP首部格式"><a href="#TCP首部格式" class="headerlink" title="TCP首部格式"></a>TCP首部格式</h2><p><img src="/images/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/TCP%E9%A6%96%E9%83%A8%E6%A0%BC%E5%BC%8F.png" alt="tip"></p>
-<ul>
-<li>源端口和目的端口:各占两个字节，分别写入源端口号和目的顿口号</li>
-<li>序号seq：占四个字节，范围是【0, 2^32 - 1】 共 2^32个序号，在TCP字节流中，每个字节都会按顺序编号，本字段表示本报文段中所发送的数据的第一个字节的序号。</li>
-<li>确认号ack：期望收到对方下一个报文段的第一个数据字节的编号。若确认号文N，则证明N-1之前的数据都已经正确收到。</li>
-<li>数据偏移：即首部长度，以4B为单位，即一个数值为4B</li>
-<li>保留：</li>
-<li>URG：紧急位，当URG=1时，标明此报文段中有紧急数据传送，是优先级最高的数据，不需要在缓存队列中排队，配合紧急指针字段使用。</li>
-<li>ACK：确认位，ACK=1时确认号有效，在连接建立后传送的所有报文段ACK都必须置为1.</li>
-<li>PSH：推送位，PSH=1时，接收方应尽快交付接受的应用进程，不用再等到缓存填满再想上层交付。</li>
-<li>RST：复位，RST=1时说明TCP连接出现严重错误，必须释放连接然后重新建立。</li>
-<li>SYN：同步位，SYN=1时，表明是一个连接请求/连接接受报文。</li>
-<li>FIN：FIN=1时，表明此报文段发送方数据已发完，请求释连接。</li>
-<li>窗口：指的是发送本报文段的一方的接受窗口，即现在允许对方发送的数据量。</li>
-<li>检验和：检验首部+数据，检验时要加上12B伪首部，第四个字段为6.</li>
-<li>紧急指针：URG=1时才有意义，指出本报文段中紧急数据的字节数。</li>
-<li>选项：长度可变</li>
-<li>填充：<h2 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h2>握手是为了建立连接，TCP三次握手的流程如下：<br></li>
-</ul>
-<ol>
-<li>第一次握手：建立连接时，客户端发送SYN包到服务器，并进入SYN_SEND状态，等待服务器确认；</li>
-<li>第二次握手：服务器收到SYN包，必须确认客户的SYN同时自己也发送一个SYN包，即SYN+ACK包，此时服务器进入SYN_RECV状态；</li>
-<li>第三次握手：客户端收到服务器的SYN+ACK包，向服务器发送确认包ACK，此包发送完毕，客户端和服务器进入ESTABLISHED状态，完成三次握手。<h2 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h2>“挥手”是为了能终止连接，TCP四次挥手的流程如下：<br></li>
-<li>第一次挥手：Client发送一个FIN，用来关闭Client到Server的数据传送，Client进入FIN_WAIT_1的状态；</li>
-<li>第二次挥手：Server收到FIN后，发送一个ACK给Client，确认序号为收到序号+1（与SYN相同，一个FIN占用一个序号），Server进入CLOSE_WAIT状态；</li>
-<li>第三次挥手：Server发送一个FIN，用来关闭Server到Client的数据发送，Server进入LAST_ACK状态；</li>
-<li>第四次挥手：Client收到FIN后，Client进入TIME_WAIT状态，接着发送一个ACK给Server，确认序号为收到序号+1，Server进入CLOSED状态，完成四次挥手。<h3 id="为什么会有TIME-WAIT状态"><a href="#为什么会有TIME-WAIT状态" class="headerlink" title="为什么会有TIME_WAIT状态"></a>为什么会有TIME_WAIT状态</h3></li>
-</ol>
-<ul>
-<li>确保有足够时间让对方收到ACK包</li>
-<li>避免新旧连接混淆<h2 id="为什么需要四次挥手才能断开连接"><a href="#为什么需要四次挥手才能断开连接" class="headerlink" title="为什么需要四次挥手才能断开连接"></a>为什么需要四次挥手才能断开连接</h2>因为全双工，发送方和接收方都需要FIN报文和ACK报文，各需要两次挥手<h2 id="服务器出现大量CLOSE"><a href="#服务器出现大量CLOSE" class="headerlink" title="服务器出现大量CLOSE"></a>服务器出现大量CLOSE</h2></li>
-</ul>
-<h2 id="TCP滑动窗口"><a href="#TCP滑动窗口" class="headerlink" title="TCP滑动窗口"></a>TCP滑动窗口</h2><h3 id="RTT和RTO"><a href="#RTT和RTO" class="headerlink" title="RTT和RTO"></a>RTT和RTO</h3><ul>
-<li>RTT：发送一个数据包收到对应的ACK，所花费的时间。</li>
-<li>RTO：重传时间间隔。根据RTT计算。<h3 id="TCP的滑动窗口"><a href="#TCP的滑动窗口" class="headerlink" title="TCP的滑动窗口"></a>TCP的滑动窗口</h3></li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">计算机网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/11/02/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-名词解释" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/10/27/%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A/">名词解释</a>
-    </h1>
-  
-
-        
-        <a href="/2019/10/27/%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A/" class="archive-article-date">
-  	<time datetime="2019-10-27T03:41:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="名词解释"><a href="#名词解释" class="headerlink" title="名词解释"></a>名词解释</h2><ol>
-<li><p>CSMA/CD<br>Carrier Sense Multiple Access with Collision Detection<br>载波监听多点接入/碰撞检测<br>发送数据前，先侦听信道是否空闲，若空闲，则立即发送数据；若忙碌，则等待一段时间至信道中的信息传送结束之后在发送数据。若同时有两个或两个以上节点同时发送请求，则判定为冲突。若侦听到冲突，则立即停止发送数据，等待一段时间再重新尝试。先听后发，边听边发，冲突停发，随机延迟后重发。</p>
-</li>
-<li><p>ARP<br>Address Resolution Protocol<br>地址解析协议,根据IP地址获取物理地址的一个TCP/IP协议</p>
-</li>
-<li><p>ICMP<br>Internet Control Message Protocol<br>internet控制报文协议<br>用于在IP主机、路由器之间传递控制消息。主要用于在主机与路由器之间传递控制信息，包括报告错误、交换受限控制和状态信息等等。</p>
-</li>
-<li><p>OSPF<br>Open Shortest Path First 开放式最短路径优先<br>用于在单一自治系统内决策路由，通过路由器之间通告网络接口的状态来建立链路状态数据库，生成最短路径树，每个OSPF路由器使用这些最短路径构造路由表。</p>
-</li>
-<li><p>BGP<br>Border Gateway Protocol 边界网关协议<br>允许一个AS与另一个AS进行通信。和其他的BGP系统交换网络可达信息。</p>
-</li>
-<li><p>DNS<br>Domain Name System 域名系统<br>作为域名和IP地址相互映射的一个分布式数据库，能够使用户更方便的访问互联网，为不用去记住能够被机器直接读取的IP数串</p>
-</li>
-<li><p>VPN<br>Virtual Private Network 虚拟专用网咯<br>在公用网络上建立专用网络，进行加密通讯。VPN网关通过对数据包的加密和数据包目的地址的转换实现远程访问。</p>
-</li>
-<li><p>HTTP<br>HyperText Transfer Protocol 超文本传输协议<br>用于从www服务器传输超文本到本地浏览器传输协议。</p>
-</li>
-<li><p>MPLS<br>Multiple Protocol Label Switching 多协议标签交换<br>在开放的通信网上利用标签引导数据告诉、高效传输的新技术。<br>MPLS是利用标记进行数据转发的。当分组进入网络时，要为其分配固定长度的短的标记，并将标记与分组封装在一起，在整个转发过程中，交换节点仅根据标记进行转发。</p>
-</li>
-<li><p>SCTP<br>Stream Control Transmission Protocol，流控制传输协议<br>SCTP是一个面向连接的流传输协议，它可以在两个端点之间提供稳定有序的数据传递服务。</p>
-</li>
-<li><p>UDP<br>User Datagram Protocol，用户数据报协议<br><br>该协议是互联网协议族中传输层的协议，UDP只是在IP数据包服务上增加了分用、复用和差错检测功能。UDP是面向无连接的,发送数据不需要建立连接；使用尽最大努力交付，即不可靠交付；UDP是面向报文的，发送方UDP对应用程序交下来的报文既不合并也不拆分。</p>
-</li>
-<li><p>带宽<br><br>在计算机网络中，带宽用来表示网络的通信线路传送数据的能力，因此带宽表示在单位时间内从网络中的某一节点到另一节点所通过的最高数据率，带宽的单位是“比特每秒”，b/s。</p>
-</li>
-<li><p>网络体系结构<br><br>为了完成计算机之间的通信合作，把每个计算机互连的功能划分成定义明确的层次，规定了同层次进程通信协议及相邻层之间的接口及服务。将这些同层间通信的协议以及相邻层接口统称为网络体系结构。</p>
-</li>
-<li><p>ADSL<br><br>Asymmetric Digital Subscriber Line，非对称数字用户线<br><br>是用数字技术对现有模拟电话用户线进行改造，使之能够承载宽带数字业务。ADSL的非对称是指下行带宽都远远大于上行带宽。</p>
-</li>
-<li><p>VLAN<br><br>Virtual LAN，虚拟局域网<br><br>是由局域网段构成的与物理位置无关的逻辑组，而这些网段具有某些共同的需求，每一个VLAN的帧都有一个明确的标识符，指明发送这个帧的工作站是属于哪一个VLAN。</p>
-</li>
-<li><p>CIDR<br><br>Classless InterDomain Routing 无类别域间路由选择<br><br>消除了A类，B类，C类地址以及划分子网的概念，同时CIDR把网络前缀都相同的连续IP地址组成一个“CIDR地址块”</p>
-</li>
-<li><p>SMTP<br><br>Simple Mail Transfer Protocol，简单邮件传送协议<br><br>规定了在两个相互通信的SMTP进程之间应如何交换信息。SMTP采用客户——服务器方式，负责发送邮件的SMTP进程就是SMTP客户，负责接收邮件的进程就是SMTP服务器，至于邮件内部的格式，邮件如何储存以及邮件系统应如以多快的速度来发送邮件，SMTP都未作出规定。</p>
-</li>
-<li><p>SNMP<br><br>Simple Network Management Protocol，简单网络管理协议<br><br>SNMP中管理程序和代理程序按客户——服务器方式工作。管理程序运行SNMP客户程序，而代理程序运行SNMP服务器程序。</p>
-</li>
-<li><p>MAC<br><br>Media Access Control，媒体访问控制</p>
-</li>
-<li><p>RTT<br><br>Round-Trip Time往返时间</p>
-</li>
-<li><p>CRC<br><br>Cyclic Redundancy Check 循环冗余检查</p>
-</li>
-<li><p>VLAN<br><br>Virtual Private Network 虚拟专用网</p>
-</li>
-<li><p>移动自组网络<br>是一种无固定设施的无线局域网，其中的每一个移动站都要参与路由的发现和维护</p>
-</li>
-<li><p>AS<br>Autonomous System，自治系统</p>
-</li>
-</ol>
-<h2 id="简答题"><a href="#简答题" class="headerlink" title="简答题"></a>简答题</h2><ol>
-<li><p>评价一个网络性能的优劣，有哪几个重要指标？<br><br>带宽，延迟，吞吐量，丢包率</p>
-</li>
-<li><p>无线网络都有哪几种类型？<br><br>WPAN，WLAN，WMAN，WWAN</p>
-</li>
-<li><p>Wi-Fi和5G各属于哪类无线网络<br><br>Wi-Fi属于无线局域网，5G属于无线广域网</p>
-</li>
-<li><p>路由器是重要的IP数据包转发设备，在考虑子网的情况下，根据你自己的理解写出路由算法的主要步骤（分步骤用文字描述即可）。<br></p>
-</li>
-<li><p>试简述RIP，OSPF和BGP路由选择协议的主要特点。<br><br>RIP是一种分布式的基于距离向量的路由选择协议，是互联网的标准协议，其最大的优点就是简单。RIP协议的特点是：(1) 仅和相邻路由器交换信息。(2) 路由器交换的信息是当前本路由器所知道的全部信息，即自己的路由表。(3) 按笃定的时间间隔交换信息。 <br><br>OSPF最主要的特征就是使用分布式的链路状态协议。OSPF协议的特点是：(1)向本自治系统中所有的路由器发送信息。(2)发送的信息就是与本路由器相邻的所有路由器的链路状态(3)只有当链路状态发生变化时，路由器才向所有路由器用泛洪法发送此信息。<br><br>BGP是不同自治系统的路由器之间交换路由器信息的协议，它采用路径响亮路由选择协议。BGP的主要特点是：(1)BGP在自治系统之间交换可达性信息。(2)自治系统之间的路由选择协议必须考虑有关策略(3)BGP只能是力求寻找一条能够到达目的网络且比较好的路由，而并非要寻找一条最佳路由。</p>
-</li>
-<li><p>试说明运输层在协议栈中的地位和作用。运输层的通信和网络层的通信有什么重要的区别？为什么运输层是必不可少的？<br><br>(1)从通信和信息处理的角度看，运输层向它上面的应用层提供通信服务，它属于面向通信部分的最高层，同时也是用户功能中的最低层。当网络的边缘部分中的两个主机使用网络的核心功能进行端到端的通信是，只有主机的协议栈才有运输层，而网络核心部分中的路由器在转发分组时都只用到下三层的功能。<br><br>(2)网络层提供点到点即主机与主机之间的逻辑通信，而运输层提供端到端应用进程之间的逻辑通信。<br><br>(3)网络层只能将实现两个主机之间的通信，而真正需要通信的是主机中的应用进程，因此提供进程之间通信的传输层是必不可少的。<br></p>
-</li>
-<li><p>试举例说明有哪些应用进程宁愿采用不可靠的UDP，也不愿意采用可靠的TCP。<br>(1)对于实时数据传输，如果宁可丢失少量分组也不要等待太晚到达的分组。<br><br>(2)在连续的音频或视频流传输中，很少量的分组丢失对播放效果影响并不大。<br><br>(3)当出现网络拥塞时，可能有的应用程序不愿放慢其报文段的发送速度<br><br>(4)有的应用程序不需要TCP的可靠传输。<br></p>
-</li>
-<li><p>为什么说UDP是面向报文的，而TCP是面向字节流的？<br>发送方的UDP对应用程序交下来的报文，在添加首部后就向下交付IP层。UDP对应用层交下来的报文，既不合并，也不拆分，而是保留这些报文的边界。在接收方的UDP，对IP层交上来的UDP用户数据报，在去除首部后就原封不动地交付上层的应用进程，。也就是说UDP一次交付一个完整的报文。</p>
-</li>
-<li><p>一个UDP用户数据报的数据字段为8192字节。在链路层要使用以太网来传送。试问应当划分几个IP数据报片？说明每一个IP数据报片的数据字段长度和片偏移字段的值。<br><br>UDP首部为8B，所以此UDP数据报长度为8192+2=8200B<br><br>以太网数据字段的最大长度为1500B。若IP首部为20B，则IP数据报的数据部分最多只能有1480B。8200=1480✖️5+800，因此划分的数据报片为6个。</p>
-</li>
-<li><p>一个TCP连接下面使用256kbit/s的链路，其端到端时延为128ms。经测试，发现吞<br>吐量只有120 kbit/s。 试问发送窗口W是多少? (提示: 可以有两种答案，取决于接<br>收端发出确认的时机。)<br><br>两种个情况<br><br>(1)接收端在收完一批</p>
-</li>
-<li><p>在TCP拥塞控制中，什么是慢开始、拥塞避免、快重传和快恢复算法？这里每一种算法各起什么作用？“乘法减小”和“加法增大”各用在什么情况下？<br><br>慢开始：由小到大逐渐增大拥塞窗口数值。<br><br>拥塞避免：当拥塞窗口大于慢开始门限ssthresh时，停止慢开始算法开始拥塞避免算法。拥塞避免算法是让拥塞窗口cwnd缓慢增大，即每经过一个往返时间RTT就把发送方的拥塞窗口加1。<br><br>快重传：快重传算法要求接受方每收到一个失序的报文段后就立即发出重复确认,发送方接收到三个冗余确认后立即重传。<br><br>快恢复：快重传之后进行乘法减小，门限值减半，后执行拥塞避免加法增大。<br><br>乘法减小：只要发生拥塞，门限值就会减小到二分之一。<br><br>加法增大：拥塞避免算法中。<br></p>
-</li>
-<li><p>5-39<br></p>
-</li>
-<li><p>5-41<br><br>TCP三次握手建立连接，四次挥手释放连接；</p>
-</li>
-<li><p>5-46-使用具体例子说明为什么在运输层连接建立时要使用三报文握手。说明如果不这样做可能会出现什么情况。<br><br>在上一个连接中，A向B发送的连接请求SYN报文滞留在网络中。于是A超时重传，与B建立了TCP连接，交换了数据，最后也释放了连接。<br><br>但滞留在网络中的SYN报文段突然传送到了B。如果不使用三报文握手，B就会以为A现在请求建立TCP连接，于是就分配资源，等待A传送数据。但是A并没有要建立连接，也不会传送数据，于是B就白白等待A传送数据，浪费了资源。<br><br>如果使用三报文握手，那么在B收到A发送的陈旧SYN报文后，就向A发送SYN报文段，A接收到此报文段后，根据ack=x+1就可以知道不应当理睬此报文段，因为A当前并没有发送seq=x的报文段。这时A返回复位报文段，拒绝建立连接。B收到后就知道不能建立TCP连接，就不会耗费资源等待A发送数据了。</p>
-</li>
-<li><p>TCP连接的吞吐量应当是每秒发送的数据字节数，还是每秒发送的首部和数据之和的字节数？吞吐量应当是每秒发送的字节数，还是每秒发送的比特数？<br><br>TCP的吞吐量是每秒发送的数据字节数；吞吐量是每秒发送的字节数。</p>
-</li>
-<li><p>流量控制和拥塞控制最主要的区别是什么？发送窗口的大小取决于流量控制还是拥塞控制？<br><br>流量控制是在一条TCP连接中接受端用于限制发送端发送报文段速率的措施，流量控制只控制一个发送端;<br><br>拥塞控制是用来控制TCP连接中发送端发送报文的速率，以免使互联网中的某处产生过载。拥塞控制可以控制多个发送端。<br><br>当发送窗口小于拥塞窗口时，其取决于流量控制，即接受端的接收能力；当发送窗口大于拥塞窗口时，其取决于拥塞控制，即整个网络拥塞情况。</p>
-</li>
-<li><p>5-35<br><br>时延 = 发送时延+传播时延+处理时延+排队时延<br><br>发送时延：发送时延是主机或路由器发送数据帧所需要的时间，也就是从发送数据的第一个比特算起，到该帧最后一个比特发送完毕所需要的时间；<br>发送时延=数据帧长度/信道带宽<br><br>传播时延：传播时延是电磁波在信道中传送需要的时间；<br>传播时延=信道长度/电磁波在信道上的传播速率<br></p>
-</li>
-<li><p><em>1-03.试从多个方面比较电路交换、报文交换和分组交换的主要优缺点。</em></p>
-</li>
-<li><p><em>1-14.计算机网络有哪些常用的性能指标？</em><br></p>
-</li>
-</ol>
-<ul>
-<li>速率：指连接在计算机网络上的主机在数字信道上传送数据的速率，也称为数据率或比特率。</li>
-<li>带宽：用来表示网络的通信线路传送数据的能力，网络带宽表示在单位时间内从网络中的一点到另一点所能通过的“最高数据率”。</li>
-<li>吞吐量：指在单位时间内通过某个网络的数据量。</li>
-<li>时延：指数据从网络的一端传送到另一端所需的时间。包括发送时延，传播时延，处理时延和排队时延。</li>
-<li>时延带宽积：是传播时延和带宽的乘积。链路的时延带宽积又称为以比特为单位的链路长度。</li>
-<li>往返时间：从发送方发送数据开始，到发送方接收到来自接受方的确认。</li>
-<li>利用率：</li>
-</ul>
-<ol start="20">
-<li><p>1-20.网络体系结构为什么要采用分层次的结构？<br>网络体系结构采用分层次的结构，是因为分层可以把庞大而复杂的问题转化为若干小的局部问题，而这些较小的局部问题比较易于研究和处理。</p>
-</li>
-<li><p><em>1-24.试述五层协议的网络体系结构的要点，包括各层的主要功能。</em><br></p>
-</li>
-</ol>
-<ul>
-<li>物理层——透明地传输比特流。</li>
-<li>数据链路层——将网络层的数据组装成帧，在两个相邻结点之间透明地传输帧中的数据。每一帧包括数据和必要的控制信息。</li>
-<li>网络层——负责为分组交换网上的不同主机提供通信服务。</li>
-<li>传输层——负责向两个主机中的进程提供通信服务。</li>
-<li>应用层——直接为用户的应用进程提供服务。</li>
-</ul>
-<ol start="22">
-<li><em>1-26.试解释一下名词：协议栈、实体、对等层、协议数据单元、服务访问节点、客户、服务器、客户-服务器方式。</em><br></li>
-</ol>
-<ul>
-<li>协议栈：由于计算机网络的体系结构采用了分层结构，因此不论在主机还是路由器中的协议都有好几层。这一层一层的协议很像堆栈的结构，所以就把这些协议层称为协议栈。</li>
-<li>实体：表示任何可发送或接收信息的硬件或软件进程。在许多情况下，实体就是一个特定的软件模块。</li>
-<li>对等层：在网络体系结构中，通信双方实现了同样功能的层。</li>
-<li>协议数据单元：通常记为PDU，它是对等实体之间进行信息交换的数据单元。</li>
-<li>服务访问节点：通常记为SAP，在同一系统中相邻两层的实体进行交互的地方，通常称为服务访问节点。</li>
-<li>客户：在计算机网络中进行通信的应用进程的服务请求方。</li>
-<li>服务器：在计算机网络中进行通信的应用进程的服务提供方。</li>
-<li>客户-服务器方式：C/S</li>
-</ul>
-<ol start="23">
-<li><p><em>2-01.物理层要解决那些问题？物理层的主要特点是什么？</em><br><br>物理层考虑的是怎样才能在连接各种计算机的传输媒体上传输数据比特流，它的任务就是透明地传送比特流。</p>
-</li>
-<li><p><em>2-04.试解释一下名词：数据，信号，模拟数据，模拟信号，基带信号，带通信号，数字数据，数字信号，码元，单工通信，半双工通信，全双工通信，串行传输，并行传输。</em><br></p>
-</li>
-</ol>
-<ul>
-<li>数据：是运送消息的实体。</li>
-<li>信号：是数据的电气或电磁的表现。</li>
-<li>模拟数据：即连续数据，即数据的变化是连续的，如人说话的声音数据。</li>
-<li>模拟信号：即连续信号，其特点是代表消息的参数的取值是连续的。入门打电话时，声波通过话筒变成了连续变化的电信号。</li>
-<li>基带信号：即来自信源的信号，也就是基本频带信号。如计算机输出的代表各种文字或图像文件的数据信号。</li>
-<li>带通信号：把基带信号的频率范围搬移到较高的频段以便在信道中传输。</li>
-<li>数字数据：离散数据，即数据的变化是不连续的。</li>
-<li>数字信号：离散信号，其特点是代表消息的参数的取值是离散的。</li>
-<li>码元：码是信号元素和字符之间的事先约定好的转换。码元是码所包含的元素，在简单的二进制编码中，一个码元就是一个比特；在比较复杂的编码中，一个码元可一包含多个比特。</li>
-<li>单工通信：单向通信，只能有一个方向的通信而没有反方向的交互。</li>
-<li>半双工通信：双向交替通信，通信的双方都可以发送消息，但不能同时发送。</li>
-<li>全双工通信：双向同时通信，通信的双方可以同时发送或接收消息。</li>
-<li>串行传输：数据在传输时是逐个比特按照时间顺序传输的。</li>
-<li>并行传输：数据在传输时采用了n个并行的信道。在每一条信道上，数据仍然是串行传输。</li>
-</ul>
-<ol start="25">
-<li>2-09.香农公式</li>
-<li>2-13.为什么要使用信道复用技术？常用的信道复用技术有哪些？<br>许多用户通过复用技术就可以共同使用一个共享信道来进行通信。<br><br>常用的复用技术有：频分复用，时分复用，波分复用和码分复用。</li>
-<li>2-14.试写出下列英文缩写的全文，并进行简单解释。</li>
-</ol>
-<ul>
-<li>FDM：Frequency Division Multiplexing，频分复用。给每个信号分配唯一的载波频率并通过单一媒体来传输多个独立信号的方法。</li>
-<li>TDM：Time Division Multiplexing，时分复用。把多个信号复用到单个硬件传输信道。</li>
-<li>STDM：Statistic TDM，统计时分复用。又称异步时分复用，是一种改进的时分复用，它能明显地提高信道的利用率。</li>
-<li>WDM：Wavelength Division Multiplexing，波分复用。就是光的频分复用。人们借用载波电话的频分复用的概念，就能做到使用一根光纤来同时传输多个频率很接近的光载波信号。</li>
-<li>DWDM：Dense WDM，密集波分复用。是波分复用的一种表现形式。</li>
-<li></li>
-</ul>
-<ol start="27">
-<li><p>3-01.数据链路与链路有何区别？电路接通了与数据链路接通了的区别何在？<br>链路就是从一个节点到相邻结点的一段物理线路，中间没有任何交换节点；数据链路是在链路的基础上增加了必要的通信协议。</p>
-</li>
-<li><p>3-02.数据链路层中的链路控制包括哪些功能？试讨论把数据链路层做成可靠的链路层有哪些优点和缺点。<br>数据链路层的功能：封装成帧、透明传输和差错检测。<br><br>可靠链路的优点是可以是网络中的某个节点及早发现传输中出了差错，因而可以通过数据链路层的重传来纠正这个差错。<br><br>缺点：又是高层协议使用的是不可靠传输UDP。UDP并不需要求重传有差错的数据。此时可靠的链路层就会牺牲了UDP的实时性。</p>
-</li>
-<li><p>3-14.常用的局域网的网络拓扑有哪些种类？现在最流行的是那种结构？为什么早期的以太网选择选择总线拓扑结构而不是用星型拓扑结构，而现在却改用星型拓扑结构？<br>常用的局域网的网络拓扑有星型网、环形网和总线网。<br><br>现在最流行的是星型网。<br><br>在局域网发展的早期，人们都认为有源器件比较容易出故障，所以认为无源的总线网会更加可靠，而星型拓扑结构的中心使用了有源器件。但是实践证明，连接有大量站点的总线式以太网，由于接插件的插口较多，反而很容易出现故障，现在专用的ASIC芯片的使用可以吧星型结构的集线器做得非常牢靠。因此现在的以太网一般都使用星型结构的拓扑。</p>
-</li>
-<li><p>3-15.什么叫做传统以太网？以太网有哪两个标准？<br>传统以太网就是最早流行的10Mbit/s速率的以太网。<br><br>主要有的两个标准：DIX Ethernet V2和IEEE 802.3</p>
-</li>
-<li><p>3-19.以太网使用的CSMA/CD协议是以争用方式接入到共享信道的。这与传统的时分复用TDM相比优缺点如何？<br>网络上负荷较轻时，CSMA/CD协议很灵活，哪个站向发送就可以发送，而且发生碰撞的概率很小，但是此时使用TDM效率就很低；但是当网络负荷较大时，CSMA/CD引起的碰撞很多，重传经常发生，因而效率大大降低，而此时TDM效率很高。</p>
-</li>
-<li><p>3-25.</p>
-</li>
-<li><p>3-26.</p>
-</li>
-<li><p>3-29.以太网交换机有何特点？用它怎样组成虚拟局域网？<br>以太网交换机实质上就是一个多接口的网桥，它与工作在物理层的转换器和集线器有很大差别。</p>
-</li>
-</ol>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">计算机网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/10/27/%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-JVM指令" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/10/24/JVM%E6%8C%87%E4%BB%A4/">JVM指令</a>
-    </h1>
-  
-
-        
-        <a href="/2019/10/24/JVM%E6%8C%87%E4%BB%A4/" class="archive-article-date">
+        <a href="/2019/10/24/JVM-%E6%8C%87%E4%BB%A4/" class="archive-article-date">
   	<time datetime="2019-10-24T08:46:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-24</time>
 </a>
         
@@ -878,7 +195,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2019/10/24/JVM%E6%8C%87%E4%BB%A4/">展开全文 >></a>
+          <a class="article-more-a" href="/2019/10/24/JVM-%E6%8C%87%E4%BB%A4/">展开全文 >></a>
         </p>
       
 
@@ -908,19 +225,19 @@
 
 
   
-    <article id="post-类加载" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-JVM-类加载" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/10/22/%E7%B1%BB%E5%8A%A0%E8%BD%BD/">类加载</a>
+      <a class="article-title" href="/2019/10/22/JVM-%E7%B1%BB%E5%8A%A0%E8%BD%BD/">类加载</a>
     </h1>
   
 
         
-        <a href="/2019/10/22/%E7%B1%BB%E5%8A%A0%E8%BD%BD/" class="archive-article-date">
+        <a href="/2019/10/22/JVM-%E7%B1%BB%E5%8A%A0%E8%BD%BD/" class="archive-article-date">
   	<time datetime="2019-10-22T09:13:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-22</time>
 </a>
         
@@ -999,7 +316,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2019/10/22/%E7%B1%BB%E5%8A%A0%E8%BD%BD/">展开全文 >></a>
+          <a class="article-more-a" href="/2019/10/22/JVM-%E7%B1%BB%E5%8A%A0%E8%BD%BD/">展开全文 >></a>
         </p>
       
 
@@ -1049,7 +366,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Mac键盘符号和修饰键说明<br>⌘ Command<br>⇧ Shift<br>⌥ Option<br>⌃ Control<br>↩︎ Return/Enter<br>⌫ Delete<br>⌦ 向前删除键（Fn+Delete）<br>↑ 上箭头<br>↓ 下箭头<br>← 左箭头<br>→ 右箭头<br>⇞ Page Up（Fn+↑）<br>⇟ Page Down（Fn+↓）<br>Home Fn + ←<br>End Fn + →<br>⇥ 右制表符（Tab键）<br>⇤ 左制表符（Shift+Tab）<br>⎋ Escape (Esc)<br>一、Editing（编辑）<br>⌃Space 基本的代码补全（补全任何类、方法、变量）<br>⌃⇧Space 智能代码补全（过滤器方法列表和变量的预期类型）<br>⌘⇧↩ 自动结束代码，行末自动添加分号<br>⌘P 显示方法的参数信息<br>⌃J, Mid. button click 快速查看文档<br>⇧F1 查看外部文档（在某些代码上会触发打开浏览器显示相关文档）<br>⌘+鼠标放在代码上 显示代码简要信息<br>⌘F1 在错误或警告处显示具体描述信息<br>⌘N, ⌃↩, ⌃N 生成代码（getter、setter、构造函数、hashCode/equals,toString）<br>⌃O 覆盖方法（重写父类方法）<br>⌃I 实现方法（实现接口中的方法）<br>⌘⌥T 包围代码（使用if..else, try..catch, for, synchronized等包围选中的代码）<br>⌘/ 注释/取消注释与行注释<br>⌘⌥/ 注释/取消注释与块注释<br>⌥↑ 连续选中代码块<br>⌥↓ 减少当前选中的代码块<br>⌃⇧Q 显示上下文信息<br>⌥↩ 显示意向动作和快速修复代码<br>⌘⌥L 格式化代码<br>⌃⌥O 优化import<br>⌃⌥I 自动缩进线<br>⇥ / ⇧⇥ 缩进代码 / 反缩进代码<br>⌘X 剪切当前行或选定的块到剪贴板<br>⌘C 复制当前行或选定的块到剪贴板<br>⌘V 从剪贴板粘贴<br>⌘⇧V 从最近的缓冲区粘贴<br>⌘D 复制当前行或选定的块<br>⌘⌫ 删除当前行或选定的块的行<br>⌃⇧J 智能的将代码拼接成一行<br>⌘↩ 智能的拆分拼接的行<br>⇧↩ 开始新的一行<br>⌘⇧U 大小写切换<br>⌘⇧] / ⌘⇧[ 选择直到代码块结束/开始<br>⌥⌦ 删除到单词的末尾（⌦键为Fn+Delete）<br>⌥⌫ 删除到单词的开头<br>⌘+ / ⌘- 展开 / 折叠代码块<br>⌘⇧+ 展开所以代码块<br>⌘⇧- 折叠所有代码块<br>⌘W 关闭活动的编辑器选项卡<br>二、Search/Replace（查询/替换）<br>Double ⇧ 查询任何东西<br>⌘F 文件内查找<br>⌘G 查找模式下，向下查找<br>⌘⇧G 查找模式下，向上查找<br>⌘R 文件内替换<br>⌘⇧F 全局查找（根据路径）<br>⌘⇧R 全局替换（根据路径）<br>⌘⇧S 查询结构（Ultimate Edition 版专用，需要在Keymap中设置）<br>⌘⇧M 替换结构（Ultimate Edition 版专用，需要在Keymap中设置）<br>三、Usage Search（使用查询）<br>⌥F7 / ⌘F7 在文件中查找用法 / 在类中查找用法<br>⌘⇧F7 在文件中突出显示的用法<br>⌘⌥F7 显示用法<br>⌘⇧I 查看定义的类,快速查看<br>四、Compile and Run（编译和运行）<br>⌘F9 编译Project<br>⌘⇧F9 编译选择的文件、包或模块<br>⌃⌥R 弹出 Run 的可选择菜单<br>⌃⌥D 弹出 Debug 的可选择菜单<br>⌃R 运行<br>⌃D 调试<br>⌃⇧R, ⌃⇧D 从编辑器运行上下文环境配置<br>五、Debugging（调试）<br>F8 进入下一步，如果当前行断点是一个方法，则不进入当前方法体内<br>F7 进入下一步，如果当前行断点是一个方法，则进入当前方法体内，如果该方法体还有方法，则不会进入该内嵌的方法中<br>⇧F7 智能步入，断点所在行上有多个方法调用，会弹出进入哪个方法<br>⇧F8 跳出<br>⌥F9 运行到光标处，如果光标前有其他断点会进入到该断点<br>⌥F8 计算表达式（可以更改变量值使其生效）<br>⌘⌥R 恢复程序运行，如果该断点下面代码还有断点则停在下一个断点上<br>⌘F8 切换断点（若光标当前行有断点则取消断点，没有则加上断点）<br>⌘⇧F8 查看断点信息<br>六、Navigation（导航）<br>⌘O 查找类文件<br>⌘⇧O 查找所有类型文件、打开文件、打开目录，打开目录需要在输入的内容前面或后面加一个反斜杠/<br>⌘⌥O 前往指定的变量 / 方法<br>⌃← / ⌃→ 左右切换打开的编辑tab页<br>F12 返回到前一个工具窗口<br>⎋ 从工具窗口进入代码文件窗口<br>⇧⎋ 隐藏当前或最后一个活动的窗口，且光标进入代码文件窗口<br>⌘⇧F4 关闭活动run/messages/find/… tab<br>⌘L 在当前文件跳转到某一行的指定处<br>⌘E 显示最近打开的文件记录列表<br>⌘⌥← / ⌘⌥→ 退回 / 前进到上一个操作的地方<br>⌘⇧⌫ 跳转到最后一个编辑的地方<br>⌥F1 显示当前文件选择目标弹出层，弹出层中有很多目标可以进行选择(如在代码编辑窗口可以选择显示该文件的Finder)<br>⌘B / ⌘ 鼠标点击 进入光标所在的方法/变量的接口或是定义处<br>⌘⌥B 跳转到实现处，在某个调用的方法名上使用会跳到具体的实现处，可以跳过接口<br>⌥ Space, ⌘Y 快速打开光标所在方法、类的定义<br>⌃⇧B 跳转到类型声明处<br>⌘U 前往当前光标所在方法的父类的方法 / 接口定义<br>⌃↓ / ⌃↑ 当前光标跳转到当前文件的前一个/后一个方法名位置<br>⌘] / ⌘[ 移动光标到当前所在代码的花括号开始/结束位置<br>⌘F12 弹出当前文件结构层，可以在弹出的层上直接输入进行筛选（可用于搜索类中的方法）<br>⌃H 显示当前类的层次结构<br>⌘⇧H 显示方法层次结构<br>⌃⌥H 显示调用层次结构<br>F2 / ⇧F2 跳转到下一个/上一个突出错误或警告的位置<br>F4 / ⌘↓ 编辑/查看代码源<br>⌥ Home 显示到当前文件的导航条<br>F3选中文件/文件夹/代码行，添加/取消书签<br>⌥F3 选中文件/文件夹/代码行，使用助记符添加/取消书签<br>⌃0…⌃9 定位到对应数值的书签位置<br>⌘F3 显示所有书签<br>七、Refactoring（重构）<br>F5 复制文件到指定目录<br>F6 移动文件到指定目录<br>⌘⌫ 在文件上为安全删除文件，弹出确认框<br>⇧F6 重命名文件<br>⌘F6 更改签名<br>⌘⌥N 一致性<br>⌘⌥M 将选中的代码提取为方法<br>⌘⌥V 提取变量<br>⌘⌥F 提取字段<br>⌘⌥C 提取常量<br>⌘⌥P 提取参数<br>八、VCS/Local History（版本控制/本地历史记录）<br>⌘K 提交代码到版本控制器<br>⌘T 从版本控制器更新代码<br>⌥⇧C 查看最近的变更记录<br>⌃C 快速弹出版本控制器操作面板<br>九、Live Templates（动态代码模板）<br>⌘⌥J 弹出模板选择窗口，将选定的代码使用动态模板包住<br>⌘J 插入自定义动态代码模板<br>十、General（通用）<br>⌘1…⌘9 打开相应编号的工具窗口<br>⌘S 保存所有<br>⌘⌥Y 同步、刷新<br>⌃⌘F 切换全屏模式<br>⌘⇧F12 切换最大化编辑器<br>⌥⇧F 添加到收藏夹<br>⌥⇧I 检查当前文件与当前的配置文件<br>§⌃, ⌃` 快速切换当前的scheme（切换主题、代码样式等）<br>⌘, 打开IDEA系统设置<br>⌘; 打开项目结构对话框<br>⇧⌘A 查找动作（可设置相关选项）<br>⌃⇥ 编辑窗口标签和工具窗口之间切换（如果在切换的过程加按上delete，则是关闭对应选中的窗口）<br>十一、Other（一些官方文档上没有体现的快捷键）<br>⌘⇧8 竖编辑模式</p>
+        <h2 id="Mac-键盘符号和修饰键说明"><a href="#Mac-键盘符号和修饰键说明" class="headerlink" title="Mac 键盘符号和修饰键说明"></a>Mac 键盘符号和修饰键说明</h2><p>⌘ ——&gt; Command<br>⇧ ——&gt; Shift<br>⌥ ——&gt; Option<br>⌃ ——&gt; Control<br>↩︎ ——&gt; Return/Enter<br>⌫ ——&gt; Delete<br>⌦ ——&gt; 向前删除键(Fn + Delete)<br>↑ ——&gt; 上箭头<br>↓ ——&gt; 下箭头<br>← ——&gt; 左箭头<br>→ ——&gt; 右箭头<br>⇞ ——&gt; Page Up(Fn + ↑)<br>⇟ ——&gt; Page Down(Fn + ↓)<br>⇥ ——&gt; 右制表符(Tab键)<br>⇤ ——&gt; 左制表符(Shift + Tab)<br>⎋ ——&gt; Escape(Esc)<br>End ——&gt; Fn + →<br>Home ——&gt; Fn + ←</p>
+<h2 id="Part-1：Editing（编辑）"><a href="#Part-1：Editing（编辑）" class="headerlink" title="Part 1：Editing（编辑）"></a>Part 1：Editing（编辑）</h2><p>快捷键    作用<br>Control + Space    基本的代码补全（补全任何类、方法、变量）<br>Control + Shift + Space    智能代码补全（过滤器方法列表和变量的预期类型）<br>Command + Shift + Enter    自动结束代码，行末自动添加分号<br>Command + P    显示方法的参数信息<br>Control + J    快速查看文档<br>Shift + F1    查看外部文档（在某些代码上会触发打开浏览器显示相关文档）<br>Command + 鼠标放在代码上    显示代码简要信息<br>Command + F1    在错误或警告处显示具体描述信息<br>Command + N, Control + Enter, Control + N    生成代码（getter、setter、hashCode、equals、toString、构造函数等）<br>Control + O    覆盖方法（重写父类方法）<br>Control + I    实现方法（实现接口中的方法）<br>Command + Option + T    包围代码（使用if…else、try…catch、for、synchronized等包围选中的代码）<br>Command + /    注释 / 取消注释与行注释<br>Command + Option + /    注释 / 取消注释与块注释<br>Option + 方向键上    连续选中代码块<br>Option + 方向键下    减少当前选中的代码块<br>Control + Shift + Q    显示上下文信息<br>Option + Enter    显示意向动作和快速修复代码<br>Command + Option + L    格式化代码<br>Control + Option + O    优化 import<br>Control + Option + I    自动缩进线<br>Tab / Shift + Tab    缩进代码 / 反缩进代码<br>Command + X    剪切当前行或选定的块到剪贴板<br>Command + C    复制当前行或选定的块到剪贴板<br>Command + V    从剪贴板粘贴<br>Command + Shift + V    从最近的缓冲区粘贴<br>Command + D    复制当前行或选定的块<br>Command + Delete    删除当前行或选定的块的行<br>Control + Shift + J    智能的将代码拼接成一行<br>Command + Enter    智能的拆分拼接的行<br>Shift + Enter    开始新的一行<br>Command + Shift + U    大小写切换<br>Command + Shift + ] / Command + Shift + [    选择直到代码块结束 / 开始<br>Option + Fn + Delete    删除到单词的末尾<br>Option + Delete    删除到单词的开头<br>Command + 加号 / Command + 减号    展开 / 折叠代码块<br>Command + Shift + 加号    展开所以代码块<br>Command + Shift + 减号    折叠所有代码块<br>Command + W    关闭活动的编辑器选项卡<br>Part 2：Search / Replace（查询/替换）<br>快捷键    作用<br>Double Shift    查询任何东西<br>Command + F    文件内查找<br>Command + G    查找模式下，向下查找<br>Command + Shift + G    查找模式下，向上查找<br>Command + R    文件内替换<br>Command + Shift + F    全局查找（根据路径）<br>Command + Shift + R    全局替换（根据路径）<br>Command + Shift + S    查询结构（Ultimate Edition 版专用，需要在 Keymap 中设置）<br>Command + Shift + M    替换结构（Ultimate Edition 版专用，需要在 Keymap 中设置）<br>Part 3：Usage Search（使用查询）<br>快捷键    作用<br>Option + F7 / Command + F7    在文件中查找用法 / 在类中查找用法<br>Command + Shift + F7    在文件中突出显示的用法<br>Command + Option + F7    显示用法<br>Part 4：Compile and Run（编译和运行）<br>快捷键    作用<br>Command + F9    编译 Project<br>Command + Shift + F9    编译选择的文件、包或模块<br>Control + Option + R    弹出 Run 的可选择菜单<br>Control + Option + D    弹出 Debug 的可选择菜单<br>Control + R    运行<br>Control + D    调试<br>Control + Shift + R, Control + Shift + D    从编辑器运行上下文环境配置<br>Part 5：Debugging（调试）<br>快捷键    作用<br>F8    进入下一步，如果当前行断点是一个方法，则不进入当前方法体内<br>F7    进入下一步，如果当前行断点是一个方法，则进入当前方法体内，如果该方法体还有方法，则不会进入该内嵌的方法中<br>Shift + F7    智能步入，断点所在行上有多个方法调用，会弹出进入哪个方法<br>Shift + F8    跳出<br>Option + F9    运行到光标处，如果光标前有其他断点会进入到该断点<br>Option + F8    计算表达式（可以更改变量值使其生效）<br>Command + Option + R    恢复程序运行，如果该断点下面代码还有断点则停在下一个断点上<br>Command + F8    切换断点（若光标当前行有断点则取消断点，没有则加上断点）<br>Command + Shift + F8    查看断点信息<br>Part 6：Navigation（导航）<br>快捷键    作用<br>Command + O    查找类文件<br>Command + Shift + O    查找所有类型文件、打开文件、打开目录，打开目录需要在输入的内容前面或后面加一个反斜杠/<br>Command + Option + O    前往指定的变量 / 方法<br>Control + 方向键左 / Control + 方向键右    左右切换打开的编辑 tab 页<br>F12    返回到前一个工具窗口<br>Esc    从工具窗口进入代码文件窗口<br>Shift + Esc    隐藏当前或最后一个活动的窗口，且光标进入代码文件窗口<br>Command + Shift + F4    关闭活动 run/messages/find/… tab<br>Command + L    在当前文件跳转到某一行的指定处<br>Command + E    显示最近打开的文件记录列表<br>Option + 方向键左 / Option + 方向键右    光标跳转到当前单词 / 中文句的左 / 右侧开头位置<br>Command + Option + 方向键左 / Command + Option + 方向键右    退回 / 前进到上一个操作的地方<br>Command + Shift + Delete    跳转到最后一个编辑的地方<br>Option + F1    显示当前文件选择目标弹出层，弹出层中有很多目标可以进行选择(如在代码编辑窗口可以选择显示该文件的 Finder)<br>Command + B / Command + 鼠标点击    进入光标所在的方法/变量的接口或是定义处<br>Command + Option + B    跳转到实现处，在某个调用的方法名上使用会跳到具体的实现处，可以跳过接口<br>Option + Space, Command + Y    快速打开光标所在方法、类的定义<br>Control + Shift + B    跳转到类型声明处<br>Command + U    前往当前光标所在方法的父类的方法 / 接口定义<br>Control + 方向键下 / Control + 方向键上    当前光标跳转到当前文件的前一个 / 后一个方法名位置<br>Command + ] / Command + [    移动光标到当前所在代码的花括号开始 / 结束位置<br>Command + F12    弹出当前文件结构层，可以在弹出的层上直接输入进行筛选（可用于搜索类中的方法）<br>Control + H    显示当前类的层次结构<br>Command + Shift + H    显示方法层次结构<br>Control + Option + H    显示调用层次结构<br>F2 / Shift + F2    跳转到下一个 / 上一个突出错误或警告的位置<br>F4 / Command + 方向键下    编辑 / 查看代码源<br>Option + Home    显示到当前文件的导航条<br>F3    选中文件 / 文件夹 / 代码行，添加 / 取消书签<br>Option + F3    选中文件 / 文件夹/代码行，使用助记符添加 / 取消书签<br>Control + 0…Control + 9    定位到对应数值的书签位置<br>Command + F3    显示所有书签<br>Part 7：Refactoring（重构）<br>快捷键    作用<br>F5    复制文件到指定目录<br>F6    移动文件到指定目录<br>Command + Delete    在文件上为安全删除文件，弹出确认框<br>Shift + F6    重命名文件<br>Command + F6    更改签名<br>Command + Option + N    一致性<br>Command + Option + M    将选中的代码提取为方法<br>Command + Option + V    提取变量<br>Command + Option + F    提取字段<br>Command + Option + C    提取常量<br>Command + Option + P    提取参数<br>Part 8：VCS / Local History（版本控制 / 本地历史记录）<br>快捷键    作用<br>Command + K    提交代码到版本控制器<br>Command + T    从版本控制器更新代码<br>Option + Shift + C    查看最近的变更记录<br>Control + C    快速弹出版本控制器操作面板<br>Part 9：Live Templates（动态代码模板）<br>快捷键    作用<br>Command + Option + J    弹出模板选择窗口，将选定的代码使用动态模板包住<br>Command + J    插入自定义动态代码模板<br>Part 10：General（通用）<br>快捷键    作用<br>Command + 1…Command + 9    打开相应编号的工具窗口<br>Command + S    保存所有<br>Command + Option + Y    同步、刷新<br>Control + Command + F    切换全屏模式<br>Command + Shift + F12    切换最大化编辑器<br>Option + Shift + F    添加到收藏夹<br>Option + Shift + I    检查当前文件与当前的配置文件<br>Control + `    快速切换当前的 scheme（切换主题、代码样式等）<br>Command + ,    打开 IDEA 系统设置<br>Command + ;    打开项目结构对话框<br>Shift + Command + A    查找动作（可设置相关选项）<br>Control + Shift + Tab    编辑窗口标签和工具窗口之间切换（如果在切换的过程加按上 delete，则是关闭对应选中的窗口）</p>
 
       
 
@@ -1103,19 +421,19 @@
 
 
   
-    <article id="post-3-4可靠数据传输" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-network-可靠数据传输" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/10/17/3-4%E5%8F%AF%E9%9D%A0%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93/">3.4 可靠数据传输的基本原理</a>
+      <a class="article-title" href="/2019/10/17/network-%E5%8F%AF%E9%9D%A0%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93/">3.4 可靠数据传输的基本原理</a>
     </h1>
   
 
         
-        <a href="/2019/10/17/3-4%E5%8F%AF%E9%9D%A0%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93/" class="archive-article-date">
+        <a href="/2019/10/17/network-%E5%8F%AF%E9%9D%A0%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93/" class="archive-article-date">
   	<time datetime="2019-10-17T09:54:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-17</time>
 </a>
         
@@ -1146,7 +464,671 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2019/10/17/3-4%E5%8F%AF%E9%9D%A0%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93/">展开全文 >></a>
+          <a class="article-more-a" href="/2019/10/17/network-%E5%8F%AF%E9%9D%A0%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-JVM-Java内存区域与内存溢出异常" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/02/JVM-Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/">Java内存区域与内存溢出异常</a>
+    </h1>
+  
+
+        
+        <a href="/2019/10/02/JVM-Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/" class="archive-article-date">
+  	<time datetime="2019-10-02T11:46:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">深入理解Java虚拟机</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/10/02/JVM-Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-剑指offer-1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/09/29/%E5%89%91%E6%8C%87offer-1/">剑指offer-面试题三</a>
+    </h1>
+  
+
+        
+        <a href="/2019/09/29/%E5%89%91%E6%8C%87offer-1/" class="archive-article-date">
+  	<time datetime="2019-09-29T09:34:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-29</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="题目一：找出数组中的数字"><a href="#题目一：找出数组中的数字" class="headerlink" title="题目一：找出数组中的数字"></a>题目一：找出数组中的数字</h2><p>在一个长度为n的数组里所有的数组都在0~n-1的范围内。数组中某些数字是重复的，但不知道有几个数字重复了，也不知道每个数字重复了几次。请找出数组中任意一个重复的数字。例如，如果输入长度为7的数组{2,3,1,0,2,5,3}，那么对应的输出是重复的数字2或者3。</p>
+<h3 id="方法一：先把数组排序，再进行扫描"><a href="#方法一：先把数组排序，再进行扫描" class="headerlink" title="方法一：先把数组排序，再进行扫描"></a>方法一：先把数组排序，再进行扫描</h3><p>排序一个长度为n的数组需要：O(nlogn) 的时间</p>
+<h3 id="方法二：利用哈希表解决此问题"><a href="#方法二：利用哈希表解决此问题" class="headerlink" title="方法二：利用哈希表解决此问题"></a>方法二：利用哈希表解决此问题</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment">     * 通过哈希表找出重复数字，时间复杂度为 O(n)，代价是需要一个大小为O(n)的哈希表来实现</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment">     * <span class="doctag">@param</span> a</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="comment">     */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ArrayList&lt;Integer&gt; <span class="title">duplicate1</span><span class="params">(<span class="keyword">int</span>[] a)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">        Map&lt;Integer, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">        ArrayList&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; a.length; i++) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">if</span> (map.containsValue(a[i])) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">                <span class="comment">//如果不存在该值，则将其存入哈希表</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">                list.add(a[i]);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">            &#125; <span class="keyword">else</span> &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">                <span class="comment">//若哈希表中存在此值，说明重复</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">                map.put(i, a[i]);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">            &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">return</span> list;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr></table></figure>
+
+<h3 id="方法三-：通过对比下标进行查找"><a href="#方法三-：通过对比下标进行查找" class="headerlink" title="方法三 ：通过对比下标进行查找"></a>方法三 ：通过对比下标进行查找</h3><p>数组中的数字都在 0~n-1 的范围内。如果数组中没有重复的数字，那么数字排序后数字i将出现在下标为i的位置。利用此特性可以进行查找重复元素。</p>
+<p>首先从头到尾依次扫描传入的数组，</p>
+<p>如果 i = a[i] ，那么扫描下一个数字，</p>
+<p>否则将 a[i] 与 下标为 a[i] 的数字比较，若不相等则将二者交换，将 a[i] 放到属于它的位置；若相等则找到重复数字。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">duplicate2</span><span class="params">(<span class="keyword">int</span>[] a)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">if</span> (a == <span class="keyword">null</span> || a.length &lt;= <span class="number">0</span>) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; a.length; i++) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">if</span> (a[i] &gt; a.length || a[i] &lt; <span class="number">0</span>) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">                <span class="keyword">return</span> -<span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">            &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">int</span> temp = <span class="number">0</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; a.length; i++) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">while</span> (i != a[i]) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">                <span class="keyword">if</span> (a[i] != a[a[i]]) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">                    temp = a[i];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">                    a[i] = a[a[i]];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">                    a[temp] = temp;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">                &#125; <span class="keyword">else</span> &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">                    <span class="keyword">return</span> a[i];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">                &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">            &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr></table></figure>
+
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color3">剑指offer</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/09/29/%E5%89%91%E6%8C%87offer-1/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-idea快捷键" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/09/29/idea%E5%BF%AB%E6%8D%B7%E9%94%AE/">idea快捷键 For Windows</a>
+    </h1>
+  
+
+        
+        <a href="/2019/09/29/idea%E5%BF%AB%E6%8D%B7%E9%94%AE/" class="archive-article-date">
+  	<time datetime="2019-09-29T09:04:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-29</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="官方文档"><a href="#官方文档" class="headerlink" title="官方文档"></a>官方文档</h2><p>工具栏 –&gt; help –&gt; Keymap Reference</p>
+<h2 id="常用快捷键"><a href="#常用快捷键" class="headerlink" title="常用快捷键"></a>常用快捷键</h2><p><strong>一键格式化代碼：Ctrl+Alt+L</strong></p>
+<p><strong>全局搜索替换：ctrl+shift+r</strong></p>
+<p><strong>强大的搜索功能，shift+shift (搜啥都能找到)</strong></p>
+<p><strong>ctrl+shift+R：搜索类   CTRL+N：按照类名搜索类</strong></p>
+<h1 id="以下为转载文章"><a href="#以下为转载文章" class="headerlink" title="以下为转载文章"></a>以下为转载文章</h1><p><strong>自动代码</strong></p>
+<p>常用的有fori/sout/psvm+Tab即可生成循环、System.out、main方法等boilerplate样板代码 。</p>
+<p><em>例如要输入for(User user : users)只需输入user.for+Tab ；</em></p>
+<p><em>再比如，要输入Date birthday = user.getBirthday()只需输入user.getBirthday().var+Tab即可。</em></p>
+<p>代码标签输入完成后，按Tab，生成代码。</p>
+<ol>
+<li>Ctrl+Alt+O 优化导入的类和包 </li>
+<li>Alt+Insert 生成代码(如get,set方法,构造函数等)   或者右键（Generate） </li>
+<li>fori/sout/psvm + Tab  </li>
+<li>Ctrl+Alt+T  生成try catch  或者 Alt+enter </li>
+<li>CTRL+ALT+T  把选中的代码放在 TRY{} IF{} ELSE{} 里 </li>
+<li>Ctrl + O 重写方法  </li>
+<li>Ctrl + I 实现方法 </li>
+<li>Ctr+shift+U 大小写转化  </li>
+<li>ALT+回车    导入包,自动修正  </li>
+<li>ALT+/       代码提示 </li>
+<li>CTRL+J      自动代码  </li>
+<li>Ctrl+Shift+J，整合两行为一行 </li>
+<li>CTRL+空格   代码提示  </li>
+<li>CTRL+SHIFT+SPACE 自动补全代码  </li>
+<li>CTRL+ALT+L  格式化代码  </li>
+<li>CTRL+ALT+I  自动缩进  </li>
+<li>CTRL+ALT+O  优化导入的类和包  </li>
+<li>ALT+INSERT  生成代码(如GET,SET方法,构造函数等)  </li>
+<li>CTRL+E      最近更改的代码  </li>
+<li>CTRL+ALT+SPACE  类名或接口名提示  </li>
+<li>CTRL+P   方法参数提示  </li>
+<li>CTRL+Q，可以看到当前方法的声明 </li>
+<li>Shift+F6  重构-重命名 (包、类、方法、变量、甚至注释等) </li>
+<li>Ctrl+Alt+V 提取变量 </li>
+</ol>
+<p><strong>查询快捷键</strong></p>
+<ol>
+<li>Ctrl＋Shift＋Backspace可以跳转到上次编辑的地 </li>
+<li>CTRL+ALT+ left/right 前后导航编辑过的地方 </li>
+<li>ALT+7  靠左窗口显示当前文件的结构 </li>
+<li>Ctrl+F12 浮动显示当前文件的结构 </li>
+<li>ALT+F7 找到你的函数或者变量或者类的所有引用到的地方 </li>
+<li>CTRL+ALT+F7  找到你的函数或者变量或者类的所有引用到的地方 </li>
+<li>Ctrl+Shift+Alt+N 查找类中的方法或变量 </li>
+<li>双击SHIFT 在项目的所有目录查找文件 </li>
+<li>Ctrl+N   查找类 </li>
+<li>Ctrl+Shift+N 查找文件 </li>
+<li>CTRL+G   定位行  </li>
+<li>CTRL+F   在当前窗口查找文本  </li>
+<li>CTRL+SHIFT+F  在指定窗口查找文本  </li>
+<li>CTRL+R   在 当前窗口替换文本  </li>
+<li>CTRL+SHIFT+R  在指定窗口替换文本  </li>
+<li>ALT+SHIFT+C  查找修改的文件  </li>
+<li>CTRL+E   最近打开的文件  </li>
+<li>F3   向下查找关键字出现位置  </li>
+<li>SHIFT+F3  向上一个关键字出现位置  </li>
+<li>选中文本，按Alt+F3 ，高亮相同文本，F3逐个往下查找相同文本 </li>
+<li>F4   查找变量来源  </li>
+<li>CTRL+SHIFT+O  弹出显示查找内容 </li>
+<li>Ctrl+W 选中代码，连续按会有其他效果 </li>
+<li>F2 或Shift+F2 高亮错误或警告快速定位 </li>
+<li>Ctrl+Up/Down 光标跳转到第一行或最后一行下 </li>
+<li>Ctrl+B 快速打开光标处的类或方法  </li>
+<li>CTRL+ALT+B  找所有的子类  </li>
+<li>CTRL+SHIFT+B  找变量的类  </li>
+<li>Ctrl+Shift+上下键  上下移动代码 </li>
+<li>Ctrl+Alt+ left/right 返回至上次浏览的位置 </li>
+<li>Ctrl+X 删除行 </li>
+<li>Ctrl+D 复制行 </li>
+<li>Ctrl+/ 或 Ctrl+Shift+/  注释（// 或者/<em>…</em>/ ） </li>
+<li>Ctrl+H 显示类结构图 </li>
+<li>Ctrl+Q 显示注释文档 </li>
+<li>Alt+F1 查找代码所在位置 </li>
+<li>Alt+1 快速打开或隐藏工程面板 </li>
+<li>Alt+ left/right 切换代码视图 </li>
+<li>ALT+ ↑/↓  在方法间快速移动定位  </li>
+<li>CTRL+ALT+ left/right 前后导航编辑过的地方 </li>
+<li>Ctrl＋Shift＋Backspace可以跳转到上次编辑的地 </li>
+<li>Alt+6    查找TODO </li>
+</ol>
+<p><strong>其他快捷键</strong></p>
+<ol>
+<li>SHIFT+ENTER 另起一行 </li>
+<li>CTRL+Z   倒退(撤销) </li>
+<li>CTRL+SHIFT+Z  向前(取消撤销) </li>
+<li>CTRL+ALT+F12  资源管理器打开文件夹  </li>
+<li>ALT+F1   查找文件所在目录位置  </li>
+<li>SHIFT+ALT+INSERT 竖编辑模式  </li>
+<li>CTRL+F4  关闭当前窗口 </li>
+<li>Ctrl+Alt+V，可以引入变量。例如：new String(); 自动导入变量定义 </li>
+<li>Ctrl+~，快速切换方案（界面外观、代码风格、快捷键映射等菜单） </li>
+</ol>
+<p><strong>svn快捷键</strong></p>
+<ol>
+<li>ctrl+k 提交代码到SVN </li>
+<li>ctrl+t 更新代码 </li>
+</ol>
+<p><strong>调试快捷键</strong></p>
+<p>其实常用的 就是F8 F7 F9 最值得一提的就是Drop Frame 可以让运行过的代码从头再来。推荐：<a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247487756&idx=2&sn=2d63cbeb48629f8c210ae96e27543c91&chksm=eb53943adc241d2cb2739248d6391bacfad3d582729a6b1551e8cb7ba3e944fb95f093f3b278&scene=21#wechat_redirect" target="_blank" rel="noopener">Intellij IDEA Debug 调试技巧</a>。</p>
+<ol>
+<li>alt+F8    debug时选中查看值 </li>
+<li>Alt+Shift+F9，选择 Debug </li>
+<li>Alt+Shift+F10，选择 Run </li>
+<li>Ctrl+Shift+F9，编译 </li>
+<li>Ctrl+Shift+F8，查看断点 </li>
+<li>F7，步入 </li>
+<li>Shift+F7，智能步入 </li>
+<li>Alt+Shift+F7，强制步入 </li>
+<li>F8，步过 </li>
+<li>Shift+F8，步出 </li>
+<li>Alt+Shift+F8，强制步过 </li>
+<li>Alt+F9，运行至光标处 </li>
+<li>Ctrl+Alt+F9，强制运行至光标处 </li>
+<li>F9，恢复程序 </li>
+<li>Alt+F10，定位到断点 </li>
+</ol>
+<p><strong>重构</strong></p>
+<ol>
+<li>Ctrl+Alt+Shift+T，弹出重构菜单 </li>
+<li>Shift+F6，重命名 </li>
+<li>F6，移动 </li>
+<li>F5，复制 </li>
+<li>Alt+Delete，安全删除 </li>
+<li>Ctrl+Alt+N，内联 </li>
+</ol>
+<p><strong>十大Intellij IDEA快捷键</strong> </p>
+<p>Intellij IDEA中有很多快捷键让人爱不释手，stackoverflow上也有一些有趣的讨论。每个人都有自己的最爱，想排出个理想的榜单还真是困难。 </p>
+<p>以前也整理过Intellij的快捷键，这次就按照我日常开发时的使用频率，简单分类列一下我最喜欢的十大快捷-神-键吧。 </p>
+<p><strong>1 智能提示:</strong> </p>
+<p>Intellij首当其冲的当然就是Intelligence智能！基本的代码提示用Ctrl+Space，还有更智能地按类型信息提示Ctrl+Shift+Space，但因为Intellij总是随着我们敲击而自动提示，所以很多时候都不会手动敲这两个快捷键(除非提示框消失了)。推荐：<a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247484370&idx=1&sn=8a091d43b1af8cae35256be22ff44193&chksm=eb5386e4dc240ff2834261929d96402822a29919a8a2098063ccb74513296d13f05e768ea496&scene=21#wechat_redirect" target="_blank" rel="noopener">Intellij Idea非常6的10个姿势！</a></p>
+<p>用F2/ Shift+F2移动到有错误的代码，Alt+Enter快速修复(即Eclipse中的Quick Fix功能)。当智能提示为我们自动补全方法名时，我们通常要自己补上行尾的反括号和分号，当括号嵌套很多层时会很麻烦，这时我们只需敲Ctrl+Shift+Enter就能自动补全末尾的字符。而且不只是括号，例如敲完if/for时也可以自动补上{}花括号。 </p>
+<p>最后要说一点，Intellij能够智能感知Spring、Hibernate等主流框架的配置文件和类，以静制动，在看似“静态”的外表下，智能地扫描理解你的项目是如何构造和配置的。 </p>
+<p><strong>2 重构:</strong> </p>
+<p>Intellij重构是另一完爆Eclipse的功能，其智能程度令人瞠目结舌，比如提取变量时自动检查到所有匹配同时提取成一个变量等。尤其看过《重构-改善既有代码设计》之后，有了Intellij的配合简直是令人大呼过瘾！也正是强大的智能和重构功能，使Intellij下的TDD开发非常顺畅。推荐： <a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247486192&idx=1&sn=27040ef95c8dfcd72f1ecb1136d288a5&chksm=eb538fc6dc2406d0f1e34e6d53f21dc1949fc1f09f1d52eba107c7d6cbf1e80dda75036e773a&scene=21#wechat_redirect" target="_blank" rel="noopener">Intellij IDEA 那些隐藏好用的小技巧</a></p>
+<p>切入正题，先说一个无敌的重构功能大汇总快捷键Ctrl+Shift+Alt+T，叫做Refactor This。按法有点复杂，但也符合Intellij的风格，很多快捷键都要双手完成，而不像Eclipse不少最有用的快捷键可以潇洒地单手完成(不知道算不算Eclipse的一大优点)，但各位用过Emacs的话就会觉得也没什么了(非Emacs黑)。</p>
+<p>此外，还有些最常用的重构技巧，因为太常用了，若每次都在Refactor This菜单里选的话效率有些低。比如Shift+F6直接就是改名，Ctrl+Alt+V则是提取变量。关注Java技术栈微信公众号，在后台回复关键字：IDEA，可以获取一份栈长整理的 IDEA 最新技术干货。 </p>
+<p><strong>3 代码生成：</strong> </p>
+<p>这一点类似Eclipse，虽不是独到之处，但因为日常使用频率极高，所以还是罗列在榜单前面。常用的有fori/sout/psvm+Tab即可生成循环、System.out、main方法等boilerplate样板代码，用Ctrl+J可以查看所有模板。</p>
+<p>后面“辅助”一节中将会讲到Alt+Insert，在编辑窗口中点击可以生成构造函数、toString、getter/setter、重写父类方法等。这两个技巧实在太常用了，几乎每天都要生成一堆main、System.out和getter/setter。 </p>
+<p>另外，Intellij IDEA 13中加入了后缀自动补全功能(Postfix Completion)，比模板生成更加灵活和强大。例如要输入for(User user : users)只需输入user.for+Tab。再比如，要输入Date birthday = user.getBirthday();只需输入user.getBirthday().var+Tab即可。 </p>
+<p><strong>4 编辑：</strong> </p>
+<p>编辑中不得不说的一大神键就是能够自动按语法选中代码的Ctrl+W以及反向的Ctrl+Shift+W了。此外，Ctrl+Left/Right移动光标到前/后单词，Ctrl+[/]移动到前/后代码块，这些类Vim风格的光标移动也是一大亮点。以上Ctrl+Left/Right/[]加上Shift的话就能选中跳跃范围内的代码。Alt+Forward/Backward移动到前/后方法。还有些非常普通的像Ctrl+Y删除行、Ctrl+D复制行、Ctrl+折叠代码就不多说了。 </p>
+<p>关于光标移动再多扩展一点，除了Intellij本身已提供的功能外，我们还可以安装ideaVim或者emacsIDEAs享受到Vim的快速移动和Emacs的AceJump功能(超爽！)。</p>
+<p>另外，Intellij的书签功能也是不错的，用Ctrl+Shift+Num定义1-10书签(再次按这组快捷键则是删除书签)，然后通过Ctrl+Num跳转。这避免了多次使用前/下一编辑位置Ctrl+Left/Right来回跳转的麻烦，而且此快捷键默认与Windows热键冲突(默认多了Alt，与Windows改变显示器显示方向冲突，一不小心显示器就变成倒着显式的了，冏啊)。 推荐：<a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247489396&idx=1&sn=8ce60c31200303fc55a2737ef7b4dc2d&chksm=eb539242dc241b54b422797aa720ea8ce1d3e45c6424ca0c7b774bc49df689fd4d476b6ce457&scene=21#wechat_redirect" target="_blank" rel="noopener">Intellij IDEA 撸码最头大的问题。。</a></p>
+<p><strong>5 查找打开：</strong> </p>
+<p>类似Eclipse，Intellij的Ctrl+N/Ctrl+Shift+N可以打开类或资源，但Intellij更加智能一些，我们输入的任何字符都将看作模糊匹配，省却了Eclipse中还有输入*的麻烦。最新版本的IDEA还加入了Search Everywhere功能，只需按Shift+Shift即可在一个弹出框中搜索任何东西，包括类、资源、配置项、方法等等。 </p>
+<p>类的继承关系则可用Ctrl+H打开类层次窗口，在继承层次上跳转则用Ctrl+B/Ctrl+Alt+B分别对应父类或父方法定义和子类或子方法实现，查看当前类的所有方法用Ctrl+F12。 </p>
+<p>要找类或方法的使用也很简单，Alt+F7。要查找文本的出现位置就用Ctrl+F/Ctrl+Shift+F在当前窗口或全工程中查找，再配合F3/Shift+F3前后移动到下一匹配处。 </p>
+<p>Intellij更加智能的又一佐证是在任意菜单或显示窗口，都可以直接输入你要找的单词，Intellij就会自动为你过滤。 关注Java技术栈微信公众号，在后台回复关键字：IDEA，可以获取一份栈长整理的 IDEA 最新技术干货。 </p>
+<p><strong>6 其他辅助：</strong> </p>
+<p>以上这些神键配上一些辅助快捷键，即可让你的双手90%以上的时间摆脱鼠标，专注于键盘仿佛在进行钢琴表演。这些不起眼却是至关重要的最后一块拼图有：</p>
+<p>Ø  命令：Ctrl+Shift+A可以查找所有Intellij的命令，并且每个命令后面还有其快捷键。所以它不仅是一大神键，也是查找学习快捷键的工具。 </p>
+<p>Ø  新建：Alt+Insert可以新建类、方法等任何东西。 </p>
+<p>Ø  格式化代码：格式化import列表Ctrl+Alt+O，格式化代码Ctrl+Alt+L。 </p>
+<p>Ø  切换窗口：Alt+Num，常用的有1-项目结构，3-搜索结果，4/5-运行调试。Ctrl+Tab切换标签页，Ctrl+E/Ctrl+Shift+E打开最近打开过的或编辑过的文件。 </p>
+<p>Ø  单元测试：Ctrl+Alt+T创建单元测试用例。 </p>
+<p>Ø  运行：Alt+Shift+F10运行程序，Shift+F9启动调试，Ctrl+F2停止。 </p>
+<p>Ø  调试：F7/F8/F9分别对应Step into，Step over，Continue。 </p>
+<p><em>此外还有些我自定义的，例如水平分屏Ctrl+|等，和一些神奇的小功能Ctrl+Shift+V粘贴很早以前拷贝过的，Alt+Shift+Insert进入到列模式进行按列选中。</em> </p>
+<p>Ø  Top #10切来切去：Ctrl+Tab</p>
+<p>Ø  Top #9选你所想：Ctrl+W</p>
+<p>Ø  Top #8代码生成：Template/Postfix +Tab</p>
+<p>Ø  Top #7发号施令：Ctrl+Shift+A</p>
+<p>Ø  Top #6无处藏身：Shift+Shift</p>
+<p>Ø  Top #5自动完成：Ctrl+Shift+Enter</p>
+<p>Ø  Top #4创造万物：Alt+Insert</p>
+<p><em>太难割舍，前三名并列吧！</em> </p>
+<p>Ø  Top #1智能补全：Ctrl+Shift+Space</p>
+<p>Ø  Top #1自我修复：Alt+Enter</p>
+<p>Ø  Top #1重构一切：Ctrl+Shift+Alt+T</p>
+<p><em>CTRL+ALT+ left/right 前后导航编辑过的地方</em> <em>Ctrl＋Shift＋Backspace可以跳转到上次编辑的地方</em></p>
+<p>转载自：<a href="https://mp.weixin.qq.com/s/r70Q0eqy5-R1CrwihREeQA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/r70Q0eqy5-R1CrwihREeQA</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color4">快捷键</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/09/29/idea%E5%BF%AB%E6%8D%B7%E9%94%AE/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-debug" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/09/26/debug/">idea debug方法</a>
+    </h1>
+  
+
+        
+        <a href="/2019/09/26/debug/" class="archive-article-date">
+  	<time datetime="2019-09-26T08:50:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.添加断点</p>
+<p>2.点击debug按钮，程序运行，停留在断点处。</p>
+<p>3.进行调试</p>
+<ul>
+<li>f8：逐行执行程序</li>
+<li>f7：进入方法中</li>
+<li>shift+f8：跳出方法</li>
+<li>ctrl+f2：退出debug模式，停止程序</li>
+<li>Console：切换到控制台</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color3">debug方法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/09/26/debug/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-SSM-Invalid-bound-statement-not-found" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/09/19/SSM-Invalid-bound-statement-not-found/">SSM-Invalid bound statement (not found)</a>
+    </h1>
+  
+
+        
+        <a href="/2019/09/19/SSM-Invalid-bound-statement-not-found/" class="archive-article-date">
+  	<time datetime="2019-09-19T07:34:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-19</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Invalid-bound-statement-not-found"><a href="#Invalid-bound-statement-not-found" class="headerlink" title="Invalid bound statement (not found)"></a>Invalid bound statement (not found)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">org.apache.ibatis.binding.BindingException: Invalid bound statement (not found): com.shopssm.dao.IShopDao.insertShop</span></pre></td></tr></table></figure>
+
+<h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><ul>
+<li>SQL语句有没有写错，没有问题。</li>
+<li>方法名称与映射器接口是否一致，没有问题。</li>
+<li>配置文件中的路径，发现映射器配置出错。</li>
+</ul>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>将sping-dao.xml中的配置进行更正</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--映射器--&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapperLocations"</span> <span class="attr">value</span>=<span class="string">"classpath:mapper/AreaMapper.xml"</span>/&gt;</span></span></pre></td></tr></table></figure>
+
+<p>改为</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--映射器--&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapperLocations"</span> <span class="attr">value</span>=<span class="string">"classpath:mapper/*Mapper.xml"</span>/&gt;</span></span></pre></td></tr></table></figure>
+
+<p>问题解决。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">SSM框架</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/09/19/SSM-Invalid-bound-statement-not-found/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Spring-Boot-属性注入" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/09/13/Spring-Boot-%E5%B1%9E%E6%80%A7%E6%B3%A8%E5%85%A5/">Spring Boot学习笔记①：属性注入</a>
+    </h1>
+  
+
+        
+        <a href="/2019/09/13/Spring-Boot-%E5%B1%9E%E6%80%A7%E6%B3%A8%E5%85%A5/" class="archive-article-date">
+  	<time datetime="2019-09-13T14:50:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-13</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Spring-Boot属性注入"><a href="#Spring-Boot属性注入" class="headerlink" title="Spring Boot属性注入"></a>Spring Boot属性注入</h1><h2 id="第一种方式"><a href="#第一种方式" class="headerlink" title="第一种方式"></a>第一种方式</h2><h2 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configeration</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@EableConfigurationProperties</span>()</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@ConfigurationProperties</span>(profix = <span class="string">""</span><span class="comment">//前缀名)</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="comment">//@Getter和@Setter等注解的组合，他可以自动生成get、set、hashcode、toString、构造，在编译的时候就产生，而不是在运行的时候才会声称这些方法</span></span></pre></td></tr></table></figure>
+
+<h2 id="配置文件application-properties"><a href="#配置文件application-properties" class="headerlink" title="配置文件application.properties"></a>配置文件application.properties</h2><ul>
+<li>必须命名为application</li>
+</ul>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">jdbc.driver</span>=<span class="string">com.mysql.jdbc.Driver</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="meta">jdbc.url</span>=<span class="string">jdbc:mysql://localhost:3306/o2o</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="meta">jdbc.username</span>=<span class="string">root</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="meta">jdbc.password</span>=<span class="string">root</span></span></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="attr">jdbc:</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">driver:</span> <span class="string">com.mysql.jdbc.Driver</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">url:</span> <span class="string">jdbc:mysql://localhost:3306/o2o</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">username:</span> <span class="string">root</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">password:</span> <span class="string">root</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">	<span class="string">//可以定义集合</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">user:</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">		<span class="attr">name:</span> <span class="string">jack</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">		<span class="attr">age:</span> <span class="number">21</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">		<span class="attr">language:</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">			<span class="bullet">-</span> <span class="string">java</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">			<span class="bullet">-</span> <span class="string">php</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">			<span class="bullet">-</span> <span class="string">ios</span></span></pre></td></tr></table></figure>
+
+<p><strong>如果两个文件都有，取它们的并集，如果有冲突，以properties为准</strong></p>
+<h2 id="类JdbcProperties-java配置属性"><a href="#类JdbcProperties-java配置属性" class="headerlink" title="类JdbcProperties.java配置属性"></a>类JdbcProperties.java配置属性</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> lombok.Data;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.boot.context.properties.ConfigurationProperties;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@ConfigurationProperties</span>(prefix = <span class="string">"jdbc"</span>)<span class="comment">//配置前缀名为jdbc的属性，给类中有set方法的属性赋值</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span> <span class="comment">//自动生成get，set，tostring，构造方法</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JdbcProperties</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    String url;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    String driver;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    String username;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    String password;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<h2 id="类JdbcConfigure-java使用属性"><a href="#类JdbcConfigure-java使用属性" class="headerlink" title="类JdbcConfigure.java使用属性"></a>类JdbcConfigure.java使用属性</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.alibaba.druid.pool.DruidDataSource;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.boot.context.properties.ConfigurationProperties;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.boot.context.properties.EnableConfigurationProperties;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.sql.DataSource;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@EnableConfigurationProperties</span>(JdbcProperties<span class="class">.<span class="keyword">class</span>)、</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"><span class="class">//注入配置属性，使用括号中的类中的属性</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line"><span class="class">//注入之后在此类中的任何位置都可以使用</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">JdbcConfig</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">    <span class="meta">@Bean</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> DataSource <span class="title">dataSource</span><span class="params">(JdbcProperties prop)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">        DruidDataSource druidDataSource = <span class="keyword">new</span> DruidDataSource();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">        druidDataSource.setDriverClassName(prop.getDriver());</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">        druidDataSource.setUrl(prop.getUrl());</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">        druidDataSource.setUsername(prop.getUsername());</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">        druidDataSource.setPassword(prop.getPassword());</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">return</span> druidDataSource;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<h2 id="第二种方式"><a href="#第二种方式" class="headerlink" title="第二种方式"></a>第二种方式</h2><ul>
+<li>不需要JdbcProperties.java</li>
+<li>第二种方式要注意application.yaml中的属性名称要和规定的一样，不能自己定义</li>
+</ul>
+<h2 id="类JdbcConfigure-java使用属性-1"><a href="#类JdbcConfigure-java使用属性-1" class="headerlink" title="类JdbcConfigure.java使用属性"></a>类JdbcConfigure.java使用属性</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.alibaba.druid.pool.DruidDataSource;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.boot.context.properties.ConfigurationProperties;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.boot.context.properties.EnableConfigurationProperties;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.sql.DataSource;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JdbcConfig</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    <span class="comment">/**</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line"><span class="comment">    <span class="doctag">@Bean</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"><span class="comment">    public DataSource dataSource(JdbcProperties prop) &#123;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"><span class="comment">        DruidDataSource druidDataSource = new DruidDataSource();</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line"><span class="comment">        druidDataSource.setDriverClassName(prop.getDriver());</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line"><span class="comment">        druidDataSource.setUrl(prop.getUrl());</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line"><span class="comment">        druidDataSource.setUsername(prop.getUsername());</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line"><span class="comment">        druidDataSource.setPassword(prop.getPassword());</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line"><span class="comment"></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line"><span class="comment">        return druidDataSource;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line"><span class="comment">    &#125;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line"><span class="comment">    **/</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">    <span class="meta">@Bean</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">    <span class="meta">@ConfigurationProperties</span>(profix = <span class="string">"jdbc"</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> DataSource <span class="title">dataSource</span><span class="params">(JdbcProperties prop)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> DruidDataSource();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">Spring Boot</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/09/13/Spring-Boot-%E5%B1%9E%E6%80%A7%E6%B3%A8%E5%85%A5/">展开全文 >></a>
         </p>
       
 
@@ -1178,7 +1160,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/3/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/">Next &amp;raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/3/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/">Next &amp;raquo;</a>
     </nav>
   
 
@@ -1273,10 +1255,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">计算机组成原理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">Docker</a>
               </li>
              
@@ -1289,23 +1267,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">redis</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">SSM框架</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">Spring Boot</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">数据库连接</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">计算机网络</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">redis</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1313,7 +1279,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">java</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">Spring Boot</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">计算机网络</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1321,27 +1291,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">mybatis</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">FPGA计组课设</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">操作系统</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">剑指offer</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">ElasticSearch</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">MongoDB</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">Java正则表达式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">计算机组成原理</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">编译原理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">剑指offer</a>
               </li>
             
             <div class="clearfix"></div>
