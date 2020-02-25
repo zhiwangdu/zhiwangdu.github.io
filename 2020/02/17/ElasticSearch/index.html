@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="杜志旺的博客">
 <meta property="og:description" content="#ElasticSearch简介 1. 什么是ElasticSearchElasticsearch是一个基于Lucene库的搜索引擎。它提供了一个分布式、支持多租户的全文搜索引擎，具有HTTP Web接口和无模式JSON文档。Elasticsearch是用Java开发的，并在Apache许可证下作为开源软件发布。官方客户端在Java、.NET（C#）、PHP、Python、Apache Groov">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-02-20T08:54:26.073Z">
+<meta property="og:updated_time" content="2020-02-24T14:30:54.202Z">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="杜志旺的博客" type="application/atom+xml">
@@ -192,7 +192,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">localhost:9200</span></pre></td></tr></table></figure>
 
 <p>即可看到输出结果</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">name: "Ds-MacBook-Pro.local",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">cluster_name: "elasticsearch",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">cluster_uuid: "y-QBAI5_QtW69ip5g8tZbA",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">version: &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">number: "7.6.0",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">build_flavor: "default",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">build_type: "tar",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">build_hash: "7f634e9f44834fbc12724506cc1da681b0c3b1e3",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">build_date: "2020-02-06T00:09:00.449973Z",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">build_snapshot: false,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">lucene_version: "8.4.0",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">minimum_wire_compatibility_version: "6.8.0",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">minimum_index_compatibility_version: "6.0.0-beta1"</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">&#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">tagline: "You Know, for Search"</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">name: "macbook.local",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">cluster_name: "elasticsearch",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">cluster_uuid: "y-QBAI5_QtW69ip5g8tZbA",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">version: &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">number: "7.6.0",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">build_flavor: "default",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">build_type: "tar",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">build_hash: "7f634e9f44834fbc12724506cc1da681b0c3b1e3",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">build_date: "2020-02-06T00:09:00.449973Z",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">build_snapshot: false,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">lucene_version: "8.4.0",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">minimum_wire_compatibility_version: "6.8.0",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">minimum_index_compatibility_version: "6.0.0-beta1"</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">&#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">tagline: "You Know, for Search"</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
 
 <h2 id="2-Postman调用RestAPI"><a href="#2-Postman调用RestAPI" class="headerlink" title="2. Postman调用RestAPI"></a>2. Postman调用RestAPI</h2><h3 id="1-新建索引"><a href="#1-新建索引" class="headerlink" title="1. 新建索引"></a>1. 新建索引</h3><p>例如要创建一个叫test的索引 ,就以put方式提交:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost:9200&#x2F;test&#x2F;</span></pre></td></tr></table></figure>
@@ -241,7 +241,14 @@
 <p>DELETE方式提交</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost:9200&#x2F;test&#x2F;article&#x2F;1</span></pre></td></tr></table></figure>
 
-<h2 id="使用head插件进行索引库的操作"><a href="#使用head插件进行索引库的操作" class="headerlink" title="使用head插件进行索引库的操作"></a>使用head插件进行索引库的操作</h2><h1 id="ik分词器的使用"><a href="#ik分词器的使用" class="headerlink" title="ik分词器的使用"></a>ik分词器的使用</h1><h2 id="什么是IK分词器"><a href="#什么是IK分词器" class="headerlink" title="什么是IK分词器"></a>什么是IK分词器</h2><p>我们在浏览器地址栏输入</p>
+<h2 id="使用head插件进行索引库的操作"><a href="#使用head插件进行索引库的操作" class="headerlink" title="使用head插件进行索引库的操作"></a>使用head插件进行索引库的操作</h2><p>在head目录下执行命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">grunt server</span></pre></td></tr></table></figure>
+
+<p>后在浏览器中输入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">Localhost:9100</span></pre></td></tr></table></figure>
+
+
+<h1 id="ik分词器的使用"><a href="#ik分词器的使用" class="headerlink" title="ik分词器的使用"></a>ik分词器的使用</h1><h2 id="什么是IK分词器"><a href="#什么是IK分词器" class="headerlink" title="什么是IK分词器"></a>什么是IK分词器</h2><p>我们在浏览器地址栏输入</p>
 <p><a href="http://127.0.0.1:9200/_analyze?analyzer=chinese&amp;pretty=true&amp;text=我是中国人" target="_blank" rel="noopener">http://127.0.0.1:9200/_analyze?analyzer=chinese&amp;pretty=true&amp;text=我是中国人</a></p>
 <p>（ES7.x版本不能直接在地址栏输入，可以使用GET或者POST方法，但是分词器和查询词需要以json的形式写在body里。）</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">"analyzer"</span>:<span class="string">"chinese"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">"text"</span>: <span class="string">"我是中国人"</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
@@ -560,6 +567,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">ElasticSearch</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">git</a>
               </li>
              
@@ -580,19 +591,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">Java正则表达式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">计算机组成原理</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">编译原理</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">Java正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">ElasticSearch</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">编译原理</a>
               </li>
              
               <li class="article-tag-list-item">

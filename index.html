@@ -151,6 +151,98 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-剑指offer-5" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/25/%E5%89%91%E6%8C%87offer-5/">数据结构-字符串</a>
+    </h1>
+  
+
+        
+        <a href="/2020/02/25/%E5%89%91%E6%8C%87offer-5/" class="archive-article-date">
+  	<time datetime="2020-02-25T08:05:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="五、替换空格"><a href="#五、替换空格" class="headerlink" title="五、替换空格"></a>五、替换空格</h1><blockquote>
+<p>题目:</p>
+<p>请实现一个函数，把字符串中的每个空格替换成“%20”。例如，输入“We are happy”，则输出“We%20are%20happy”</p>
+</blockquote>
+<p><em>笔者目前尚未清楚Java是否需要考虑内存覆盖问题，因为Java的内存管理是虚拟机完成的。</em></p>
+<p><strong><em>看到这个题目，首先应该想到的就是内存覆盖的问题。</em></strong> </p>
+<p>原来的一个空格字符，替换之后是‘%20’三个字符，因此替换之后字符串会变长。若是在原来字符串的基础上进行替换，则有可能覆盖该字符串修改前后面的内存。如果是创建新的字符串进行替换，那么就可以自己分配足够的内存。</p>
+<p>所以应该向面试官问清楚，让他说明他的需求。</p>
+<p>对Java来说，String是不可变对象，需要修改就会创建一个新的String对象，然后将指针指向新的对象；如果要频繁进行修改字符串内容则应该使用StringBuffer（线程安全）或StringBuilder（非线程安全）对象。</p>
+<p><strong>思路一：</strong> 从前向后扫描替换</p>
+<p>创建一个新的StringBuilder对象，使用它的append方法，扫描到正常字符则append此字符，扫描到空格则append三次，分别是‘%’、‘2’、‘0’。代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">replaceBlank</span><span class="params">(StringBuffer str)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">        <span class="comment">//如果是空字符串</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">if</span> (str == <span class="keyword">null</span> || <span class="string">""</span>.equals(str)) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">return</span> <span class="string">"输入为空"</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">        StringBuilder newStr = <span class="keyword">new</span> StringBuilder();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; str.length(); i++) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">if</span> (str.charAt(i) == <span class="string">' '</span>) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">                newStr.append(<span class="string">"%"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">                newStr.append(<span class="string">"2"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">                newStr.append(<span class="string">"0"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">            &#125; <span class="keyword">else</span> &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">                newStr.append(str.charAt(i));</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">            &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">return</span> newStr.toString();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr></table></figure>
+
+<p><strong>思路二：</strong> 从后往前扫描</p>
+<p>先遍历字符串找出空格的总个数为count，然后算出替换之后的字符串长度为原长度lenth+count。然后定义两个索引p1、p2，p1指向原长度尾端，p2指向新长度尾端。</p>
+<p>设数组从左往右依次为索引0，1，2……，p1开始向左扫描，若扫描到正常字符，则将此字符放入p2索引处，同时p2向左前进一位；若扫描到空格，则p2向左进三位，同时将经过的三位依次放入“%20”。循环这个过程，直到p1和p2相等。</p>
+<p>图解：</p>
+<p><img src="/2020/02/25/%E5%89%91%E6%8C%87offer-5/1.png" alt="图解"></p>
+<p>代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">replaceBlank</span><span class="params">(StringBuffer str)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">if</span> (str == <span class="keyword">null</span> || <span class="string">""</span>.equals(str)) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">return</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">int</span> countBlank = <span class="number">0</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; str.length(); i++) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">if</span> (Character.isSpaceChar(str.charAt(i))) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">                ++countBlank;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">            &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">        <span class="comment">//设置新的字符串长度</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">        str.setLength(str.length() + countBlank * <span class="number">2</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">        <span class="comment">//设置两个索引，一个指向原长度尾端，一个指向新长度尾端</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">int</span> p1 = str.length() -<span class="number">1</span> ;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">int</span> p2 = str.length() + countBlank * <span class="number">2</span> - <span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">while</span> (p1 != p2) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">if</span> (!Character.isSpaceChar(str.charAt(p1))) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">                <span class="comment">//若不是空格，则将p1索引处的值放入p2处</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">                str.setCharAt(p2, str.charAt(p1));</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">                --p1;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">                --p2;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">            &#125; <span class="keyword">else</span> &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">                <span class="comment">//若是空格，p1索引向前一格，p2索引连续放入%20</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">                --p1;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">                str.setCharAt(p2, <span class="string">'0'</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">                str.setCharAt(--p2, <span class="string">'2'</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">30</span></pre></td><td class="code"><pre><span class="line">                str.setCharAt(--p2, <span class="string">'%'</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">31</span></pre></td><td class="code"><pre><span class="line">                --p2;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">32</span></pre></td><td class="code"><pre><span class="line">            &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">33</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">34</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color3">剑指offer</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/02/25/%E5%89%91%E6%8C%87offer-5/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-git-github速度提高" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -471,7 +563,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">localhost:9200</span></pre></td></tr></table></figure>
 
 <p>即可看到输出结果</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">name: "Ds-MacBook-Pro.local",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">cluster_name: "elasticsearch",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">cluster_uuid: "y-QBAI5_QtW69ip5g8tZbA",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">version: &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">number: "7.6.0",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">build_flavor: "default",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">build_type: "tar",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">build_hash: "7f634e9f44834fbc12724506cc1da681b0c3b1e3",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">build_date: "2020-02-06T00:09:00.449973Z",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">build_snapshot: false,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">lucene_version: "8.4.0",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">minimum_wire_compatibility_version: "6.8.0",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">minimum_index_compatibility_version: "6.0.0-beta1"</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">&#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">tagline: "You Know, for Search"</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">name: "macbook.local",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">cluster_name: "elasticsearch",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">cluster_uuid: "y-QBAI5_QtW69ip5g8tZbA",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">version: &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">number: "7.6.0",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">build_flavor: "default",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">build_type: "tar",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">build_hash: "7f634e9f44834fbc12724506cc1da681b0c3b1e3",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">build_date: "2020-02-06T00:09:00.449973Z",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">build_snapshot: false,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">lucene_version: "8.4.0",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">minimum_wire_compatibility_version: "6.8.0",</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">minimum_index_compatibility_version: "6.0.0-beta1"</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">&#125;,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">tagline: "You Know, for Search"</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
 
 <h2 id="2-Postman调用RestAPI"><a href="#2-Postman调用RestAPI" class="headerlink" title="2. Postman调用RestAPI"></a>2. Postman调用RestAPI</h2><h3 id="1-新建索引"><a href="#1-新建索引" class="headerlink" title="1. 新建索引"></a>1. 新建索引</h3><p>例如要创建一个叫test的索引 ,就以put方式提交:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost:9200&#x2F;test&#x2F;</span></pre></td></tr></table></figure>
@@ -520,7 +612,14 @@
 <p>DELETE方式提交</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost:9200&#x2F;test&#x2F;article&#x2F;1</span></pre></td></tr></table></figure>
 
-<h2 id="使用head插件进行索引库的操作"><a href="#使用head插件进行索引库的操作" class="headerlink" title="使用head插件进行索引库的操作"></a>使用head插件进行索引库的操作</h2><h1 id="ik分词器的使用"><a href="#ik分词器的使用" class="headerlink" title="ik分词器的使用"></a>ik分词器的使用</h1><h2 id="什么是IK分词器"><a href="#什么是IK分词器" class="headerlink" title="什么是IK分词器"></a>什么是IK分词器</h2><p>我们在浏览器地址栏输入</p>
+<h2 id="使用head插件进行索引库的操作"><a href="#使用head插件进行索引库的操作" class="headerlink" title="使用head插件进行索引库的操作"></a>使用head插件进行索引库的操作</h2><p>在head目录下执行命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">grunt server</span></pre></td></tr></table></figure>
+
+<p>后在浏览器中输入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">Localhost:9100</span></pre></td></tr></table></figure>
+
+
+<h1 id="ik分词器的使用"><a href="#ik分词器的使用" class="headerlink" title="ik分词器的使用"></a>ik分词器的使用</h1><h2 id="什么是IK分词器"><a href="#什么是IK分词器" class="headerlink" title="什么是IK分词器"></a>什么是IK分词器</h2><p>我们在浏览器地址栏输入</p>
 <p><a href="http://127.0.0.1:9200/_analyze?analyzer=chinese&amp;pretty=true&amp;text=我是中国人" target="_blank" rel="noopener">http://127.0.0.1:9200/_analyze?analyzer=chinese&amp;pretty=true&amp;text=我是中国人</a></p>
 <p>（ES7.x版本不能直接在地址栏输入，可以使用GET或者POST方法，但是分词器和查询词需要以json的形式写在body里。）</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">"analyzer"</span>:<span class="string">"chinese"</span>,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">	<span class="attr">"text"</span>: <span class="string">"我是中国人"</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
@@ -1340,92 +1439,6 @@
 
 
   
-    <article id="post-MacOS-安装redis" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/08/MacOS-%E5%AE%89%E8%A3%85redis/">MacOS安装redis</a>
-    </h1>
-  
-
-        
-        <a href="/2020/02/08/MacOS-%E5%AE%89%E8%A3%85redis/" class="archive-article-date">
-  	<time datetime="2020-02-08T08:31:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="利用Homebrew安装Redis"><a href="#利用Homebrew安装Redis" class="headerlink" title="利用Homebrew安装Redis"></a>利用Homebrew安装Redis</h1><h5 id="1-安装命令"><a href="#1-安装命令" class="headerlink" title="(1)安装命令"></a>(1)安装命令</h5><p>$ brew install redis</p>
-<h5 id="2-进入安装目录"><a href="#2-进入安装目录" class="headerlink" title="(2)进入安装目录"></a>(2)进入安装目录</h5><p>$ cd /usr/local/Cellar/redis/4.0.6/bin</p>
-<h5 id="3-启动、关闭redis"><a href="#3-启动、关闭redis" class="headerlink" title="(3)启动、关闭redis"></a>(3)启动、关闭redis</h5><p>$ redis-server<br> 以下命令即可关闭redis服务<br> redis 127.0.0.1:6379&gt; SHUTDOWN</p>
-<h5 id="4-连接redis服务"><a href="#4-连接redis服务" class="headerlink" title="(4)连接redis服务"></a>(4)连接redis服务</h5><p>$ redis-cli -h  127.0.0.1（ip） -p 1234（端口号）<br> 示例：$ redis-cli -h  127.0.0.1 -p 1234</p>
-<h5 id="5-键入授权登录密码"><a href="#5-键入授权登录密码" class="headerlink" title="(5)键入授权登录密码"></a>(5)键入授权登录密码</h5><p>127.0.0.1:6379&gt; AUTH 123456（密码）</p>
-<h5 id="6-退出本次会话"><a href="#6-退出本次会话" class="headerlink" title="(6)退出本次会话"></a>(6)退出本次会话</h5><p>127.0.0.1:6379&gt; quit</p>
-<h1 id="Redis其他常用命令及配置"><a href="#Redis其他常用命令及配置" class="headerlink" title="Redis其他常用命令及配置"></a>Redis其他常用命令及配置</h1><p>开机启动redis命令<br> $ ln -sfv /usr/local/opt/redis/*.plist ~/Library/LaunchAgents</p>
-<p>使用launchctl启动redis server<br> $ launchctl load ~/Library/LaunchAgents/homebrew.mxcl.redis.plist</p>
-<p>使用配置文件启动redis server<br> $ redis-server /usr/local/etc/redis.conf</p>
-<p>停止redis server的自启动<br> $ launchctl unload ~/Library/LaunchAgents/homebrew.mxcl.redis.plist</p>
-<p>redis 配置文件的位置<br> /usr/local/etc/redis.conf</p>
-<p>卸载redis和它的文件<br> brewuninstallredis rm ~/Library/LaunchAgents/homebrew.mxcl.redis.plist</p>
-<p>测试redis server是否启动<br> $ redis-cli ping</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">redis</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/08/MacOS-%E5%AE%89%E8%A3%85redis/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
@@ -1547,6 +1560,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">ElasticSearch</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">git</a>
               </li>
              
@@ -1567,19 +1584,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">Java正则表达式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">计算机组成原理</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">编译原理</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">Java正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">ElasticSearch</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">编译原理</a>
               </li>
              
               <li class="article-tag-list-item">
