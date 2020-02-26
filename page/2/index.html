@@ -151,6 +151,132 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Docker-7Dockfile" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/08/Docker-7Dockfile/">Dockfile</a>
+    </h1>
+  
+
+        
+        <a href="/2020/02/08/Docker-7Dockfile/" class="archive-article-date">
+  	<time datetime="2020-02-08T08:37:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h1><h2 id="什么是Dockerfile"><a href="#什么是Dockerfile" class="headerlink" title="什么是Dockerfile"></a>什么是Dockerfile</h2><p>Dockerfile是由一系列命令和参数构成的脚本，这些命令应用于基础镜像并最终创建一个新的镜像。</p>
+<p>1、对于开发人员：可以为开发团队提供一个完全一致的开发环境；<br>2、对于测试人员：可以直接拿开发时所构建的镜像或者通过Dockerfile文件构建一个新的镜像开始工作了；<br>3、对于运维人员：在部署时，可以实现应用的无缝移植。</p>
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FROM image_name:tag</td>
+<td>定义了使用哪个基础镜像启动构建流程</td>
+</tr>
+<tr>
+<td>MAINTAINER user_name</td>
+<td>声明镜像的创建者</td>
+</tr>
+<tr>
+<td>ENV key value</td>
+<td>设置环境变量 (可以写多条)</td>
+</tr>
+<tr>
+<td>RUN command</td>
+<td>是Dockerfile的核心部分(可以写多条)</td>
+</tr>
+<tr>
+<td>ADD source_dir/file dest_dir/file</td>
+<td>将宿主机的文件复制到容器内，如果是一个压缩文件，将会在复制后自动解压</td>
+</tr>
+<tr>
+<td>COPY source_dir/file dest_dir/file</td>
+<td>和ADD相似，但是如果有压缩文件并不能解压</td>
+</tr>
+<tr>
+<td>WORKDIR path_dir</td>
+<td>设置工作目录</td>
+</tr>
+</tbody></table>
+<h2 id="使用脚本创建镜像"><a href="#使用脚本创建镜像" class="headerlink" title="使用脚本创建镜像"></a>使用脚本创建镜像</h2><p>步骤：</p>
+<p>（1）创建目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">mkdir –p &#x2F;usr&#x2F;local&#x2F;dockerjdk8</span></pre></td></tr></table></figure>
+
+<p>（2）下载jdk-8u171-linux-x64.tar.gz并上传到服务器（虚拟机）中的/usr/local/dockerjdk8目录</p>
+<p>（3）创建文件Dockerfile  <code>vi Dockerfile</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">#依赖镜像名称和ID</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">FROM centos:7</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">#指定镜像创建者信息</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">MAINTAINER ITCAST</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">#切换工作目录</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">WORKDIR &#x2F;usr</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">RUN mkdir  &#x2F;usr&#x2F;local&#x2F;java</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">#ADD 是相对路径jar,把java添加到容器中</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">ADD jdk-8u171-linux-x64.tar.gz &#x2F;usr&#x2F;local&#x2F;java&#x2F;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">#配置java环境变量</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">ENV JAVA_HOME &#x2F;usr&#x2F;local&#x2F;java&#x2F;jdk1.8.0_171</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">ENV JRE_HOME $JAVA_HOME&#x2F;jre</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">ENV CLASSPATH $JAVA_HOME&#x2F;lib&#x2F;dt.jar:$JAVA_HOME&#x2F;lib&#x2F;tools.jar:$JRE_HOME&#x2F;lib:$CLASSPATH</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">ENV PATH $JAVA_HOME&#x2F;bin:$PATH</span></pre></td></tr></table></figure>
+
+<p>（4）执行命令构建镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker build -t&#x3D;&#39;jdk1.8&#39; .</span></pre></td></tr></table></figure>
+
+<p>注意后边的空格和点，不要省略</p>
+<p>（5）查看镜像是否建立完成</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker images</span></pre></td></tr></table></figure>
+
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">Docker</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/02/08/Docker-7Dockfile/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-MacOS-安装redis" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1096,105 +1222,6 @@ Docker也不关心你要把容器运到何方：我们可以在自己的笔记�
 
 
   
-    <article id="post-组成原理-存储器" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/01/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86-%E5%AD%98%E5%82%A8%E5%99%A8/">存储器</a>
-    </h1>
-  
-
-        
-        <a href="/2019/12/01/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86-%E5%AD%98%E5%82%A8%E5%99%A8/" class="archive-article-date">
-  	<time datetime="2019-12-01T02:24:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="存储器"><a href="#存储器" class="headerlink" title="存储器"></a>存储器</h1><h2 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h2><ul>
-<li>存储系统的层次结构</li>
-<li>DRAM的读写和刷新</li>
-<li>存储器的字位扩展，与CPU的连接</li>
-<li>如何提高访存速度</li>
-<li>Cache与主存之间的地址映射，替换策略，命中率等</li>
-<li>存储校验汉明码、CRC</li>
-<li>硬盘参数的计算</li>
-</ul>
-<h2 id="典型例题"><a href="#典型例题" class="headerlink" title="典型例题"></a>典型例题</h2><ol>
-<li>概念解释</li>
-</ol>
-<ul>
-<li>主存：主存储器，用于存放正在执行的程序和数据。CPU可以直接进行随机读写，访问速度较高。</li>
-<li>辅存：辅助存储器，用于存放当前暂不执行的程序和数据，以及一些需要永久保存的信息。</li>
-<li>cache：高速缓冲存储器，介于CPU和主存之间，用于解决CPU和主存之间速度不匹配的问题。</li>
-<li>RAM：半导体随机存取器，主要用作计算机中的主存。</li>
-<li>SRAM：静态半导体随机存储器。</li>
-<li>DRAM：动态半导体随机存储器。</li>
-<li>ROM：掩膜式半导体只读存储器。由芯片制造商在制造时写入内容，以后只能读出而不能写入。</li>
-<li>PROM：可编程只读存储器，由用户根据需要确定写入内容，只能写入一次。</li>
-<li>EPROM：紫外线可擦写可编程只读存储器。需要修改内容时，先将其全部内容擦除，然后再编程。擦除依靠紫外线使浮动栅极上的电荷泄漏实现。</li>
-<li>EERPM：电擦写可编程只读寄存器。</li>
-<li>CDROM：只读型光盘。</li>
-<li>Flash Memory：闪速存储器，或称快擦型存储器。</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color3">计算机组成原理</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/12/01/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86-%E5%AD%98%E5%82%A8%E5%99%A8/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">Next &amp;raquo;</a>
@@ -1316,10 +1343,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">ElasticSearch</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">git</a>
               </li>
              
@@ -1340,15 +1363,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">计算机组成原理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">Java正则表达式</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">计算机组成原理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">编译原理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">ElasticSearch</a>
               </li>
              
               <li class="article-tag-list-item">
