@@ -151,6 +151,400 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-docker-1简介" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/07/docker-1%E7%AE%80%E4%BB%8B/">Docker简介</a>
+    </h1>
+  
+
+        
+        <a href="/2020/02/07/docker-1%E7%AE%80%E4%BB%8B/" class="archive-article-date">
+  	<time datetime="2020-02-07T11:17:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="/2020/02/07/docker-1%E7%AE%80%E4%BB%8B/1-3.png" alt="1-3"></p>
+<h1 id="1-Docker简介"><a href="#1-Docker简介" class="headerlink" title="1 Docker简介"></a>1 Docker简介</h1><h2 id="1-1-什么是虚拟化"><a href="#1-1-什么是虚拟化" class="headerlink" title="1.1 什么是虚拟化"></a>1.1 什么是虚拟化</h2><p>​    在计算机中，虚拟化（英语：Virtualization）是一种资源管理技术，是将计算机的各种实体资源，如服务器、网络、内存及存储等，予以抽象、转换后呈现出来，打破实体结构间的不可切割的障碍，使用户可以比原本的组态更好的方式来应用这些资源。这些资源的新虚拟部份是不受现有资源的架设方式，地域或物理组态所限制。一般所指的虚拟化资源包括计算能力和资料存储。</p>
+<p>​    在实际的生产环境中，虚拟化技术主要用来解决高性能的物理硬件产能过剩和老的旧的硬件产能过低的重组重用，透明化底层物理硬件，从而最大化的利用物理硬件   对资源充分利用</p>
+<p>​    虚拟化技术种类很多，例如：软件虚拟化、硬件虚拟化、内存虚拟化、网络虚拟化(vip)、桌面虚拟化、服务虚拟化、虚拟机等等。</p>
+<h2 id="1-2-什么是Docker"><a href="#1-2-什么是Docker" class="headerlink" title="1.2 什么是Docker"></a>1.2 什么是Docker</h2><p>​    Docker 是一个开源项目，诞生于 2013 年初，最初是 dotCloud 公司内部的一个业余项目。它基于 Google 公司推出的 Go 语言实现。 项目后来加入了 Linux 基金会，遵从了 Apache 2.0 协议，项目代码在 <a href="https://github.com/docker/docker" target="_blank" rel="noopener">GitHub</a> 上进行维护。</p>
+<p>​    Docker 自开源后受到广泛的关注和讨论，以至于 dotCloud 公司后来都改名为 Docker Inc。Redhat 已经在其 RHEL6.5 中集中支持 Docker；Google 也在其 PaaS 产品中广泛应用。</p>
+<p>​    Docker 项目的目标是实现轻量级的操作系统虚拟化解决方案。 Docker 的基础是 Linux 容器（LXC）等技术。</p>
+<p>​    在 LXC 的基础上 Docker 进行了进一步的封装，让用户不需要去关心容器的管理，使得操作更为简便。用户操作 Docker 的容器就像操作一个快速轻量级的虚拟机一样简单。</p>
+<h2 id="1-3-Docker-组件"><a href="#1-3-Docker-组件" class="headerlink" title="1.3 Docker 组件"></a>1.3 Docker 组件</h2><h3 id="1-3-1-Docker服务器与客户端"><a href="#1-3-1-Docker服务器与客户端" class="headerlink" title="1.3.1 Docker服务器与客户端"></a>1.3.1 Docker服务器与客户端</h3><p>​    Docker是一个客户端-服务器（C/S）架构程序。Docker客户端只需要向Docker服务器或者守护进程发出请求，服务器或者守护进程将完成所有工作并返回结果。Docker提供了一个命令行工具Docker以及一整套RESTful API。你可以在同一台宿主机上运行Docker守护进程和客户端，也可以从本地的Docker客户端连接到运行在另一台宿主机上的远程Docker守护进程。</p>
+<h3 id="1-3-2-Docker镜像与容器"><a href="#1-3-2-Docker镜像与容器" class="headerlink" title="1.3.2 Docker镜像与容器"></a>1.3.2 Docker镜像与容器</h3><p>镜像是构建Docker的基石。用户基于镜像来运行自己的容器。镜像也是Docker生命周期中的“构建”部分。镜像是基于联合文件系统的一种层式结构，由一系列指令一步一步构建出来。例如：</p>
+<p>添加一个文件；</p>
+<p>执行一个命令；</p>
+<p>打开一个窗口。</p>
+<p>也可以将镜像当作容器的“源代码”。镜像体积很小，非常“便携”，易于分享、存储和更新。</p>
+<p>​    Docker可以帮助你构建和部署容器，你只需要把自己的应用程序或者服务打包放进容器即可。容器是基于镜像启动起来的，容器中可以运行一个或多个进程。我们可以认为，镜像是Docker生命周期中的构建或者打包阶段，而容器则是启动或者执行阶段。  容器基于镜像启动，一旦容器启动完成后，我们就可以登录到容器中安装自己需要的软件或者服务。</p>
+<p>所以Docker容器就是：</p>
+<p>​    一个镜像格式；</p>
+<p>​    一些列标准操作；</p>
+<p>​    一个执行环境。</p>
+<p>​    Docker借鉴了标准集装箱的概念。标准集装箱将货物运往世界各地，Docker将这个模型运用到自己的设计中，唯一不同的是：集装箱运输货物，而Docker运输软件。</p>
+<pre><code>和集装箱一样，Docker在执行上述操作时，并不关心容器中到底装了什么，它不管是web服务器，还是数据库，或者是应用程序服务器什么的。所有的容器都按照相同的方式将内容“装载”进去。
+
+Docker也不关心你要把容器运到何方：我们可以在自己的笔记本中构建容器，上传到Registry，然后下载到一个物理的或者虚拟的服务器来测试，在把容器部署到具体的主机中。像标准集装箱一样，Docker容器方便替换，可以叠加，易于分发，并且尽量通用。</code></pre><h3 id="1-3-3-Registry（注册中心）"><a href="#1-3-3-Registry（注册中心）" class="headerlink" title="1.3.3 Registry（注册中心）"></a>1.3.3 Registry（注册中心）</h3><p>​    Docker用Registry来保存用户构建的镜像。Registry分为公共和私有两种。Docker公司运营公共的Registry叫做Docker Hub。用户可以在Docker Hub注册账号，分享并保存自己的镜像（说明：在Docker Hub下载镜像巨慢，可以自己构建私有的Registry）。</p>
+<p>​    <a href="https://hub.docker.com/" target="_blank" rel="noopener">https://hub.docker.com/</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">Docker</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/02/07/docker-1%E7%AE%80%E4%BB%8B/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-SpringBoot-Application注解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/04/SpringBoot-Application%E6%B3%A8%E8%A7%A3/">@SpringBootApplication注解</a>
+    </h1>
+  
+
+        
+        <a href="/2020/02/04/SpringBoot-Application%E6%B3%A8%E8%A7%A3/" class="archive-article-date">
+  	<time datetime="2020-02-04T06:38:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>org.springframework.boot @Target({ElementType.TYPE})<br>@Retention(RetentionPolicy.RUNTIME)<br>@Documented<br>@Configuration<br>public interface SpringBootConfiguration<br>extends annotation.Annotation</p>
+</blockquote>
+<blockquote>
+<p>Indicates a configuration class that declares one or more @Bean methods and also triggers auto-configuration and component scanning. This is a convenience annotation that is equivalent to declaring @Configuration, @EnableAutoConfiguration and @ComponentScan</p>
+</blockquote>
+<h2 id="SpringBootConfiguration"><a href="#SpringBootConfiguration" class="headerlink" title="@SpringBootConfiguration"></a>@SpringBootConfiguration</h2><blockquote>
+<p>org.springframework.boot @Target(ElementType.TYPE)<br>@Retention(RetentionPolicy.RUNTIME)<br>@Documented<br>@Configuration<br>public interface SpringBootConfiguration<br>extends annotation.Annotation</p>
+</blockquote>
+<blockquote>
+<p>Indicates that a class provides Spring Boot application @Configuration. Can be used as an alternative to the Spring’s standard @Configuration annotation so that configuration can be found automatically (for example in tests).<br>Application should only ever include one @SpringBootConfiguration and most idiomatic Spring Boot applications will inherit it from @SpringBootApplication.</p>
+</blockquote>
+<h3 id="Configuration"><a href="#Configuration" class="headerlink" title="@Configuration"></a>@Configuration</h3><blockquote>
+<p>Indicates that a class declares one or more @Bean methods and may be processed by the Spring container to generate bean definitions and service requests for those beans at runtime,</p>
+</blockquote>
+<p>for example </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">   <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AppConfig</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">       <span class="meta">@Bean</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">       <span class="function"><span class="keyword">public</span> MyBean <span class="title">myBean</span><span class="params">()</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">           <span class="comment">// instantiate, configure and return bean ...</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">       &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">   &#125;</span></pre></td></tr></table></figure>
+
+
+
+<h2 id="EnableAutoConfiguration"><a href="#EnableAutoConfiguration" class="headerlink" title="@EnableAutoConfiguration"></a>@EnableAutoConfiguration</h2><h2 id="ComponentScan"><a href="#ComponentScan" class="headerlink" title="@ComponentScan"></a>@ComponentScan</h2>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">Spring Boot</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/02/04/SpringBoot-Application%E6%B3%A8%E8%A7%A3/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-verilog入门" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/24/verilog%E5%85%A5%E9%97%A8/">verilog入门</a>
+    </h1>
+  
+
+        
+        <a href="/2019/12/24/verilog%E5%85%A5%E9%97%A8/" class="archive-article-date">
+  	<time datetime="2019-12-24T09:37:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-24</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="数据类型及变量、常量"><a href="#数据类型及变量、常量" class="headerlink" title="数据类型及变量、常量"></a>数据类型及变量、常量</h2><h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><ol>
+<li>线网型变量</li>
+</ol>
+<ul>
+<li>wire：可以直接理解为连线</li>
+</ul>
+<h2 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h2><h3 id="算术运算符"><a href="#算术运算符" class="headerlink" title="算术运算符"></a>算术运算符</h3><ul>
+<li>+，加</li>
+<li>-，减</li>
+<li>*，乘</li>
+<li>/，除</li>
+<li>&amp;，取模（取余数）</li>
+</ul>
+<ol>
+<li>在进行整数除法运算时，结果要略去小数部分,只取整数部分；</li>
+<li>而进行取模运算时，结果的符号位采用模运算符中第一个操作数的符号。<h3 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h3></li>
+</ol>
+<ul>
+<li>&amp;&amp;（双目），逻辑与</li>
+<li>||（双目），逻辑或</li>
+<li>！（单目），逻辑非<h3 id="按位运算符"><a href="#按位运算符" class="headerlink" title="按位运算符"></a>按位运算符</h3></li>
+<li>~，按位取反</li>
+<li>&amp;，按位与</li>
+<li>|，按位或</li>
+<li>^，按位异或</li>
+<li>^<del>,</del>^,按位同或</li>
+</ul>
+<h3 id="关系运算符"><a href="#关系运算符" class="headerlink" title="关系运算符"></a>关系运算符</h3><ul>
+<li><blockquote>
+</blockquote>
+</li>
+<li>&lt;</li>
+<li>=</li>
+<li><blockquote>
+<p>=</p>
+</blockquote>
+</li>
+<li>&lt;=</li>
+</ul>
+<h3 id="等式运算符"><a href="#等式运算符" class="headerlink" title="等式运算符"></a>等式运算符</h3><ul>
+<li>==</li>
+<li>！=</li>
+<li>===</li>
+<li>！==</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color4">FPGA计组课设</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/12/24/verilog%E5%85%A5%E9%97%A8/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-组成原理-输入输出" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/06/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/">输入输出</a>
+    </h1>
+  
+
+        
+        <a href="/2019/12/06/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/" class="archive-article-date">
+  	<time datetime="2019-12-06T06:37:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li>简要说明CPU与I/O之间传递信息可采用哪几种联络方式？它们分别用于什么场合？<br>CPU与IO之间传递信息通常采用三种联络方式：直接响应（立即响应）、同步、异步。<br><br>使用场合分别为：<br></li>
+</ol>
+<ul>
+<li>直接控制使用与结构极简单、速度极慢的I/O设备，CPU直接控制外设处于某种状态而无需联络信号。</li>
+<li>同步方式采用统一的时标进行联络，适用于CPU与I/O速度差别不大，近距离传送的场合。</li>
+<li>异步方式采用应答机制进行联络，适用于CPU与I/O速度差较大、远距离传送的场合。</li>
+</ul>
+<ol start="2">
+<li><p>在什么条件下，I/O设备可以向CPU提出中断请求？<br>设备工作完成状态为1（D=1），中断屏蔽码为0（MASK=0），且查询中断时，中断请求触发器为1（INTR=1）</p>
+</li>
+<li></li>
+</ol>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color3">计算机组成原理</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/12/06/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-组成原理-存储器" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -752,390 +1146,9 @@
 
 
   
-    <article id="post-network-数据链路层" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/12/network-%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/">数据链路层</a>
-    </h1>
-  
-
-        
-        <a href="/2019/11/12/network-%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/" class="archive-article-date">
-  	<time datetime="2019-11-12T06:37:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-12</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="数据链路层服务"><a href="#数据链路层服务" class="headerlink" title="数据链路层服务"></a>数据链路层服务</h2><ol>
-<li>流量控制</li>
-<li>差错检测</li>
-<li>差错纠正</li>
-<li>全双工和半双工通信控制</li>
-<li></li>
-</ol>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">计算机网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/11/12/network-%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-network-计算机网络课后题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/10/network-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E5%90%8E%E9%A2%98/">计算机网络历年试卷</a>
-    </h1>
-  
-
-        
-        <a href="/2019/11/10/network-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E5%90%8E%E9%A2%98/" class="archive-article-date">
-  	<time datetime="2019-11-10T10:58:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-10</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="2016年A卷"><a href="#2016年A卷" class="headerlink" title="2016年A卷"></a>2016年A卷</h2><h3 id="简答题"><a href="#简答题" class="headerlink" title="简答题"></a>简答题</h3><ol>
-<li>计算机网络的性能指标是哪四个？指标的含义是什么？</li>
-</ol>
-<ul>
-<li>带宽：指数据信道上能传送的最高数据率，单位是b/s</li>
-<li>延迟：</li>
-<li>丢包率：</li>
-<li>吞吐量：数据在网络信道上的传输速率</li>
-</ul>
-<ol start="2">
-<li><p>目前互联网的体系结构都包含那几层？其局限性或面临的挑战包含那几方面？<br><br>物理层，数据链路层，网络层，传输层，应用层</p>
-</li>
-<li><p>在1948年，信息论的创始人香农（Shannon）推导出了著名的香农公式，请写出该公式并解释该公式的意义。</p>
-</li>
-<li><p>端口地址、IP地址、硬件地址三者的主要区别是什么？<br><br>端口地址用于传输层，应用层寻址；IP地址用于网络层互联网中IP数据包寻址；硬件地址用于数据链路层，局域网中帧寻址。</p>
-</li>
-<li><p>划分子网的意义何在，举例说明。<br><br>三级地址结构，提高主机地址空间的利用率，减少地址的开销</p>
-</li>
-<li><p>TCP流量控制机制和拥塞控制机制分别是什么？<br><br>流量控制：滑动窗口机制<br><br>拥塞控制：慢开始和拥塞避免<br></p>
-</li>
-<li><p>FTP的工作原理是什么？<br><br>在进行文件传输时，FTP的客户和服务器之间要建立两个并行的TCP连接：控制连接和数据连接。控制连接在整个会话期间会一直保持打开，FTP客户所发出的传送请求，通过控制连接发送给服务器端的控制进程，但控制连接并不用来传送文件。实际用于传送文件的是数据连接。服务器端的控制进程在收到FTP客户端发送来的文件传输请求后就创建数据传送进程和数据连接，用来连接客户端和服务器端的数据传送进程。</p>
-</li>
-<li><p>防火墙的工作原理是什么？<br>在一个网点和网络的其余部分之间安装一个特殊编程的路由器，用来实施访问控制策略，从而禁止不必要的通信。</p>
-</li>
-<li><p>移动IP的工作原理是什么？</p>
-</li>
-<li><p>入侵检测系统的工作原理是什么？</p>
-</li>
-</ol>
-<ul>
-<li>基于特征的IDS：通过维护一个所有已知攻击标志性特征的数据库。</li>
-<li>基于异常的IDS：通过观察学习正常的网络流量，当网络流量中某统计特征异常时，则可能发生了入侵。</li>
-</ul>
-<ol start="11">
-<li><p>从IPv4项IPv6过渡的两种技术特点是什么？</p>
-</li>
-<li><p>三层交换机和两层交换机的主要区别是什么？</p>
-</li>
-<li><p>从不同的角度考虑，计算机网络会有不同的分类结果，你知道从作用范围角度可将计算机网络分为那几类？Internet和它们是什么关系？<br>局域网，都市网，广域网；Internet时他们的集合。</p>
-</li>
-<li><p>TCP/IP协议族设置物理层的主要意义是什么？物理层具体表现为明确与传输媒体的接口有关的若干特性，你知道都有那几个特性？<br>1)物理层考虑媒体的比特流传输，通过屏蔽底层的差异，为数据链路层提供统一平台。<br>2）机械特性，电气特性，功能特性，过程特性。</p>
-</li>
-<li><p>数据链路层的意义在于控制物理层数据的传输，其本身是有结构的数据传输，试描述常见的局域网以太网的帧的结构（包括帧中各字段的组成和相应字节的长度，其中类型字段的含义是什么？<br>1）源MAC地址和目的MAC地址各6字节，类型字段各2字节，数据字段46-1500字节，FCS字段4字节<br><br>2）类型字段用来标识上一层使用的协议种类，以准确提交数据。</p>
-</li>
-<li><p>以太网的MTU值是多少？假设一IP数据报长度为4100字节（固定首部长度）。现在经过一个以太网网络传送，问（1）该IP数据报应当划分为几个分片？（2）分别写出各数据报分片的数据字段长度、片偏移字段和MF标志的数值？<br>以太网的MTU值为1500字节。<br><br>3个<br></p>
-</li>
-<li><p>简述访问WWW的工作过程</p>
-</li>
-</ol>
-<ul>
-<li>浏览器分歧超链接指向页面的URL</li>
-<li>浏览器向DNS请求解析<a href="http://www.neuq.edu.cn的IP地址" target="_blank" rel="noopener">www.neuq.edu.cn的IP地址</a></li>
-<li>DNS解析出IP地址为202.206.16.3</li>
-<li>浏览器与服务器建立TCP连接</li>
-<li>浏览器发出取文件命令</li>
-<li>服务器给出相应</li>
-<li>TCP释放连接</li>
-<li>浏览器显示<a href="http://www.neuq.edu.cn文件index.html中的所有文本" target="_blank" rel="noopener">www.neuq.edu.cn文件index.html中的所有文本</a></li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">计算机网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/11/10/network-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E8%AF%BE%E5%90%8E%E9%A2%98/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-macOS-清除启动台中残余的图标" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/07/macOS-%E6%B8%85%E9%99%A4%E5%90%AF%E5%8A%A8%E5%8F%B0%E4%B8%AD%E6%AE%8B%E4%BD%99%E7%9A%84%E5%9B%BE%E6%A0%87/">macOS清除启动台中残余的图标</a>
-    </h1>
-  
-
-        
-        <a href="/2019/11/07/macOS-%E6%B8%85%E9%99%A4%E5%90%AF%E5%8A%A8%E5%8F%B0%E4%B8%AD%E6%AE%8B%E4%BD%99%E7%9A%84%E5%9B%BE%E6%A0%87/" class="archive-article-date">
-  	<time datetime="2019-11-07T15:38:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>经常会不通过appstore下载软件，也就是从网页中下载dmg，自己安装，但是当我不再想要这个软件，然后把它卸载掉之后就会发现，launchpad里还是遗留了这个软件的图标，而且删不掉。这个时候，就可以下面的办法就管用啦！</p>
-<p>思路：找到存放launchpad中图标的数据库，对数据库进行操作直接删除对于的图标。<br>第一步找到comappledocklaunchpad文件夹<br>第二步找到数据库获取其路径<br>第三步开始对数据库进行操作<br>第一步：找到com.apple.dock.launchpad文件夹：</p>
-<p>打开一个folder，按command+shift+G，在前往当中输入地址/private/var/folders，然后在里边自己尝试找到com.apple.dock.launchpad这个文件夹，我的路径是/private/var/folders/8v/…/0/com.apple.dock.launchpad，省略号处应该大家都不一样，所以慢慢找，总之最后找到名为com.apple.dock.launchpad的文件夹。</p>
-<p>第二步：找到数据库，获取其路径：</p>
-<p>打开com.apple.dock.launchpad 文件夹<br>之后有一个db文件夹，再点进去有一个文件叫db,它就是我们要找的数据库（如图）。 </p>
-<p>右击它，选择显示简介，将位置信息拷贝到剪切板，注意从private开始（如图）。 </p>
-<p>第三步：开始对数据库进行操作</p>
-<p>打开终端：cd到刚才拷贝的路径<br>然后输入：<br>sqlite3 db “delete from apps where title=’应用名称’;”&amp;&amp;killall Dock<br>注意要将应用名称处替换成你要删除的图标的名称，然后回车即可。</p>
-<p>再回到launchpad看看，没有啦！</p>
-<p>————————————————<br>版权声明：本文为CSDN博主「ohyeahhhh」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a href="https://blog.csdn.net/ohyeahhhh/article/details/53168753" target="_blank" rel="noopener">https://blog.csdn.net/ohyeahhhh/article/details/53168753</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color4">macOS小问题</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/11/07/macOS-%E6%B8%85%E9%99%A4%E5%90%AF%E5%8A%A8%E5%8F%B0%E4%B8%AD%E6%AE%8B%E4%BD%99%E7%9A%84%E5%9B%BE%E6%A0%87/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-组成原理-CPU" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/06/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86-CPU/">CPU</a>
-    </h1>
-  
-
-        
-        <a href="/2019/11/06/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86-CPU/" class="archive-article-date">
-  	<time datetime="2019-11-06T06:27:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="CPU的功能"><a href="#CPU的功能" class="headerlink" title="CPU的功能"></a>CPU的功能</h2><ol>
-<li>指令控制</li>
-<li>操作控制</li>
-<li>时间控制</li>
-</ol>
-<h2 id="CPU运算器和控制器的功能"><a href="#CPU运算器和控制器的功能" class="headerlink" title="CPU运算器和控制器的功能"></a>CPU运算器和控制器的功能</h2><ol>
-<li>运算器：对数据进行加工。</li>
-<li>控制器：协调并控制计算机各个部件执行程序的指令序列，基本功能包括取指令、分析指令、执行指令、中断处理。</li>
-</ol>
-<h2 id="运算器的基本结构"><a href="#运算器的基本结构" class="headerlink" title="运算器的基本结构"></a>运算器的基本结构</h2><ol>
-<li>算术逻辑单元：主要功能是进行算术、逻辑运算。</li>
-<li>通用寄存器组：用于存放操作数和各种地址信息等。</li>
-</ol>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color3">计算机组成原理</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/11/06/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86-CPU/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/2/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">Next &amp;raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/2/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/">Next &amp;raquo;</a>
     </nav>
   
 
@@ -1242,6 +1255,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">Linux</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">SSM框架</a>
               </li>
              
@@ -1266,11 +1283,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">FPGA计组课设</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">剑指offer</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">剑指offer</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">FPGA计组课设</a>
               </li>
              
               <li class="article-tag-list-item">
