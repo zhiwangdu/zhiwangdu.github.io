@@ -151,6 +151,285 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Docker-3常用命令" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/08/Docker-3%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">Docker常用命令</a>
+    </h1>
+  
+
+        
+        <a href="/2020/02/08/Docker-3%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="archive-article-date">
+  	<time datetime="2020-02-08T04:57:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><h2 id="镜像相关命令"><a href="#镜像相关命令" class="headerlink" title="镜像相关命令"></a>镜像相关命令</h2><h3 id="查看镜像"><a href="#查看镜像" class="headerlink" title="查看镜像"></a>查看镜像</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker images</span></pre></td></tr></table></figure>
+
+<p>REPOSITORY：镜像名称</p>
+<p>TAG：镜像标签</p>
+<p>IMAGE ID：镜像ID</p>
+<p>CREATED：镜像的创建日期（不是获取该镜像的日期）</p>
+<p>SIZE：镜像大小</p>
+<p>这些镜像都是存储在Docker宿主机的/var/lib/docker目录下</p>
+<h3 id="搜索镜像"><a href="#搜索镜像" class="headerlink" title="搜索镜像"></a>搜索镜像</h3><p>如果你需要从网络中查找需要的镜像，可以通过以下命令搜索</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker search 镜像名称</span></pre></td></tr></table></figure>
+
+<p>NAME：仓库名称</p>
+<p>DESCRIPTION：镜像描述</p>
+<p>STARS：用户评价，反应一个镜像的受欢迎程度</p>
+<p>OFFICIAL：是否官方</p>
+<p>AUTOMATED：自动构建，表示该镜像由Docker Hub自动构建流程创建的</p>
+<h3 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h3><p>拉取镜像就是从中央仓库中下载镜像到本地</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker pull 镜像名称</span></pre></td></tr></table></figure>
+
+<p>例如，我要下载centos7镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker pull centos:7</span></pre></td></tr></table></figure>
+
+<h3 id="删除镜像"><a href="#删除镜像" class="headerlink" title="删除镜像"></a>删除镜像</h3><p>按镜像ID删除镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker rmi 镜像ID</span></pre></td></tr></table></figure>
+
+<p>删除所有镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker rmi &#96;docker images -q&#96;</span></pre></td></tr></table></figure>
+
+<h2 id="容器相关命令"><a href="#容器相关命令" class="headerlink" title="容器相关命令"></a>容器相关命令</h2><h3 id="查看容器"><a href="#查看容器" class="headerlink" title="查看容器"></a>查看容器</h3><p>查看正在运行的容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker ps</span></pre></td></tr></table></figure>
+
+<p>查看所有容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker ps –a</span></pre></td></tr></table></figure>
+
+<p>查看最后一次运行的容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker ps –l</span></pre></td></tr></table></figure>
+
+<p>查看停止的容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker ps -f status&#x3D;exited</span></pre></td></tr></table></figure>
+
+<h3 id="创建与启动容器"><a href="#创建与启动容器" class="headerlink" title="创建与启动容器"></a>创建与启动容器</h3><p>创建容器常用的参数说明：</p>
+<p>创建容器命令：docker run</p>
+<p> -i：表示运行容器</p>
+<p> -t：表示容器启动后会进入其命令行。加入这两个参数后，容器创建就能登录进去。即分配一个伪终端。</p>
+<p> –name :为创建的容器命名。</p>
+<p> -v：表示目录映射关系（前者是宿主机目录，后者是映射到宿主机上的目录），可以使用多个－v做多个目录或文件映射。注意：最好做目录映射，在宿主机上做修改，然后共享到容器上。</p>
+<p> -d：在run后面加上-d参数,则会创建一个守护式容器在后台运行（这样创建容器后不会自动登录容器，如果只加-i -t两个参数，创建后就会自动进去容器）。</p>
+<p> -p：表示端口映射，前者是宿主机端口，后者是容器内的映射端口。可以使用多个-p做多个端口映射</p>
+<p>（1）交互式方式创建容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker run -it --name&#x3D;容器名称 镜像名称:标签 &#x2F;bin&#x2F;bash</span></pre></td></tr></table></figure>
+
+<p>这时我们通过ps命令查看，发现可以看到启动的容器，状态为启动状态  </p>
+<p>退出当前容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">exit</span></pre></td></tr></table></figure>
+
+<p>（2）守护式方式创建容器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker run -di --name&#x3D;容器名称 镜像名称:标签</span></pre></td></tr></table></figure>
+
+<p>登录守护式容器方式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker exec -it 容器名称 (或者容器ID)  &#x2F;bin&#x2F;bash</span></pre></td></tr></table></figure>
+
+<h3 id="停止与启动容器"><a href="#停止与启动容器" class="headerlink" title="停止与启动容器"></a>停止与启动容器</h3><p>停止容器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker stop 容器名称（或者容器ID）</span></pre></td></tr></table></figure>
+
+<p>启动容器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker start 容器名称（或者容器ID）</span></pre></td></tr></table></figure>
+
+<h3 id="文件拷贝"><a href="#文件拷贝" class="headerlink" title="文件拷贝"></a>文件拷贝</h3><p>如果我们需要将文件拷贝到容器内可以使用cp命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker cp 需要拷贝的文件或目录 容器名称:容器目录</span></pre></td></tr></table></figure>
+
+<p>也可以将文件从容器内拷贝出来</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker cp 容器名称:容器目录 需要拷贝的文件或目录</span></pre></td></tr></table></figure>
+
+<h3 id="目录挂载"><a href="#目录挂载" class="headerlink" title="目录挂载"></a>目录挂载</h3><p>我们可以在创建容器的时候，将宿主机的目录与容器内的目录进行映射，这样我们就可以通过修改宿主机某个目录的文件从而去影响容器。<br>创建容器 添加-v参数 后边为   宿主机目录:容器目录，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker run -di -v &#x2F;usr&#x2F;local&#x2F;myhtml:&#x2F;usr&#x2F;local&#x2F;myhtml --name&#x3D;mycentos3 centos:7</span></pre></td></tr></table></figure>
+
+<p>如果你共享的是多级的目录，可能会出现权限不足的提示。</p>
+<p>这是因为CentOS7中的安全模块selinux把权限禁掉了，我们需要添加参数  –privileged=true  来解决挂载的目录没有权限的问题</p>
+<h3 id="查看容器IP地址"><a href="#查看容器IP地址" class="headerlink" title="查看容器IP地址"></a>查看容器IP地址</h3><p>我们可以通过以下命令查看容器运行的各种数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker inspect 容器名称（容器ID）</span></pre></td></tr></table></figure>
+
+<p>也可以直接执行下面的命令直接输出IP地址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker inspect --format&#x3D;&#39;&#123;&#123;.NetworkSettings.IPAddress&#125;&#125;&#39; 容器名称（容器ID）</span></pre></td></tr></table></figure>
+
+<h3 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h3><p>删除指定的容器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker rm 容器名称（容器ID）</span></pre></td></tr></table></figure>
+
+<h1 id><a href="#" class="headerlink" title></a></h1>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">Docker</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/02/08/Docker-3%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Docker-2安装" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/07/Docker-2%E5%AE%89%E8%A3%85/">Docker安装</a>
+    </h1>
+  
+
+        
+        <a href="/2020/02/07/Docker-2%E5%AE%89%E8%A3%85/" class="archive-article-date">
+  	<time datetime="2020-02-07T11:55:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Docker安装与启动"><a href="#Docker安装与启动" class="headerlink" title="Docker安装与启动"></a>Docker安装与启动</h1><h2 id="CentOS-安装Docker"><a href="#CentOS-安装Docker" class="headerlink" title="CentOS 安装Docker"></a>CentOS 安装Docker</h2><p>​    Docker官方建议在Ubuntu中安装，因为Docker是基于Ubuntu发布的，而且一般Docker出现的问题Ubuntu是最先更新或者打补丁的。在很多版本的CentOS中是不支持更新最新的一些补丁包的。</p>
+<p>（1）yum 包更新到最新</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">sudo yum update</span></pre></td></tr></table></figure>
+
+<p>（2）安装需要的软件包， yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">sudo yum install -y yum-utils device-mapper-persistent-data lvm2</span></pre></td></tr></table></figure>
+
+<p>（3）设置yum源为阿里云</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">sudo yum-config-manager --add-repo http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;docker-ce&#x2F;linux&#x2F;centos&#x2F;docker-ce.repo</span></pre></td></tr></table></figure>
+
+<p>（4）安装docker</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">sudo yum install docker-ce</span></pre></td></tr></table></figure>
+
+<p>（5）安装后查看docker版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker -v</span></pre></td></tr></table></figure>
+
+<h2 id="设置ustc的镜像"><a href="#设置ustc的镜像" class="headerlink" title="设置ustc的镜像"></a>设置ustc的镜像</h2><p>ustc是老牌的linux镜像服务提供者了，还在遥远的ubuntu 5.04版本的时候就在用。ustc的docker镜像加速器速度很快。ustc docker mirror的优势之一就是不需要注册，是真正的公共服务。</p>
+<p><a href="https://lug.ustc.edu.cn/wiki/mirrors/help/docker" target="_blank" rel="noopener">https://lug.ustc.edu.cn/wiki/mirrors/help/docker</a></p>
+<p>编辑该文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">vi &#x2F;etc&#x2F;docker&#x2F;daemon.json</span></pre></td></tr></table></figure>
+
+<p>在该文件中输入如下内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">&quot;registry-mirrors&quot;: [&quot;https:&#x2F;&#x2F;docker.mirrors.ustc.edu.cn&quot;]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<h2 id="Docker的启动与停止"><a href="#Docker的启动与停止" class="headerlink" title="Docker的启动与停止"></a>Docker的启动与停止</h2><p><strong>systemctl</strong>命令是系统服务管理器指令</p>
+<p>启动docker：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">systemctl start docker</span></pre></td></tr></table></figure>
+
+<p>停止docker：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">systemctl stop docker</span></pre></td></tr></table></figure>
+
+<p>重启docker：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">systemctl restart docker</span></pre></td></tr></table></figure>
+
+<p>查看docker状态：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">systemctl status docker</span></pre></td></tr></table></figure>
+
+<p>开机启动：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">systemctl enable docker</span></pre></td></tr></table></figure>
+
+<p>查看docker概要信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker info</span></pre></td></tr></table></figure>
+
+<p>查看docker帮助文档</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker --help</span></pre></td></tr></table></figure>
+
+<h1 id><a href="#" class="headerlink" title></a></h1>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">Docker</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/02/07/Docker-2%E5%AE%89%E8%A3%85/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-docker-1简介" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -928,224 +1207,6 @@ Docker也不关心你要把容器运到何方：我们可以在自己的笔记�
 
 
   
-    <article id="post-编译原理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/21/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/">编译原理概念的大全</a>
-    </h1>
-  
-
-        
-        <a href="/2019/11/21/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" class="archive-article-date">
-  	<time datetime="2019-11-21T09:17:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-21</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="第一章"><a href="#第一章" class="headerlink" title="第一章"></a>第一章</h1><ol>
-<li>解释下列术语：编译程序，源程序，目标程序，编译程序的前端，后端，遍</li>
-</ol>
-<ul>
-<li>编译程序：如果源语言为高级语言，目标语言为某台计算机上的汇编语言或机器语言，则此翻译程序称为编译程序。</li>
-<li>源程序：源语言编写的程序称为源程序。</li>
-<li>目标程序：目标语言书写的程序称为目标程序。</li>
-<li>编译程序的前端：它由这样一些阶段组成：词法分析，语法分析，语义分析，和中间代码生成；这些阶段的工作主要依赖于源语言而与目标机无关。</li>
-<li>后端：指那些依赖于目标机而一般不依赖源语言，只与中间代码有关的那些阶段，即中间代码生成以及相关出错处理和符号表操作。</li>
-<li>遍：是对源程序或其等价的中间语言程序从头带尾扫视并完成规定任务的过程。</li>
-</ul>
-<ol start="2">
-<li>一个典型的编译程序通常有哪些部分组成？各部分的主要功能是什么？并画出编译程序的总体结构图。</li>
-</ol>
-<ul>
-<li>一个典型的编译程序通常包括8个组成部分，词法分析程序、语法分析程序、语义分析程序、中间代码生成程序、中间代码优化程序、目标代码生成程序、表格管理程序和错误处理程序。</li>
-<li>词法分析：输入源程序，拼单词、检查单词和分析单词，输出单词的机内表达式。</li>
-<li>语法分析：检查源程序中存在的形式语法错误，输出错误处理信息。</li>
-<li>语义分析程序：进行语义检查和分析语义信息，并把分析结果保存到各类语义信息表中。</li>
-<li>中间代码生成：按照语义规则，将语法分析程序分析出的语法单位转换成一定形式的中间语言代码，如三元式或四元式。</li>
-<li>中间代码优化：为了产生高质量的目标代码，对中间代码进行等价变换处理。</li>
-<li>目标代码生成程序：将优化后的中间代码程序转换成目标代码程序。</li>
-<li>表格管理程序：负责建立、填写和查找一系列表格工作。</li>
-<li>错误处理程序：处理和校正源程序中存在的词法、语法和语义错误。当编译程序发现源程序中的错误时，错误处理程序负责报告出错的位置和错误性质等信息，同时对发现的错误进行适当的校正（修复），目的是使编译程序能够继续向下进行分析和处理。</li>
-</ul>
-<ol start="3">
-<li>何为翻译程序、编译程序和解释程序？它们三者之间有何种关系？<br>翻译程序是指将用某种语言编写的程序转换成另一种语言形式的程序的程序。广义上讲，编译程序和解释程序都属于翻译程序，但它们的翻译方式不同，解释程序是边翻译（解释）边执行，不生成目标代码，输出源程序的运行结果；而编译程序只负责把源程序翻译成目标程序，输出与源程序等价的目标程序，而目标程序的执行任务由操作系统完成，即只翻译不执行。</li>
-</ol>
-<h2 id="第二章、文法"><a href="#第二章、文法" class="headerlink" title="第二章、文法"></a>第二章、文法</h2><p>文法定义为四元组（VN，VT，P，S），VN是终结符号，VT是非终结符号，P是规则集合，S是识别符或开始符。</p>
-<h2 id="自顶向下语法分析"><a href="#自顶向下语法分析" class="headerlink" title="自顶向下语法分析"></a>自顶向下语法分析</h2><ol>
-<li>消除左递归：A——&gt;Aa|b，变化为 A——&gt;bA’，A’——&gt;aA’|空</li>
-<li>LL（1）分析步骤：1.First集合、FOLLOW集合、SELECT集合、2.根据SELECT集合构造预测分析表、3.根据预测分析表进行出栈入栈分析</li>
-</ol>
-<p>##自底向上语法分析</p>
-<ol>
-<li>简单优先分析：规范规约</li>
-<li>算符优先分析：1.构造FIRSTVT集合和LASTVT集合，FIRSTVT（…a、…Qa）,LASTVT(a…、Qa…)、2.构造算符优先关系表，先找ab或aQb,填等号，在找aQ,即a&lt;FIRSTVT(Q)填小于号，再找Qa,即LASTVT(Q)&gt;a,填大于号</li>
-</ol>
-<h2 id="LR分析"><a href="#LR分析" class="headerlink" title="LR分析"></a>LR分析</h2><h2 id="词法分析"><a href="#词法分析" class="headerlink" title="词法分析"></a>词法分析</h2><ol>
-<li>文法G定义为四元组(VN,VT,P,S)，其中VN是<em>非终结符号<em>，VT是</em>终结符号<em>，P是</em>规则集合<em>，S是</em>识别结符号</em></li>
-<li>乔姆斯基形式文法共有4种，分别是<em>0，1，2，3型，即短语文法，上下文有关文法，上下文无关文法，正规文法</em></li>
-<li>词法分析程序自动构造工具：<em>Lex,Flex等</em></li>
-<li>编译方式与解释方式的根本区别在于：<em>是否生成目标代码</em></li>
-<li>编译程序分为六个阶段：<em>词法分析、语法分析、语义分析、中间代码生成、代码优化、目标代码生成</em></li>
-<li>DFA的构成成分：*有穷字母表、终止状态集合、有限状态集合 *</li>
-<li>词法分析的输入是：<em>源程序</em>， 输出程序是：<em>单词符号串</em>。</li>
-<li>词法分析阶段不能识别：<em>四元式</em></li>
-<li></li>
-<li></li>
-</ol>
-<h2 id="第十章-代码优化"><a href="#第十章-代码优化" class="headerlink" title="第十章 代码优化"></a>第十章 代码优化</h2><ol>
-<li>删除多余运算<br>如果一个表达式E在前面已经定义过，并且在这之后E的变量没有改变，则称E为公共子表达式，对于公共子表达式，避免对它的重复计算，称为删除公共子表达式。</li>
-<li>代码外提<br>将循环体内的独立于循环执行次数的四元式提到循环的前面，使之志哉循环外计算一次。</li>
-<li>强度削弱<br>把计算强度大的运算变成计算强度小的运算。</li>
-<li>变换循环控制条件</li>
-</ol>
-<ul>
-<li>入口：第一条、转移到的语句、转移语句之后</li>
-<li>出口：入口的上一句、转移语句、停语句 </li>
-<li>DAG删除冗余node</li>
-</ul>
-<h2 id="储存空间和符号表"><a href="#储存空间和符号表" class="headerlink" title="储存空间和符号表"></a>储存空间和符号表</h2><ul>
-<li>静态链（访问链）：指定义该过程的直接外过程运行时活动记录基址</li>
-<li>动态链（控制链）：指调用该过程的过程的活动基址</li>
-<li></li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color5">编译原理</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/11/21/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-network-应用层" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/15/network-%E5%BA%94%E7%94%A8%E5%B1%82/">应用层</a>
-    </h1>
-  
-
-        
-        <a href="/2019/11/15/network-%E5%BA%94%E7%94%A8%E5%B1%82/" class="archive-article-date">
-  	<time datetime="2019-11-15T11:50:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-15</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="应用层的功能"><a href="#应用层的功能" class="headerlink" title="应用层的功能"></a>应用层的功能</h2><p>文件传输、访问和管理；电子邮件；虚拟终端；查询和远程作业登陆；</p>
-<h2 id="应用层的重要协议"><a href="#应用层的重要协议" class="headerlink" title="应用层的重要协议"></a>应用层的重要协议</h2><p>FTP；SMTP、POP3；HTTP；DNS</p>
-<h2 id="网络应用模型"><a href="#网络应用模型" class="headerlink" title="网络应用模型"></a>网络应用模型</h2><p>客户服务器模型（Client/Server）；P2P模型（Peer-to-Peer）</p>
-<h2 id="文件传送协议FTP（File-Transfer-Protocol）"><a href="#文件传送协议FTP（File-Transfer-Protocol）" class="headerlink" title="文件传送协议FTP（File Transfer Protocol）"></a>文件传送协议FTP（File Transfer Protocol）</h2><ol>
-<li>FTP的工作原理<br><br>在进行文件传输时，FTP的客户和服务器之间要建立两个并行的TCP连接：控制连接和数据连接。控制连接在整个会话期间会一直保持打开，FTP客户所发出的传送请求，通过控制连接发送给服务器端的控制进程，但控制连接并不用来传送文件。实际用于传送文件的是数据连接。服务器端的控制进程在收到FTP客户端发送来的文件传输请求后就创建数据传送进程和数据连接，用来连接客户端和服务器端的数据传送进程。</li>
-</ol>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">计算机网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/11/15/network-%E5%BA%94%E7%94%A8%E5%B1%82/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/2/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/">Next &amp;raquo;</a>
@@ -1251,11 +1312,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">redis</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">Linux</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">Linux</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">redis</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1283,11 +1344,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">剑指offer</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">FPGA计组课设</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">FPGA计组课设</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">剑指offer</a>
               </li>
              
               <li class="article-tag-list-item">
