@@ -151,6 +151,68 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-操作系统-内存管理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">操作系统-内存管理</a>
+    </h1>
+  
+
+        
+        <a href="/2019/11/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" class="archive-article-date">
+  	<time datetime="2019-11-28T07:42:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-28</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/11/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-编译原理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1000,115 +1062,6 @@
 
 
   
-    <article id="post-network-TCP三次握手四次挥手" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/02/network-TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/">TCP协议</a>
-    </h1>
-  
-
-        
-        <a href="/2019/11/02/network-TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/" class="archive-article-date">
-  	<time datetime="2019-11-02T11:42:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="TCP首部格式"><a href="#TCP首部格式" class="headerlink" title="TCP首部格式"></a>TCP首部格式</h2><p><img src="/images/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/TCP%E9%A6%96%E9%83%A8%E6%A0%BC%E5%BC%8F.png" alt="tip"></p>
-<ul>
-<li>源端口和目的端口:各占两个字节，分别写入源端口号和目的顿口号</li>
-<li>序号seq：占四个字节，范围是【0, 2^32 - 1】 共 2^32个序号，在TCP字节流中，每个字节都会按顺序编号，本字段表示本报文段中所发送的数据的第一个字节的序号。</li>
-<li>确认号ack：期望收到对方下一个报文段的第一个数据字节的编号。若确认号文N，则证明N-1之前的数据都已经正确收到。</li>
-<li>数据偏移：即首部长度，以4B为单位，即一个数值为4B</li>
-<li>保留：</li>
-<li>URG：紧急位，当URG=1时，标明此报文段中有紧急数据传送，是优先级最高的数据，不需要在缓存队列中排队，配合紧急指针字段使用。</li>
-<li>ACK：确认位，ACK=1时确认号有效，在连接建立后传送的所有报文段ACK都必须置为1.</li>
-<li>PSH：推送位，PSH=1时，接收方应尽快交付接受的应用进程，不用再等到缓存填满再想上层交付。</li>
-<li>RST：复位，RST=1时说明TCP连接出现严重错误，必须释放连接然后重新建立。</li>
-<li>SYN：同步位，SYN=1时，表明是一个连接请求/连接接受报文。</li>
-<li>FIN：FIN=1时，表明此报文段发送方数据已发完，请求释连接。</li>
-<li>窗口：指的是发送本报文段的一方的接受窗口，即现在允许对方发送的数据量。</li>
-<li>检验和：检验首部+数据，检验时要加上12B伪首部，第四个字段为6.</li>
-<li>紧急指针：URG=1时才有意义，指出本报文段中紧急数据的字节数。</li>
-<li>选项：长度可变</li>
-<li>填充：<h2 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h2>握手是为了建立连接，TCP三次握手的流程如下：<br></li>
-</ul>
-<ol>
-<li>第一次握手：建立连接时，客户端发送SYN包到服务器，并进入SYN_SEND状态，等待服务器确认；</li>
-<li>第二次握手：服务器收到SYN包，必须确认客户的SYN同时自己也发送一个SYN包，即SYN+ACK包，此时服务器进入SYN_RECV状态；</li>
-<li>第三次握手：客户端收到服务器的SYN+ACK包，向服务器发送确认包ACK，此包发送完毕，客户端和服务器进入ESTABLISHED状态，完成三次握手。<h2 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h2>“挥手”是为了能终止连接，TCP四次挥手的流程如下：<br></li>
-<li>第一次挥手：Client发送一个FIN，用来关闭Client到Server的数据传送，Client进入FIN_WAIT_1的状态；</li>
-<li>第二次挥手：Server收到FIN后，发送一个ACK给Client，确认序号为收到序号+1（与SYN相同，一个FIN占用一个序号），Server进入CLOSE_WAIT状态；</li>
-<li>第三次挥手：Server发送一个FIN，用来关闭Server到Client的数据发送，Server进入LAST_ACK状态；</li>
-<li>第四次挥手：Client收到FIN后，Client进入TIME_WAIT状态，接着发送一个ACK给Server，确认序号为收到序号+1，Server进入CLOSED状态，完成四次挥手。<h3 id="为什么会有TIME-WAIT状态"><a href="#为什么会有TIME-WAIT状态" class="headerlink" title="为什么会有TIME_WAIT状态"></a>为什么会有TIME_WAIT状态</h3></li>
-</ol>
-<ul>
-<li>确保有足够时间让对方收到ACK包</li>
-<li>避免新旧连接混淆<h2 id="为什么需要四次挥手才能断开连接"><a href="#为什么需要四次挥手才能断开连接" class="headerlink" title="为什么需要四次挥手才能断开连接"></a>为什么需要四次挥手才能断开连接</h2>因为全双工，发送方和接收方都需要FIN报文和ACK报文，各需要两次挥手<h2 id="服务器出现大量CLOSE"><a href="#服务器出现大量CLOSE" class="headerlink" title="服务器出现大量CLOSE"></a>服务器出现大量CLOSE</h2></li>
-</ul>
-<h2 id="TCP滑动窗口"><a href="#TCP滑动窗口" class="headerlink" title="TCP滑动窗口"></a>TCP滑动窗口</h2><h3 id="RTT和RTO"><a href="#RTT和RTO" class="headerlink" title="RTT和RTO"></a>RTT和RTO</h3><ul>
-<li>RTT：发送一个数据包收到对应的ACK，所花费的时间。</li>
-<li>RTO：重传时间间隔。根据RTT计算。<h3 id="TCP的滑动窗口"><a href="#TCP的滑动窗口" class="headerlink" title="TCP的滑动窗口"></a>TCP的滑动窗口</h3></li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">计算机网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/11/02/network-TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/3/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/">Next &amp;raquo;</a>
@@ -1227,6 +1180,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">Spring Boot</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">Spring实战</a>
               </li>
              
               <li class="article-tag-list-item">
