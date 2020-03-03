@@ -8,15 +8,15 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>数据结构-树 | 杜志旺的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="8、二叉树的下一个节点 题目：给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。二叉树结构如下：  1public class TreeLinkNode &amp;#123;2    int val;3    TreeLinkNode left &#x3D; null;4    TreeLinkNode right &#x3D; null;5">
+  <meta name="description" content="八、二叉树的下一个节点 题目：给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。二叉树结构如下：  1public class TreeLinkNode &amp;#123;2    int val;3    TreeLinkNode left &#x3D; null;4    TreeLinkNode right &#x3D; null;5">
 <meta name="keywords" content="剑指offer">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据结构-树">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;29&#x2F;%E5%89%91%E6%8C%87offer-8&#x2F;index.html">
 <meta property="og:site_name" content="杜志旺的博客">
-<meta property="og:description" content="8、二叉树的下一个节点 题目：给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。二叉树结构如下：  1public class TreeLinkNode &amp;#123;2    int val;3    TreeLinkNode left &#x3D; null;4    TreeLinkNode right &#x3D; null;5">
+<meta property="og:description" content="八、二叉树的下一个节点 题目：给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。二叉树结构如下：  1public class TreeLinkNode &amp;#123;2    int val;3    TreeLinkNode left &#x3D; null;4    TreeLinkNode right &#x3D; null;5">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-02-29T05:03:08.541Z">
+<meta property="og:updated_time" content="2020-03-02T03:59:41.866Z">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="杜志旺的博客" type="application/atom+xml">
@@ -173,7 +173,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="8、二叉树的下一个节点"><a href="#8、二叉树的下一个节点" class="headerlink" title="8、二叉树的下一个节点"></a>8、二叉树的下一个节点</h1><blockquote>
+        <h1 id="八、二叉树的下一个节点"><a href="#八、二叉树的下一个节点" class="headerlink" title="八、二叉树的下一个节点"></a>八、二叉树的下一个节点</h1><blockquote>
 <p>题目：<br>给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。<br>二叉树结构如下：</p>
 </blockquote>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TreeLinkNode</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">int</span> val;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    TreeLinkNode left = <span class="keyword">null</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    TreeLinkNode right = <span class="keyword">null</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    TreeLinkNode next = <span class="keyword">null</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    TreeLinkNode(<span class="keyword">int</span> val) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">this</span>.val = val;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
@@ -300,7 +300,7 @@
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          栈和队列
+          数据结构-栈和队列
         
       </div>
     </a>
@@ -457,11 +457,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">Spring实战</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">debug方法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">debug方法</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">Spring实战</a>
               </li>
              
               <li class="article-tag-list-item">

@@ -8,13 +8,15 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>JVM-垃圾收集器与内存分配策略 | 杜志旺的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="keywords" content="jvm">
+  <meta name="description" content="垃圾判断的算法引用计数算法根搜索算法方法区的回收主要回收两部分内容：废弃常量和无用类 类回收的条件： JVM常见GC算法标记-清除算法标记-整理算法复制算法分代算法（Generation GC） 年轻代  1 2 3   老年代  存放了经过一次或多次GC还存活的对象 一般采用Mark-Sweep或着Mark-Compact算法进行GC 有多种垃圾收集器可以选择   永久代（JDK8之前）  并不">
+<meta name="keywords" content="jvm">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM-垃圾收集器与内存分配策略">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;26&#x2F;JVM-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5&#x2F;index.html">
 <meta property="og:site_name" content="杜志旺的博客">
+<meta property="og:description" content="垃圾判断的算法引用计数算法根搜索算法方法区的回收主要回收两部分内容：废弃常量和无用类 类回收的条件： JVM常见GC算法标记-清除算法标记-整理算法复制算法分代算法（Generation GC） 年轻代  1 2 3   老年代  存放了经过一次或多次GC还存活的对象 一般采用Mark-Sweep或着Mark-Compact算法进行GC 有多种垃圾收集器可以选择   永久代（JDK8之前）  并不">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-02-28T13:13:14.970Z">
+<meta property="og:updated_time" content="2020-03-02T13:55:18.924Z">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="杜志旺的博客" type="application/atom+xml">
@@ -171,7 +173,51 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h1 id="垃圾判断的算法"><a href="#垃圾判断的算法" class="headerlink" title="垃圾判断的算法"></a>垃圾判断的算法</h1><h2 id="引用计数算法"><a href="#引用计数算法" class="headerlink" title="引用计数算法"></a>引用计数算法</h2><h2 id="根搜索算法"><a href="#根搜索算法" class="headerlink" title="根搜索算法"></a>根搜索算法</h2><h1 id="方法区的回收"><a href="#方法区的回收" class="headerlink" title="方法区的回收"></a>方法区的回收</h1><p>主要回收两部分内容：废弃常量和无用类</p>
+<p>类回收的条件：</p>
+<h1 id="JVM常见GC算法"><a href="#JVM常见GC算法" class="headerlink" title="JVM常见GC算法"></a>JVM常见GC算法</h1><h2 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h2><h2 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h2><h2 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h2><h2 id="分代算法（Generation-GC）"><a href="#分代算法（Generation-GC）" class="headerlink" title="分代算法（Generation GC）"></a>分代算法（Generation GC）</h2><ul>
+<li><p>年轻代</p>
+<ul>
+<li>1</li>
+<li>2</li>
+<li>3</li>
+</ul>
+</li>
+<li><p>老年代</p>
+<ul>
+<li>存放了经过一次或多次GC还存活的对象</li>
+<li>一般采用Mark-Sweep或着Mark-Compact算法进行GC</li>
+<li>有多种垃圾收集器可以选择</li>
+</ul>
+</li>
+<li><p>永久代（JDK8之前）</p>
+<ul>
+<li>并不属于堆，但GC也会涉及</li>
+<li>存放了各Class的结构信息</li>
+</ul>
+</li>
+</ul>
+<h1 id="内存结构"><a href="#内存结构" class="headerlink" title="内存结构"></a>内存结构</h1><h1 id="内存分配"><a href="#内存分配" class="headerlink" title="内存分配"></a>内存分配</h1><p>堆上分配</p>
+<p>栈上分配</p>
+<h1 id="内存回收"><a href="#内存回收" class="headerlink" title="内存回收"></a>内存回收</h1><p>引用类型</p>
+<h1 id="GC的时机"><a href="#GC的时机" class="headerlink" title="GC的时机"></a>GC的时机</h1><ul>
+<li>在分代模型的基础上，gc从时机上分为两种</li>
+</ul>
+<p>scavenge GC</p>
+<p>出发时机：新对象生成时，eden空间满了</p>
+<p>理论上eden区大多数对象会在</p>
+<p>full gc</p>
+<p>对整个jvm进行整理，</p>
+<p>主要触发时机：Old满了、Perm满了、system.gc()</p>
+<p>效率很低，尽量减少Full GC</p>
+<h1 id="垃圾回收器"><a href="#垃圾回收器" class="headerlink" title="垃圾回收器"></a>垃圾回收器</h1><h2 id="Serial收集器"><a href="#Serial收集器" class="headerlink" title="Serial收集器"></a>Serial收集器</h2><p>单线程收集器</p>
+<h2 id="ParNew收集器"><a href="#ParNew收集器" class="headerlink" title="ParNew收集器"></a>ParNew收集器</h2><p>是Serial的多线程版本</p>
+<h2 id="Parallel-New"><a href="#Parallel-New" class="headerlink" title="Parallel New"></a>Parallel New</h2><h2 id="CMS收集器"><a href="#CMS收集器" class="headerlink" title="CMS收集器"></a>CMS收集器</h2><h2 id="G1收集器"><a href="#G1收集器" class="headerlink" title="G1收集器"></a>G1收集器</h2><h1 id="Java内存泄漏的经典原因"><a href="#Java内存泄漏的经典原因" class="headerlink" title="Java内存泄漏的经典原因"></a>Java内存泄漏的经典原因</h1><ol>
+<li>对象定义在错误的范围（Wrong Scope）</li>
+<li>异常（Exception）处理不当</li>
+<li>集合数据管理不当</li>
+</ol>
+
       
 
       
@@ -436,11 +482,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">Spring实战</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">debug方法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">debug方法</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">Spring实战</a>
               </li>
              
               <li class="article-tag-list-item">

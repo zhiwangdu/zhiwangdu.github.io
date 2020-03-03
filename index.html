@@ -151,6 +151,103 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-剑指offer-10" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/02/%E5%89%91%E6%8C%87offer-10/">递归和循环</a>
+    </h1>
+  
+
+        
+        <a href="/2020/03/02/%E5%89%91%E6%8C%87offer-10/" class="archive-article-date">
+  	<time datetime="2020-03-02T04:01:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="十、斐波那契数列"><a href="#十、斐波那契数列" class="headerlink" title="十、斐波那契数列"></a>十、斐波那契数列</h1><h2 id="题目一：求斐波那契数列的第n项"><a href="#题目一：求斐波那契数列的第n项" class="headerlink" title="题目一：求斐波那契数列的第n项"></a>题目一：求斐波那契数列的第n项</h2><blockquote>
+<p>写一个函数，输入n，求斐波那契数列的第n项。</p>
+</blockquote>
+<p><strong>思路一：</strong></p>
+<p>直接采用递归的方式，很简洁，但是会出现大量重复计算，效率很低，不推荐。</p>
+<p><strong>思路二：</strong></p>
+<p>为减少递归中的重复计算，采用从下至上计算的方法。先根据f0和f1计算出f2，再由f1和f2计算出f3，……以此类推就可以计算出第n项了。</p>
+<p>代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">fibonacci</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">int</span> f0 = <span class="number">0</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">int</span> f1 = <span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">int</span> num = <span class="number">0</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">if</span> (n == <span class="number">0</span>) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (n == <span class="number">1</span>) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">        &#125; <span class="keyword">else</span> &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">                num = f0 + f1;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">                f0 = f1;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">                f1 = num;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">            &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">return</span> num;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr></table></figure>
+
+<h2 id="相关类似题目："><a href="#相关类似题目：" class="headerlink" title="相关类似题目："></a>相关类似题目：</h2><h3 id="青蛙跳台阶问题"><a href="#青蛙跳台阶问题" class="headerlink" title="青蛙跳台阶问题"></a>青蛙跳台阶问题</h3><blockquote>
+<p>一只青蛙一次可以跳上一级台阶，也可以跳上两级台阶。求该青蛙上一个n级的台阶共有多少种做法。</p>
+</blockquote>
+<p>首先最简单的情况：如果只有一级台阶，那么只有一种跳法；如果有两级台阶，则有两种跳法，一次两级或者两次一级。</p>
+<p>如果是n级台阶，第一步有两个选择，跳一级或两级。如果跳一级，那么剩下的就是n-1级台阶的跳法总数；如果跳两级，那么剩下的就是n-2级台阶的跳法总数。一共就是f(n-1)+f(n-2)种跳法。</p>
+<p>显然是一个斐波那契数列。</p>
+<blockquote>
+<p>在青蛙跳台阶的问题中，如果把条件改成：一只青蛙一次可以跳上 1 级台阶，也可以跳上 2 级…它也可以跳上 n 级，此时该青蛙跳上一个 n 级的台阶总共有多少种跳法？我们用数学归纳法可以证明 f(n) =2 ^ (n-1)</p>
+</blockquote>
+<h3 id="矩形填充问题"><a href="#矩形填充问题" class="headerlink" title="矩形填充问题"></a>矩形填充问题</h3><blockquote>
+<p>我们可以用 2x1 的小矩形横着或者竖着去覆盖更大的矩形。请问用 8 个 2×1 的小矩形无重叠地覆盖一个 2×8 的大矩形，总共有多少种方法？</p>
+</blockquote>
+<p><img src="/2020/03/02/%E5%89%91%E6%8C%87offer-10/1.png" alt="1"></p>
+<p>先把 2x8 的覆盖方法记为 f8 。用第一个 2×1 的小矩形去覆盖大矩形的最左边时有两种选择：竖着放或者横着放。当竖着放的时候，右边还剩下 2×7 的区域，这种情形下的覆盖方法记为 f7。接下来考虑横着放的情况。当 2×1 的小矩形横着放在左上角的时候，左下角必须和横着放一个 2x1 的小矩形，而在右边还剩下 2×6 的区域，这种情形下的覆盖方法记为 f6 ，因此 f8 = f7 + f6。此时可以看出，这仍然是斐波那契数列。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color3">剑指offer</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/03/02/%E5%89%91%E6%8C%87offer-10/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Spring实战-1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -231,7 +328,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/29/%E5%89%91%E6%8C%87offer-9/">栈和队列</a>
+      <a class="article-title" href="/2020/02/29/%E5%89%91%E6%8C%87offer-9/">数据结构-栈和队列</a>
     </h1>
   
 
@@ -324,7 +421,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="8、二叉树的下一个节点"><a href="#8、二叉树的下一个节点" class="headerlink" title="8、二叉树的下一个节点"></a>8、二叉树的下一个节点</h1><blockquote>
+        <h1 id="八、二叉树的下一个节点"><a href="#八、二叉树的下一个节点" class="headerlink" title="八、二叉树的下一个节点"></a>八、二叉树的下一个节点</h1><blockquote>
 <p>题目：<br>给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。<br>二叉树结构如下：</p>
 </blockquote>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TreeLinkNode</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">int</span> val;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    TreeLinkNode left = <span class="keyword">null</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    TreeLinkNode right = <span class="keyword">null</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    TreeLinkNode next = <span class="keyword">null</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    TreeLinkNode(<span class="keyword">int</span> val) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">this</span>.val = val;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
@@ -652,7 +749,51 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h1 id="垃圾判断的算法"><a href="#垃圾判断的算法" class="headerlink" title="垃圾判断的算法"></a>垃圾判断的算法</h1><h2 id="引用计数算法"><a href="#引用计数算法" class="headerlink" title="引用计数算法"></a>引用计数算法</h2><h2 id="根搜索算法"><a href="#根搜索算法" class="headerlink" title="根搜索算法"></a>根搜索算法</h2><h1 id="方法区的回收"><a href="#方法区的回收" class="headerlink" title="方法区的回收"></a>方法区的回收</h1><p>主要回收两部分内容：废弃常量和无用类</p>
+<p>类回收的条件：</p>
+<h1 id="JVM常见GC算法"><a href="#JVM常见GC算法" class="headerlink" title="JVM常见GC算法"></a>JVM常见GC算法</h1><h2 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h2><h2 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h2><h2 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h2><h2 id="分代算法（Generation-GC）"><a href="#分代算法（Generation-GC）" class="headerlink" title="分代算法（Generation GC）"></a>分代算法（Generation GC）</h2><ul>
+<li><p>年轻代</p>
+<ul>
+<li>1</li>
+<li>2</li>
+<li>3</li>
+</ul>
+</li>
+<li><p>老年代</p>
+<ul>
+<li>存放了经过一次或多次GC还存活的对象</li>
+<li>一般采用Mark-Sweep或着Mark-Compact算法进行GC</li>
+<li>有多种垃圾收集器可以选择</li>
+</ul>
+</li>
+<li><p>永久代（JDK8之前）</p>
+<ul>
+<li>并不属于堆，但GC也会涉及</li>
+<li>存放了各Class的结构信息</li>
+</ul>
+</li>
+</ul>
+<h1 id="内存结构"><a href="#内存结构" class="headerlink" title="内存结构"></a>内存结构</h1><h1 id="内存分配"><a href="#内存分配" class="headerlink" title="内存分配"></a>内存分配</h1><p>堆上分配</p>
+<p>栈上分配</p>
+<h1 id="内存回收"><a href="#内存回收" class="headerlink" title="内存回收"></a>内存回收</h1><p>引用类型</p>
+<h1 id="GC的时机"><a href="#GC的时机" class="headerlink" title="GC的时机"></a>GC的时机</h1><ul>
+<li>在分代模型的基础上，gc从时机上分为两种</li>
+</ul>
+<p>scavenge GC</p>
+<p>出发时机：新对象生成时，eden空间满了</p>
+<p>理论上eden区大多数对象会在</p>
+<p>full gc</p>
+<p>对整个jvm进行整理，</p>
+<p>主要触发时机：Old满了、Perm满了、system.gc()</p>
+<p>效率很低，尽量减少Full GC</p>
+<h1 id="垃圾回收器"><a href="#垃圾回收器" class="headerlink" title="垃圾回收器"></a>垃圾回收器</h1><h2 id="Serial收集器"><a href="#Serial收集器" class="headerlink" title="Serial收集器"></a>Serial收集器</h2><p>单线程收集器</p>
+<h2 id="ParNew收集器"><a href="#ParNew收集器" class="headerlink" title="ParNew收集器"></a>ParNew收集器</h2><p>是Serial的多线程版本</p>
+<h2 id="Parallel-New"><a href="#Parallel-New" class="headerlink" title="Parallel New"></a>Parallel New</h2><h2 id="CMS收集器"><a href="#CMS收集器" class="headerlink" title="CMS收集器"></a>CMS收集器</h2><h2 id="G1收集器"><a href="#G1收集器" class="headerlink" title="G1收集器"></a>G1收集器</h2><h1 id="Java内存泄漏的经典原因"><a href="#Java内存泄漏的经典原因" class="headerlink" title="Java内存泄漏的经典原因"></a>Java内存泄漏的经典原因</h1><ol>
+<li>对象定义在错误的范围（Wrong Scope）</li>
+<li>异常（Exception）处理不当</li>
+<li>集合数据管理不当</li>
+</ol>
+
       
 
       
@@ -881,101 +1022,6 @@
 
 
   
-    <article id="post-git-github速度提高" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/24/git-github%E9%80%9F%E5%BA%A6%E6%8F%90%E9%AB%98/">github速度提高</a>
-    </h1>
-  
-
-        
-        <a href="/2020/02/24/git-github%E9%80%9F%E5%BA%A6%E6%8F%90%E9%AB%98/" class="archive-article-date">
-  	<time datetime="2020-02-24T10:17:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-24</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ol>
-<li>查找域名对应的ip地址，并修改hosts文件，依次输入以下命令：</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">nslookup github.global.ssl.fastly.Net</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">nslookup github.com</span></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>将得到的adderss加入到/etc/hosts文件中，如下：</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">151.101.76.249 http:&#x2F;&#x2F;global-ssl.fastly.net</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">192.30.255.113 http:&#x2F;&#x2F;github.com</span></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>刷新DNS缓存</li>
-</ol>
-<p>linux：</p>
-<p><code>sudo /etc/init.d/networking restart</code></p>
-<p>Windows:</p>
-<p><code>ipconfig /flushdns</code></p>
-<p>macOS：</p>
-<p><code>sudo killall -HUP mDNSResponder</code></p>
-<ol start="4">
-<li>完成，git clone速度显著提升。</li>
-</ol>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color4">git</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/24/git-github%E9%80%9F%E5%BA%A6%E6%8F%90%E9%AB%98/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
@@ -1097,11 +1143,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">Spring实战</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">debug方法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">debug方法</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">Spring实战</a>
               </li>
              
               <li class="article-tag-list-item">

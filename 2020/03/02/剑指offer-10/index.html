@@ -6,18 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>@SpringBootApplication注解 | 杜志旺的博客</title>
+  <title>递归和循环 | 杜志旺的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="org.springframework.boot @Target({ElementType.TYPE})@Retention(RetentionPolicy.RUNTIME)@Documented@Configurationpublic interface SpringBootConfigurationextends annotation.Annotation   Indicates a con">
-<meta name="keywords" content="Spring Boot">
+  <meta name="description" content="十、斐波那契数列题目一：求斐波那契数列的第n项 写一个函数，输入n，求斐波那契数列的第n项。  思路一： 直接采用递归的方式，很简洁，但是会出现大量重复计算，效率很低，不推荐。 思路二： 为减少递归中的重复计算，采用从下至上计算的方法。先根据f0和f1计算出f2，再由f1和f2计算出f3，……以此类推就可以计算出第n项了。 代码如下： 1public int fibonacci(int n) &amp;#">
+<meta name="keywords" content="剑指offer">
 <meta property="og:type" content="article">
-<meta property="og:title" content="@SpringBootApplication注解">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;04&#x2F;SpringBoot-Application%E6%B3%A8%E8%A7%A3&#x2F;index.html">
+<meta property="og:title" content="递归和循环">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;03&#x2F;02&#x2F;%E5%89%91%E6%8C%87offer-10&#x2F;index.html">
 <meta property="og:site_name" content="杜志旺的博客">
-<meta property="og:description" content="org.springframework.boot @Target({ElementType.TYPE})@Retention(RetentionPolicy.RUNTIME)@Documented@Configurationpublic interface SpringBootConfigurationextends annotation.Annotation   Indicates a con">
+<meta property="og:description" content="十、斐波那契数列题目一：求斐波那契数列的第n项 写一个函数，输入n，求斐波那契数列的第n项。  思路一： 直接采用递归的方式，很简洁，但是会出现大量重复计算，效率很低，不推荐。 思路二： 为减少递归中的重复计算，采用从下至上计算的方法。先根据f0和f1计算出f2，再由f1和f2计算出f3，……以此类推就可以计算出第n项了。 代码如下： 1public int fibonacci(int n) &amp;#">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-02-06T07:24:04.241Z">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;03&#x2F;02&#x2F;%E5%89%91%E6%8C%87offer-10&#x2F;1.png">
+<meta property="og:updated_time" content="2020-03-03T07:31:30.754Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;03&#x2F;02&#x2F;%E5%89%91%E6%8C%87offer-10&#x2F;1.png">
   
     <link rel="alternative" href="/atom.xml" title="杜志旺的博客" type="application/atom+xml">
   
@@ -153,47 +155,51 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-SpringBoot-Application注解" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-剑指offer-10" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      @SpringBootApplication注解
+      递归和循环
     </h1>
   
 
         
-        <a href="/2020/02/04/SpringBoot-Application%E6%B3%A8%E8%A7%A3/" class="archive-article-date">
-  	<time datetime="2020-02-04T06:38:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-04</time>
+        <a href="/2020/03/02/%E5%89%91%E6%8C%87offer-10/" class="archive-article-date">
+  	<time datetime="2020-03-02T04:01:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-02</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
-<p>org.springframework.boot @Target({ElementType.TYPE})<br>@Retention(RetentionPolicy.RUNTIME)<br>@Documented<br>@Configuration<br>public interface SpringBootConfiguration<br>extends annotation.Annotation</p>
+        <h1 id="十、斐波那契数列"><a href="#十、斐波那契数列" class="headerlink" title="十、斐波那契数列"></a>十、斐波那契数列</h1><h2 id="题目一：求斐波那契数列的第n项"><a href="#题目一：求斐波那契数列的第n项" class="headerlink" title="题目一：求斐波那契数列的第n项"></a>题目一：求斐波那契数列的第n项</h2><blockquote>
+<p>写一个函数，输入n，求斐波那契数列的第n项。</p>
 </blockquote>
+<p><strong>思路一：</strong></p>
+<p>直接采用递归的方式，很简洁，但是会出现大量重复计算，效率很低，不推荐。</p>
+<p><strong>思路二：</strong></p>
+<p>为减少递归中的重复计算，采用从下至上计算的方法。先根据f0和f1计算出f2，再由f1和f2计算出f3，……以此类推就可以计算出第n项了。</p>
+<p>代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">fibonacci</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">int</span> f0 = <span class="number">0</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">int</span> f1 = <span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">int</span> num = <span class="number">0</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">if</span> (n == <span class="number">0</span>) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (n == <span class="number">1</span>) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">        &#125; <span class="keyword">else</span> &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">                num = f0 + f1;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">                f0 = f1;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">                f1 = num;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">            &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">return</span> num;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr></table></figure>
+
+<h2 id="相关类似题目："><a href="#相关类似题目：" class="headerlink" title="相关类似题目："></a>相关类似题目：</h2><h3 id="青蛙跳台阶问题"><a href="#青蛙跳台阶问题" class="headerlink" title="青蛙跳台阶问题"></a>青蛙跳台阶问题</h3><blockquote>
+<p>一只青蛙一次可以跳上一级台阶，也可以跳上两级台阶。求该青蛙上一个n级的台阶共有多少种做法。</p>
+</blockquote>
+<p>首先最简单的情况：如果只有一级台阶，那么只有一种跳法；如果有两级台阶，则有两种跳法，一次两级或者两次一级。</p>
+<p>如果是n级台阶，第一步有两个选择，跳一级或两级。如果跳一级，那么剩下的就是n-1级台阶的跳法总数；如果跳两级，那么剩下的就是n-2级台阶的跳法总数。一共就是f(n-1)+f(n-2)种跳法。</p>
+<p>显然是一个斐波那契数列。</p>
 <blockquote>
-<p>Indicates a configuration class that declares one or more @Bean methods and also triggers auto-configuration and component scanning. This is a convenience annotation that is equivalent to declaring @Configuration, @EnableAutoConfiguration and @ComponentScan</p>
+<p>在青蛙跳台阶的问题中，如果把条件改成：一只青蛙一次可以跳上 1 级台阶，也可以跳上 2 级…它也可以跳上 n 级，此时该青蛙跳上一个 n 级的台阶总共有多少种跳法？我们用数学归纳法可以证明 f(n) =2 ^ (n-1)</p>
 </blockquote>
-<h2 id="SpringBootConfiguration"><a href="#SpringBootConfiguration" class="headerlink" title="@SpringBootConfiguration"></a>@SpringBootConfiguration</h2><blockquote>
-<p>org.springframework.boot @Target(ElementType.TYPE)<br>@Retention(RetentionPolicy.RUNTIME)<br>@Documented<br>@Configuration<br>public interface SpringBootConfiguration<br>extends annotation.Annotation</p>
+<h3 id="矩形填充问题"><a href="#矩形填充问题" class="headerlink" title="矩形填充问题"></a>矩形填充问题</h3><blockquote>
+<p>我们可以用 2x1 的小矩形横着或者竖着去覆盖更大的矩形。请问用 8 个 2×1 的小矩形无重叠地覆盖一个 2×8 的大矩形，总共有多少种方法？</p>
 </blockquote>
-<blockquote>
-<p>Indicates that a class provides Spring Boot application @Configuration. Can be used as an alternative to the Spring’s standard @Configuration annotation so that configuration can be found automatically (for example in tests).<br>Application should only ever include one @SpringBootConfiguration and most idiomatic Spring Boot applications will inherit it from @SpringBootApplication.</p>
-</blockquote>
-<h3 id="Configuration"><a href="#Configuration" class="headerlink" title="@Configuration"></a>@Configuration</h3><blockquote>
-<p>Indicates that a class declares one or more @Bean methods and may be processed by the Spring container to generate bean definitions and service requests for those beans at runtime,</p>
-</blockquote>
-<p>for example </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">   <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AppConfig</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">       <span class="meta">@Bean</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">       <span class="function"><span class="keyword">public</span> MyBean <span class="title">myBean</span><span class="params">()</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">           <span class="comment">// instantiate, configure and return bean ...</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">       &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">   &#125;</span></pre></td></tr></table></figure>
+<p><img src="/2020/03/02/%E5%89%91%E6%8C%87offer-10/1.png" alt="1"></p>
+<p>先把 2x8 的覆盖方法记为 f8 。用第一个 2×1 的小矩形去覆盖大矩形的最左边时有两种选择：竖着放或者横着放。当竖着放的时候，右边还剩下 2×7 的区域，这种情形下的覆盖方法记为 f7。接下来考虑横着放的情况。当 2×1 的小矩形横着放在左上角的时候，左下角必须和横着放一个 2x1 的小矩形，而在右边还剩下 2×6 的区域，这种情形下的覆盖方法记为 f6 ，因此 f8 = f7 + f6。此时可以看出，这仍然是斐波那契数列。</p>
 
-
-
-<h2 id="EnableAutoConfiguration"><a href="#EnableAutoConfiguration" class="headerlink" title="@EnableAutoConfiguration"></a>@EnableAutoConfiguration</h2><h2 id="ComponentScan"><a href="#ComponentScan" class="headerlink" title="@ComponentScan"></a>@ComponentScan</h2>
       
 
       
@@ -227,7 +233,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">Spring Boot</a>
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color3">剑指offer</a>
         		</li>
       		
 		</ul>
@@ -283,7 +289,7 @@
     <a class="close js-modal-close" href="javascript:;" target="_blank" rel="noopener"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/02/04/SpringBoot-Application%E6%B3%A8%E8%A7%A3/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/03/02/%E5%89%91%E6%8C%87offer-10/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -297,18 +303,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2020/02/07/docker-1%E7%AE%80%E4%BB%8B/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Docker简介
-        
-      </div>
-    </a>
   
-  
-    <a href="/2019/12/24/verilog%E5%85%A5%E9%97%A8/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">verilog入门</div>
+    <a href="/2020/03/01/Spring%E5%AE%9E%E6%88%98-1/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">一、Spring之旅</div>
       <i class="icon-circle-right"></i>
     </a>
   
