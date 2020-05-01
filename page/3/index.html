@@ -151,683 +151,6 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-Docker-7Dockfile" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/08/Docker-7Dockfile/">Dockfile</a>
-    </h1>
-  
-
-        
-        <a href="/2020/02/08/Docker-7Dockfile/" class="archive-article-date">
-  	<time datetime="2020-02-08T08:37:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h1><h2 id="什么是Dockerfile"><a href="#什么是Dockerfile" class="headerlink" title="什么是Dockerfile"></a>什么是Dockerfile</h2><p>Dockerfile是由一系列命令和参数构成的脚本，这些命令应用于基础镜像并最终创建一个新的镜像。</p>
-<p>1、对于开发人员：可以为开发团队提供一个完全一致的开发环境；<br>2、对于测试人员：可以直接拿开发时所构建的镜像或者通过Dockerfile文件构建一个新的镜像开始工作了；<br>3、对于运维人员：在部署时，可以实现应用的无缝移植。</p>
-<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><table>
-<thead>
-<tr>
-<th>命令</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>FROM image_name:tag</td>
-<td>定义了使用哪个基础镜像启动构建流程</td>
-</tr>
-<tr>
-<td>MAINTAINER user_name</td>
-<td>声明镜像的创建者</td>
-</tr>
-<tr>
-<td>ENV key value</td>
-<td>设置环境变量 (可以写多条)</td>
-</tr>
-<tr>
-<td>RUN command</td>
-<td>是Dockerfile的核心部分(可以写多条)</td>
-</tr>
-<tr>
-<td>ADD source_dir/file dest_dir/file</td>
-<td>将宿主机的文件复制到容器内，如果是一个压缩文件，将会在复制后自动解压</td>
-</tr>
-<tr>
-<td>COPY source_dir/file dest_dir/file</td>
-<td>和ADD相似，但是如果有压缩文件并不能解压</td>
-</tr>
-<tr>
-<td>WORKDIR path_dir</td>
-<td>设置工作目录</td>
-</tr>
-</tbody></table>
-<h2 id="使用脚本创建镜像"><a href="#使用脚本创建镜像" class="headerlink" title="使用脚本创建镜像"></a>使用脚本创建镜像</h2><p>步骤：</p>
-<p>（1）创建目录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">mkdir –p &#x2F;usr&#x2F;local&#x2F;dockerjdk8</span></pre></td></tr></table></figure>
-
-<p>（2）下载jdk-8u171-linux-x64.tar.gz并上传到服务器（虚拟机）中的/usr/local/dockerjdk8目录</p>
-<p>（3）创建文件Dockerfile  <code>vi Dockerfile</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">#依赖镜像名称和ID</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">FROM centos:7</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">#指定镜像创建者信息</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">MAINTAINER ITCAST</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">#切换工作目录</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">WORKDIR &#x2F;usr</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">RUN mkdir  &#x2F;usr&#x2F;local&#x2F;java</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">#ADD 是相对路径jar,把java添加到容器中</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">ADD jdk-8u171-linux-x64.tar.gz &#x2F;usr&#x2F;local&#x2F;java&#x2F;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">#配置java环境变量</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">ENV JAVA_HOME &#x2F;usr&#x2F;local&#x2F;java&#x2F;jdk1.8.0_171</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">ENV JRE_HOME $JAVA_HOME&#x2F;jre</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">ENV CLASSPATH $JAVA_HOME&#x2F;lib&#x2F;dt.jar:$JAVA_HOME&#x2F;lib&#x2F;tools.jar:$JRE_HOME&#x2F;lib:$CLASSPATH</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">ENV PATH $JAVA_HOME&#x2F;bin:$PATH</span></pre></td></tr></table></figure>
-
-<p>（4）执行命令构建镜像</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker build -t&#x3D;&#39;jdk1.8&#39; .</span></pre></td></tr></table></figure>
-
-<p>注意后边的空格和点，不要省略</p>
-<p>（5）查看镜像是否建立完成</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker images</span></pre></td></tr></table></figure>
-
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">Docker</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/08/Docker-7Dockfile/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-MacOS-安装redis" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/08/MacOS-%E5%AE%89%E8%A3%85redis/">MacOS安装redis</a>
-    </h1>
-  
-
-        
-        <a href="/2020/02/08/MacOS-%E5%AE%89%E8%A3%85redis/" class="archive-article-date">
-  	<time datetime="2020-02-08T08:31:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="利用Homebrew安装Redis"><a href="#利用Homebrew安装Redis" class="headerlink" title="利用Homebrew安装Redis"></a>利用Homebrew安装Redis</h1><h5 id="1-安装命令"><a href="#1-安装命令" class="headerlink" title="(1)安装命令"></a>(1)安装命令</h5><p>$ brew install redis</p>
-<h5 id="2-进入安装目录"><a href="#2-进入安装目录" class="headerlink" title="(2)进入安装目录"></a>(2)进入安装目录</h5><p>$ cd /usr/local/Cellar/redis/4.0.6/bin</p>
-<h5 id="3-启动、关闭redis"><a href="#3-启动、关闭redis" class="headerlink" title="(3)启动、关闭redis"></a>(3)启动、关闭redis</h5><p>$ redis-server<br> 以下命令即可关闭redis服务<br> redis 127.0.0.1:6379&gt; SHUTDOWN</p>
-<h5 id="4-连接redis服务"><a href="#4-连接redis服务" class="headerlink" title="(4)连接redis服务"></a>(4)连接redis服务</h5><p>$ redis-cli -h  127.0.0.1（ip） -p 1234（端口号）<br> 示例：$ redis-cli -h  127.0.0.1 -p 1234</p>
-<h5 id="5-键入授权登录密码"><a href="#5-键入授权登录密码" class="headerlink" title="(5)键入授权登录密码"></a>(5)键入授权登录密码</h5><p>127.0.0.1:6379&gt; AUTH 123456（密码）</p>
-<h5 id="6-退出本次会话"><a href="#6-退出本次会话" class="headerlink" title="(6)退出本次会话"></a>(6)退出本次会话</h5><p>127.0.0.1:6379&gt; quit</p>
-<h1 id="Redis其他常用命令及配置"><a href="#Redis其他常用命令及配置" class="headerlink" title="Redis其他常用命令及配置"></a>Redis其他常用命令及配置</h1><p>开机启动redis命令<br> $ ln -sfv /usr/local/opt/redis/*.plist ~/Library/LaunchAgents</p>
-<p>使用launchctl启动redis server<br> $ launchctl load ~/Library/LaunchAgents/homebrew.mxcl.redis.plist</p>
-<p>使用配置文件启动redis server<br> $ redis-server /usr/local/etc/redis.conf</p>
-<p>停止redis server的自启动<br> $ launchctl unload ~/Library/LaunchAgents/homebrew.mxcl.redis.plist</p>
-<p>redis 配置文件的位置<br> /usr/local/etc/redis.conf</p>
-<p>卸载redis和它的文件<br> brewuninstallredis rm ~/Library/LaunchAgents/homebrew.mxcl.redis.plist</p>
-<p>测试redis server是否启动<br> $ redis-cli ping</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">redis</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/08/MacOS-%E5%AE%89%E8%A3%85redis/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Docker-6迁移与备份" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/08/Docker-6%E8%BF%81%E7%A7%BB%E4%B8%8E%E5%A4%87%E4%BB%BD/">Docker迁移与备份</a>
-    </h1>
-  
-
-        
-        <a href="/2020/02/08/Docker-6%E8%BF%81%E7%A7%BB%E4%B8%8E%E5%A4%87%E4%BB%BD/" class="archive-article-date">
-  	<time datetime="2020-02-08T08:28:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="迁移与备份"><a href="#迁移与备份" class="headerlink" title="迁移与备份"></a>迁移与备份</h1><h2 id="容器保存为镜像"><a href="#容器保存为镜像" class="headerlink" title="容器保存为镜像"></a>容器保存为镜像</h2><p>我们可以通过以下命令将容器保存为镜像</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker commit mynginx mynginx_i</span></pre></td></tr></table></figure>
-
-<h2 id="镜像备份"><a href="#镜像备份" class="headerlink" title="镜像备份"></a>镜像备份</h2><p>我们可以通过以下命令将镜像保存为tar 文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker  save -o mynginx.tar mynginx_i</span></pre></td></tr></table></figure>
-
-<h2 id="镜像恢复与迁移"><a href="#镜像恢复与迁移" class="headerlink" title="镜像恢复与迁移"></a>镜像恢复与迁移</h2><p>首先我们先删除掉mynginx_img镜像  然后执行此命令进行恢复</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker load -i mynginx.tar</span></pre></td></tr></table></figure>
-
-<p>-i 输入的文件</p>
-<p>执行后再次查看镜像，可以看到镜像已经恢复</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">Docker</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/08/Docker-6%E8%BF%81%E7%A7%BB%E4%B8%8E%E5%A4%87%E4%BB%BD/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Docker-4应用部署" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/08/Docker-4%E5%BA%94%E7%94%A8%E9%83%A8%E7%BD%B2/">Docker应用部署</a>
-    </h1>
-  
-
-        
-        <a href="/2020/02/08/Docker-4%E5%BA%94%E7%94%A8%E9%83%A8%E7%BD%B2/" class="archive-article-date">
-  	<time datetime="2020-02-08T07:24:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="应用部署"><a href="#应用部署" class="headerlink" title="应用部署"></a>应用部署</h1><h2 id="MySQL部署"><a href="#MySQL部署" class="headerlink" title="MySQL部署"></a>MySQL部署</h2><p>（1）拉取mysql镜像</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker pull centos&#x2F;mysql-57-centos7</span></pre></td></tr></table></figure>
-
-<p>（2）创建容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker run -di --name&#x3D;tensquare_mysql -p 33306:3306 -e MYSQL_ROOT_PASSWORD&#x3D;123456 mysql</span></pre></td></tr></table></figure>
-
-<p>-p 代表端口映射，格式为  宿主机映射端口:容器运行端口</p>
-<p>-e 代表添加环境变量  MYSQL_ROOT_PASSWORD  是root用户的登陆密码</p>
-<p>（3）远程登录mysql</p>
-<p>连接宿主机的IP  ,指定端口为33306 </p>
-<h2 id="tomcat部署"><a href="#tomcat部署" class="headerlink" title="tomcat部署"></a>tomcat部署</h2><p>（1）拉取镜像</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker pull tomcat:7-jre7</span></pre></td></tr></table></figure>
-
-<p>（2）创建容器</p>
-<p>创建容器  -p表示地址映射</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker run -di --name&#x3D;mytomcat -p 9000:8080 </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">-v &#x2F;usr&#x2F;local&#x2F;webapps:&#x2F;usr&#x2F;local&#x2F;tomcat&#x2F;webapps tomcat:7-jre7</span></pre></td></tr></table></figure>
-
-<h2 id="Nginx部署"><a href="#Nginx部署" class="headerlink" title="Nginx部署"></a>Nginx部署</h2><p>（1）拉取镜像    </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker pull nginx</span></pre></td></tr></table></figure>
-
-<p>（2）创建Nginx容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker run -di --name&#x3D;mynginx -p 80:80 nginx</span></pre></td></tr></table></figure>
-
-<h2 id="Redis部署"><a href="#Redis部署" class="headerlink" title="Redis部署"></a>Redis部署</h2><p>（1）拉取镜像</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker pull redis</span></pre></td></tr></table></figure>
-
-<p>（2）创建容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker run -di --name&#x3D;myredis -p 6379:6379 redis</span></pre></td></tr></table></figure>
-
-<h1 id><a href="#" class="headerlink" title></a></h1>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">Docker</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/08/Docker-4%E5%BA%94%E7%94%A8%E9%83%A8%E7%BD%B2/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Docker-3常用命令" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/08/Docker-3%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">Docker常用命令</a>
-    </h1>
-  
-
-        
-        <a href="/2020/02/08/Docker-3%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="archive-article-date">
-  	<time datetime="2020-02-08T04:57:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><h2 id="镜像相关命令"><a href="#镜像相关命令" class="headerlink" title="镜像相关命令"></a>镜像相关命令</h2><h3 id="查看镜像"><a href="#查看镜像" class="headerlink" title="查看镜像"></a>查看镜像</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker images</span></pre></td></tr></table></figure>
-
-<p>REPOSITORY：镜像名称</p>
-<p>TAG：镜像标签</p>
-<p>IMAGE ID：镜像ID</p>
-<p>CREATED：镜像的创建日期（不是获取该镜像的日期）</p>
-<p>SIZE：镜像大小</p>
-<p>这些镜像都是存储在Docker宿主机的/var/lib/docker目录下</p>
-<h3 id="搜索镜像"><a href="#搜索镜像" class="headerlink" title="搜索镜像"></a>搜索镜像</h3><p>如果你需要从网络中查找需要的镜像，可以通过以下命令搜索</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker search 镜像名称</span></pre></td></tr></table></figure>
-
-<p>NAME：仓库名称</p>
-<p>DESCRIPTION：镜像描述</p>
-<p>STARS：用户评价，反应一个镜像的受欢迎程度</p>
-<p>OFFICIAL：是否官方</p>
-<p>AUTOMATED：自动构建，表示该镜像由Docker Hub自动构建流程创建的</p>
-<h3 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h3><p>拉取镜像就是从中央仓库中下载镜像到本地</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker pull 镜像名称</span></pre></td></tr></table></figure>
-
-<p>例如，我要下载centos7镜像</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker pull centos:7</span></pre></td></tr></table></figure>
-
-<h3 id="删除镜像"><a href="#删除镜像" class="headerlink" title="删除镜像"></a>删除镜像</h3><p>按镜像ID删除镜像</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker rmi 镜像ID</span></pre></td></tr></table></figure>
-
-<p>删除所有镜像</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker rmi &#96;docker images -q&#96;</span></pre></td></tr></table></figure>
-
-<h2 id="容器相关命令"><a href="#容器相关命令" class="headerlink" title="容器相关命令"></a>容器相关命令</h2><h3 id="查看容器"><a href="#查看容器" class="headerlink" title="查看容器"></a>查看容器</h3><p>查看正在运行的容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker ps</span></pre></td></tr></table></figure>
-
-<p>查看所有容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker ps –a</span></pre></td></tr></table></figure>
-
-<p>查看最后一次运行的容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker ps –l</span></pre></td></tr></table></figure>
-
-<p>查看停止的容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker ps -f status&#x3D;exited</span></pre></td></tr></table></figure>
-
-<h3 id="创建与启动容器"><a href="#创建与启动容器" class="headerlink" title="创建与启动容器"></a>创建与启动容器</h3><p>创建容器常用的参数说明：</p>
-<p>创建容器命令：docker run</p>
-<p> -i：表示运行容器</p>
-<p> -t：表示容器启动后会进入其命令行。加入这两个参数后，容器创建就能登录进去。即分配一个伪终端。</p>
-<p> –name :为创建的容器命名。</p>
-<p> -v：表示目录映射关系（前者是宿主机目录，后者是映射到宿主机上的目录），可以使用多个－v做多个目录或文件映射。注意：最好做目录映射，在宿主机上做修改，然后共享到容器上。</p>
-<p> -d：在run后面加上-d参数,则会创建一个守护式容器在后台运行（这样创建容器后不会自动登录容器，如果只加-i -t两个参数，创建后就会自动进去容器）。</p>
-<p> -p：表示端口映射，前者是宿主机端口，后者是容器内的映射端口。可以使用多个-p做多个端口映射</p>
-<p>（1）交互式方式创建容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker run -it --name&#x3D;容器名称 镜像名称:标签 &#x2F;bin&#x2F;bash</span></pre></td></tr></table></figure>
-
-<p>这时我们通过ps命令查看，发现可以看到启动的容器，状态为启动状态  </p>
-<p>退出当前容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">exit</span></pre></td></tr></table></figure>
-
-<p>（2）守护式方式创建容器：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker run -di --name&#x3D;容器名称 镜像名称:标签</span></pre></td></tr></table></figure>
-
-<p>登录守护式容器方式：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker exec -it 容器名称 (或者容器ID)  &#x2F;bin&#x2F;bash</span></pre></td></tr></table></figure>
-
-<h3 id="停止与启动容器"><a href="#停止与启动容器" class="headerlink" title="停止与启动容器"></a>停止与启动容器</h3><p>停止容器：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker stop 容器名称（或者容器ID）</span></pre></td></tr></table></figure>
-
-<p>启动容器：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker start 容器名称（或者容器ID）</span></pre></td></tr></table></figure>
-
-<h3 id="文件拷贝"><a href="#文件拷贝" class="headerlink" title="文件拷贝"></a>文件拷贝</h3><p>如果我们需要将文件拷贝到容器内可以使用cp命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker cp 需要拷贝的文件或目录 容器名称:容器目录</span></pre></td></tr></table></figure>
-
-<p>也可以将文件从容器内拷贝出来</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker cp 容器名称:容器目录 需要拷贝的文件或目录</span></pre></td></tr></table></figure>
-
-<h3 id="目录挂载"><a href="#目录挂载" class="headerlink" title="目录挂载"></a>目录挂载</h3><p>我们可以在创建容器的时候，将宿主机的目录与容器内的目录进行映射，这样我们就可以通过修改宿主机某个目录的文件从而去影响容器。<br>创建容器 添加-v参数 后边为   宿主机目录:容器目录，例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker run -di -v &#x2F;usr&#x2F;local&#x2F;myhtml:&#x2F;usr&#x2F;local&#x2F;myhtml --name&#x3D;mycentos3 centos:7</span></pre></td></tr></table></figure>
-
-<p>如果你共享的是多级的目录，可能会出现权限不足的提示。</p>
-<p>这是因为CentOS7中的安全模块selinux把权限禁掉了，我们需要添加参数  –privileged=true  来解决挂载的目录没有权限的问题</p>
-<h3 id="查看容器IP地址"><a href="#查看容器IP地址" class="headerlink" title="查看容器IP地址"></a>查看容器IP地址</h3><p>我们可以通过以下命令查看容器运行的各种数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker inspect 容器名称（容器ID）</span></pre></td></tr></table></figure>
-
-<p>也可以直接执行下面的命令直接输出IP地址</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker inspect --format&#x3D;&#39;&#123;&#123;.NetworkSettings.IPAddress&#125;&#125;&#39; 容器名称（容器ID）</span></pre></td></tr></table></figure>
-
-<h3 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h3><p>删除指定的容器：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker rm 容器名称（容器ID）</span></pre></td></tr></table></figure>
-
-<h1 id><a href="#" class="headerlink" title></a></h1>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">Docker</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/08/Docker-3%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Docker-2安装" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/07/Docker-2%E5%AE%89%E8%A3%85/">Docker安装</a>
-    </h1>
-  
-
-        
-        <a href="/2020/02/07/Docker-2%E5%AE%89%E8%A3%85/" class="archive-article-date">
-  	<time datetime="2020-02-07T11:55:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Docker安装与启动"><a href="#Docker安装与启动" class="headerlink" title="Docker安装与启动"></a>Docker安装与启动</h1><h2 id="CentOS-安装Docker"><a href="#CentOS-安装Docker" class="headerlink" title="CentOS 安装Docker"></a>CentOS 安装Docker</h2><p>​    Docker官方建议在Ubuntu中安装，因为Docker是基于Ubuntu发布的，而且一般Docker出现的问题Ubuntu是最先更新或者打补丁的。在很多版本的CentOS中是不支持更新最新的一些补丁包的。</p>
-<p>（1）yum 包更新到最新</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">sudo yum update</span></pre></td></tr></table></figure>
-
-<p>（2）安装需要的软件包， yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">sudo yum install -y yum-utils device-mapper-persistent-data lvm2</span></pre></td></tr></table></figure>
-
-<p>（3）设置yum源为阿里云</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">sudo yum-config-manager --add-repo http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;docker-ce&#x2F;linux&#x2F;centos&#x2F;docker-ce.repo</span></pre></td></tr></table></figure>
-
-<p>（4）安装docker</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">sudo yum install docker-ce</span></pre></td></tr></table></figure>
-
-<p>（5）安装后查看docker版本</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker -v</span></pre></td></tr></table></figure>
-
-<h2 id="设置ustc的镜像"><a href="#设置ustc的镜像" class="headerlink" title="设置ustc的镜像"></a>设置ustc的镜像</h2><p>ustc是老牌的linux镜像服务提供者了，还在遥远的ubuntu 5.04版本的时候就在用。ustc的docker镜像加速器速度很快。ustc docker mirror的优势之一就是不需要注册，是真正的公共服务。</p>
-<p><a href="https://lug.ustc.edu.cn/wiki/mirrors/help/docker" target="_blank" rel="noopener">https://lug.ustc.edu.cn/wiki/mirrors/help/docker</a></p>
-<p>编辑该文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">vi &#x2F;etc&#x2F;docker&#x2F;daemon.json</span></pre></td></tr></table></figure>
-
-<p>在该文件中输入如下内容：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">&quot;registry-mirrors&quot;: [&quot;https:&#x2F;&#x2F;docker.mirrors.ustc.edu.cn&quot;]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
-
-<h2 id="Docker的启动与停止"><a href="#Docker的启动与停止" class="headerlink" title="Docker的启动与停止"></a>Docker的启动与停止</h2><p><strong>systemctl</strong>命令是系统服务管理器指令</p>
-<p>启动docker：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">systemctl start docker</span></pre></td></tr></table></figure>
-
-<p>停止docker：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">systemctl stop docker</span></pre></td></tr></table></figure>
-
-<p>重启docker：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">systemctl restart docker</span></pre></td></tr></table></figure>
-
-<p>查看docker状态：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">systemctl status docker</span></pre></td></tr></table></figure>
-
-<p>开机启动：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">systemctl enable docker</span></pre></td></tr></table></figure>
-
-<p>查看docker概要信息</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker info</span></pre></td></tr></table></figure>
-
-<p>查看docker帮助文档</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker --help</span></pre></td></tr></table></figure>
-
-<h1 id><a href="#" class="headerlink" title></a></h1>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">Docker</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/07/Docker-2%E5%AE%89%E8%A3%85/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
     <article id="post-docker-1简介" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1018,71 +341,36 @@ Docker也不关心你要把容器运到何方：我们可以在自己的笔记�
 
 
   
-    <article id="post-verilog入门" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-macOS-清除启动台中残余的图标" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/24/verilog%E5%85%A5%E9%97%A8/">verilog入门</a>
+      <a class="article-title" href="/2019/11/07/macOS-%E6%B8%85%E9%99%A4%E5%90%AF%E5%8A%A8%E5%8F%B0%E4%B8%AD%E6%AE%8B%E4%BD%99%E7%9A%84%E5%9B%BE%E6%A0%87/">macOS清除启动台中残余的图标</a>
     </h1>
   
 
         
-        <a href="/2019/12/24/verilog%E5%85%A5%E9%97%A8/" class="archive-article-date">
-  	<time datetime="2019-12-24T09:37:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-24</time>
+        <a href="/2019/11/07/macOS-%E6%B8%85%E9%99%A4%E5%90%AF%E5%8A%A8%E5%8F%B0%E4%B8%AD%E6%AE%8B%E4%BD%99%E7%9A%84%E5%9B%BE%E6%A0%87/" class="archive-article-date">
+  	<time datetime="2019-11-07T15:38:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-07</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="数据类型及变量、常量"><a href="#数据类型及变量、常量" class="headerlink" title="数据类型及变量、常量"></a>数据类型及变量、常量</h2><h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><ol>
-<li>线网型变量</li>
-</ol>
-<ul>
-<li>wire：可以直接理解为连线</li>
-</ul>
-<h2 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h2><h3 id="算术运算符"><a href="#算术运算符" class="headerlink" title="算术运算符"></a>算术运算符</h3><ul>
-<li>+，加</li>
-<li>-，减</li>
-<li>*，乘</li>
-<li>/，除</li>
-<li>&amp;，取模（取余数）</li>
-</ul>
-<ol>
-<li>在进行整数除法运算时，结果要略去小数部分,只取整数部分；</li>
-<li>而进行取模运算时，结果的符号位采用模运算符中第一个操作数的符号。<h3 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h3></li>
-</ol>
-<ul>
-<li>&amp;&amp;（双目），逻辑与</li>
-<li>||（双目），逻辑或</li>
-<li>！（单目），逻辑非<h3 id="按位运算符"><a href="#按位运算符" class="headerlink" title="按位运算符"></a>按位运算符</h3></li>
-<li>~，按位取反</li>
-<li>&amp;，按位与</li>
-<li>|，按位或</li>
-<li>^，按位异或</li>
-<li>^<del>,</del>^,按位同或</li>
-</ul>
-<h3 id="关系运算符"><a href="#关系运算符" class="headerlink" title="关系运算符"></a>关系运算符</h3><ul>
-<li><blockquote>
-</blockquote>
-</li>
-<li>&lt;</li>
-<li>=</li>
-<li><blockquote>
-<p>=</p>
-</blockquote>
-</li>
-<li>&lt;=</li>
-</ul>
-<h3 id="等式运算符"><a href="#等式运算符" class="headerlink" title="等式运算符"></a>等式运算符</h3><ul>
-<li>==</li>
-<li>！=</li>
-<li>===</li>
-<li>！==</li>
-</ul>
+        <p>经常会不通过appstore下载软件，也就是从网页中下载dmg，自己安装，但是当我不再想要这个软件，然后把它卸载掉之后就会发现，launchpad里还是遗留了这个软件的图标，而且删不掉。这个时候，就可以下面的办法就管用啦！</p>
+<p>思路：找到存放launchpad中图标的数据库，对数据库进行操作直接删除对于的图标。<br>第一步找到comappledocklaunchpad文件夹<br>第二步找到数据库获取其路径<br>第三步开始对数据库进行操作<br>第一步：找到com.apple.dock.launchpad文件夹：</p>
+<p>打开一个folder，按command+shift+G，在前往当中输入地址/private/var/folders，然后在里边自己尝试找到com.apple.dock.launchpad这个文件夹，我的路径是/private/var/folders/8v/…/0/com.apple.dock.launchpad，省略号处应该大家都不一样，所以慢慢找，总之最后找到名为com.apple.dock.launchpad的文件夹。</p>
+<p>第二步：找到数据库，获取其路径：</p>
+<p>打开com.apple.dock.launchpad 文件夹<br>之后有一个db文件夹，再点进去有一个文件叫db,它就是我们要找的数据库（如图）。 </p>
+<p>右击它，选择显示简介，将位置信息拷贝到剪切板，注意从private开始（如图）。 </p>
+<p>第三步：开始对数据库进行操作</p>
+<p>打开终端：cd到刚才拷贝的路径<br>然后输入：<br>sqlite3 db “delete from apps where title=’应用名称’;”&amp;&amp;killall Dock<br>注意要将应用名称处替换成你要删除的图标的名称，然后回车即可。</p>
+<p>再回到launchpad看看，没有啦！</p>
+<p>————————————————<br>版权声明：本文为CSDN博主「ohyeahhhh」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a href="https://blog.csdn.net/ohyeahhhh/article/details/53168753" target="_blank" rel="noopener">https://blog.csdn.net/ohyeahhhh/article/details/53168753</a></p>
 
       
 
@@ -1096,7 +384,7 @@ Docker也不关心你要把容器运到何方：我们可以在自己的笔记�
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color4">FPGA计组课设</a>
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color4">macOS小问题</a>
         		</li>
       		
 		</ul>
@@ -1106,7 +394,7 @@ Docker也不关心你要把容器运到何方：我们可以在自己的笔记�
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2019/12/24/verilog%E5%85%A5%E9%97%A8/">展开全文 >></a>
+          <a class="article-more-a" href="/2019/11/07/macOS-%E6%B8%85%E9%99%A4%E5%90%AF%E5%8A%A8%E5%8F%B0%E4%B8%AD%E6%AE%8B%E4%BD%99%E7%9A%84%E5%9B%BE%E6%A0%87/">展开全文 >></a>
         </p>
       
 
@@ -1136,38 +424,427 @@ Docker也不关心你要把容器运到何方：我们可以在自己的笔记�
 
 
   
-    <article id="post-组成原理-输入输出" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-network-网络层" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/06/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/">输入输出</a>
+      <a class="article-title" href="/2019/11/04/network-%E7%BD%91%E7%BB%9C%E5%B1%82/">网络层</a>
     </h1>
   
 
         
-        <a href="/2019/12/06/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/" class="archive-article-date">
-  	<time datetime="2019-12-06T06:37:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-06</time>
+        <a href="/2019/11/04/network-%E7%BD%91%E7%BB%9C%E5%B1%82/" class="archive-article-date">
+  	<time datetime="2019-11-04T08:03:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-04</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <ol>
-<li>简要说明CPU与I/O之间传递信息可采用哪几种联络方式？它们分别用于什么场合？<br>CPU与IO之间传递信息通常采用三种联络方式：直接响应（立即响应）、同步、异步。<br><br>使用场合分别为：<br></li>
+        <h2 id="IP数据报格式"><a href="#IP数据报格式" class="headerlink" title="IP数据报格式"></a>IP数据报格式</h2><p>长度 = 固定部分20B+可变部分</p>
+<h3 id="固定部分"><a href="#固定部分" class="headerlink" title="固定部分"></a>固定部分</h3><ul>
+<li>版本：IPv4或者IPv6</li>
+<li>首部长度：单位是4B，最小为5</li>
+<li>区分服务：指期望获得那种类型的服务</li>
+<li>总长度：首部+数据的总长度，单位是1B</li>
+<li>标识、标志、片偏移：</li>
+<li>生存时间：TTL，IP数据报的保质期，每经过一个路由器就-1，变成0则丢弃</li>
+<li>协议：传输层传下来的报文使用的协议，TCP-6或UDP-17 </li>
+<li>首部检验和：只检验首部</li>
+<li>源地址：32位</li>
+<li>目的地址：32位</li>
+<li>可选字段：长度可变，0～40B，用来支持排错，测量以及安全等措施</li>
+<li>填充：全0，把首部补成4B的整数倍。</li>
+</ul>
+<h2 id="IP地址"><a href="#IP地址" class="headerlink" title="IP地址"></a>IP地址</h2><h2 id="网络地址转换-NAT"><a href="#网络地址转换-NAT" class="headerlink" title="网络地址转换(NAT)"></a>网络地址转换(NAT)</h2><h2 id="传输单元名词辨析"><a href="#传输单元名词辨析" class="headerlink" title="传输单元名词辨析"></a>传输单元名词辨析</h2><p>应用层：报文<br><br>传输层：报文段<br><br>网络层：IP数据报，分组<br><br>链路层：帧，IP网络层传来的分组加头加尾<br><br>物理层：比特流</p>
+<h2 id="数据报"><a href="#数据报" class="headerlink" title="数据报"></a>数据报</h2><p>无连接服务：不事先为分组的传输确定传输路径，每个分组独立确定传输路径，不同分组传输路径可能不同；<br></p>
+<h2 id="IP数据报格式-1"><a href="#IP数据报格式-1" class="headerlink" title="IP数据报格式"></a>IP数据报格式</h2><p>总长度单位是1B，片偏移单位是8B，首部长度是4B。</p>
+<h2 id="IP数据报分片"><a href="#IP数据报分片" class="headerlink" title="IP数据报分片"></a>IP数据报分片</h2><ul>
+<li>标识：同一数据报的分片使用同一标识。</li>
+<li>标志：三位中只有两位有意义 X _ _<br><br>中间位DF（Don’t Fragment），DF=1禁止分片，DF=0允许分片。<br><br>最低位MF（More Fragment），MF=1后面还有分片，MF=0代表最后一片。</li>
+<li>片偏移：指出较长分组分片后，某片在原分组中的相对位置。以8B为单位。据此，除了最后一个分片，每个分片的长度一定是 <em>8B的整数倍</em>。</li>
+</ul>
+<h2 id="网络地址转换（NAT）"><a href="#网络地址转换（NAT）" class="headerlink" title="网络地址转换（NAT）"></a>网络地址转换（NAT）</h2><h2 id="子网划分和子网掩码"><a href="#子网划分和子网掩码" class="headerlink" title="子网划分和子网掩码"></a>子网划分和子网掩码</h2><h2 id="CRID"><a href="#CRID" class="headerlink" title="CRID"></a>CRID</h2><h2 id="ICMP协议"><a href="#ICMP协议" class="headerlink" title="ICMP协议"></a>ICMP协议</h2><h3 id="ICMP差错报告报文"><a href="#ICMP差错报告报文" class="headerlink" title="ICMP差错报告报文"></a>ICMP差错报告报文</h3><ol>
+<li>终点不可达</li>
+<li>源点抑制（基本不再使用）</li>
+<li>时间超过</li>
+<li>参数问题</li>
+<li>改变路由（重定向）</li>
+</ol>
+<h3 id="不应发送ICMP差错报文的情况"><a href="#不应发送ICMP差错报文的情况" class="headerlink" title="不应发送ICMP差错报文的情况"></a>不应发送ICMP差错报文的情况</h3><ol>
+<li>对ICMP差错报告报文</li>
+<li>对第一个分片的数据报片的所有后续数据报片</li>
+<li>对具有组播地址的数据报</li>
+<li>对具有特殊地址（如127.0.0.0或0.0.0.0）</li>
+</ol>
+<h3 id="ICMP询问报文"><a href="#ICMP询问报文" class="headerlink" title="ICMP询问报文"></a>ICMP询问报文</h3><h2 id="IPv4和IPv6"><a href="#IPv4和IPv6" class="headerlink" title="IPv4和IPv6"></a>IPv4和IPv6</h2><h3 id="IPv6向IPv6的过渡"><a href="#IPv6向IPv6的过渡" class="headerlink" title="IPv6向IPv6的过渡"></a>IPv6向IPv6的过渡</h3><ol>
+<li>双栈协议</li>
+<li>隧道通信</li>
+</ol>
+<h2 id="路由算法"><a href="#路由算法" class="headerlink" title="路由算法"></a>路由算法</h2><h3 id="静态路由算法（非自适应路由算法）"><a href="#静态路由算法（非自适应路由算法）" class="headerlink" title="静态路由算法（非自适应路由算法）"></a>静态路由算法（非自适应路由算法）</h3><p>管理员手工配置路由信息<br><br>优点：简便、可靠，在符合稳定、拓扑变化不大的网络中运行效果很好，广泛用于高度安全性的军事网络和较小的商业网络。<br><br>缺点：路由更新慢，不适用于大型网络。</p>
+<h3 id="动态路由算法（自适应路由算法）"><a href="#动态路由算法（自适应路由算法）" class="headerlink" title="动态路由算法（自适应路由算法）"></a>动态路由算法（自适应路由算法）</h3><p>路由器间彼此交换信息，按照路由算法优化出路由表项<br><br>优点：路由更新快，适用于大型网络，及时响应链路费用或网络拓扑变化。<br><br>缺点：算法复杂，增加网络负担。</p>
+<h4 id="全局性"><a href="#全局性" class="headerlink" title="全局性"></a>全局性</h4><h4 id="分散性"><a href="#分散性" class="headerlink" title="分散性"></a>分散性</h4>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">计算机网络</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/11/04/network-%E7%BD%91%E7%BB%9C%E5%B1%82/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-network-TCP三次握手四次挥手" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/02/network-TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/">TCP协议</a>
+    </h1>
+  
+
+        
+        <a href="/2019/11/02/network-TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/" class="archive-article-date">
+  	<time datetime="2019-11-02T11:42:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="TCP首部格式"><a href="#TCP首部格式" class="headerlink" title="TCP首部格式"></a>TCP首部格式</h2><p><img src="/images/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/TCP%E9%A6%96%E9%83%A8%E6%A0%BC%E5%BC%8F.png" alt="tip"></p>
+<ul>
+<li>源端口和目的端口:各占两个字节，分别写入源端口号和目的顿口号</li>
+<li>序号seq：占四个字节，范围是【0, 2^32 - 1】 共 2^32个序号，在TCP字节流中，每个字节都会按顺序编号，本字段表示本报文段中所发送的数据的第一个字节的序号。</li>
+<li>确认号ack：期望收到对方下一个报文段的第一个数据字节的编号。若确认号文N，则证明N-1之前的数据都已经正确收到。</li>
+<li>数据偏移：即首部长度，以4B为单位，即一个数值为4B</li>
+<li>保留：</li>
+<li>URG：紧急位，当URG=1时，标明此报文段中有紧急数据传送，是优先级最高的数据，不需要在缓存队列中排队，配合紧急指针字段使用。</li>
+<li>ACK：确认位，ACK=1时确认号有效，在连接建立后传送的所有报文段ACK都必须置为1.</li>
+<li>PSH：推送位，PSH=1时，接收方应尽快交付接受的应用进程，不用再等到缓存填满再想上层交付。</li>
+<li>RST：复位，RST=1时说明TCP连接出现严重错误，必须释放连接然后重新建立。</li>
+<li>SYN：同步位，SYN=1时，表明是一个连接请求/连接接受报文。</li>
+<li>FIN：FIN=1时，表明此报文段发送方数据已发完，请求释连接。</li>
+<li>窗口：指的是发送本报文段的一方的接受窗口，即现在允许对方发送的数据量。</li>
+<li>检验和：检验首部+数据，检验时要加上12B伪首部，第四个字段为6.</li>
+<li>紧急指针：URG=1时才有意义，指出本报文段中紧急数据的字节数。</li>
+<li>选项：长度可变</li>
+<li>填充：<h2 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h2>握手是为了建立连接，TCP三次握手的流程如下：<br></li>
+</ul>
+<ol>
+<li>第一次握手：建立连接时，客户端发送SYN包到服务器，并进入SYN_SEND状态，等待服务器确认；</li>
+<li>第二次握手：服务器收到SYN包，必须确认客户的SYN同时自己也发送一个SYN包，即SYN+ACK包，此时服务器进入SYN_RECV状态；</li>
+<li>第三次握手：客户端收到服务器的SYN+ACK包，向服务器发送确认包ACK，此包发送完毕，客户端和服务器进入ESTABLISHED状态，完成三次握手。<h2 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h2>“挥手”是为了能终止连接，TCP四次挥手的流程如下：<br></li>
+<li>第一次挥手：Client发送一个FIN，用来关闭Client到Server的数据传送，Client进入FIN_WAIT_1的状态；</li>
+<li>第二次挥手：Server收到FIN后，发送一个ACK给Client，确认序号为收到序号+1（与SYN相同，一个FIN占用一个序号），Server进入CLOSE_WAIT状态；</li>
+<li>第三次挥手：Server发送一个FIN，用来关闭Server到Client的数据发送，Server进入LAST_ACK状态；</li>
+<li>第四次挥手：Client收到FIN后，Client进入TIME_WAIT状态，接着发送一个ACK给Server，确认序号为收到序号+1，Server进入CLOSED状态，完成四次挥手。<h3 id="为什么会有TIME-WAIT状态"><a href="#为什么会有TIME-WAIT状态" class="headerlink" title="为什么会有TIME_WAIT状态"></a>为什么会有TIME_WAIT状态</h3></li>
 </ol>
 <ul>
-<li>直接控制使用与结构极简单、速度极慢的I/O设备，CPU直接控制外设处于某种状态而无需联络信号。</li>
-<li>同步方式采用统一的时标进行联络，适用于CPU与I/O速度差别不大，近距离传送的场合。</li>
-<li>异步方式采用应答机制进行联络，适用于CPU与I/O速度差较大、远距离传送的场合。</li>
+<li>确保有足够时间让对方收到ACK包</li>
+<li>避免新旧连接混淆<h2 id="为什么需要四次挥手才能断开连接"><a href="#为什么需要四次挥手才能断开连接" class="headerlink" title="为什么需要四次挥手才能断开连接"></a>为什么需要四次挥手才能断开连接</h2>因为全双工，发送方和接收方都需要FIN报文和ACK报文，各需要两次挥手<h2 id="服务器出现大量CLOSE"><a href="#服务器出现大量CLOSE" class="headerlink" title="服务器出现大量CLOSE"></a>服务器出现大量CLOSE</h2></li>
 </ul>
-<ol start="2">
-<li><p>在什么条件下，I/O设备可以向CPU提出中断请求？<br>设备工作完成状态为1（D=1），中断屏蔽码为0（MASK=0），且查询中断时，中断请求触发器为1（INTR=1）</p>
+<h2 id="TCP滑动窗口"><a href="#TCP滑动窗口" class="headerlink" title="TCP滑动窗口"></a>TCP滑动窗口</h2><h3 id="RTT和RTO"><a href="#RTT和RTO" class="headerlink" title="RTT和RTO"></a>RTT和RTO</h3><ul>
+<li>RTT：发送一个数据包收到对应的ACK，所花费的时间。</li>
+<li>RTO：重传时间间隔。根据RTT计算。<h3 id="TCP的滑动窗口"><a href="#TCP的滑动窗口" class="headerlink" title="TCP的滑动窗口"></a>TCP的滑动窗口</h3></li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">计算机网络</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/11/02/network-TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-network-名词解释" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/27/network-%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A/">名词解释</a>
+    </h1>
+  
+
+        
+        <a href="/2019/10/27/network-%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A/" class="archive-article-date">
+  	<time datetime="2019-10-27T03:41:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="名词解释"><a href="#名词解释" class="headerlink" title="名词解释"></a>名词解释</h2><ol>
+<li><p>CSMA/CD<br>Carrier Sense Multiple Access with Collision Detection<br>载波监听多点接入/碰撞检测<br>发送数据前，先侦听信道是否空闲，若空闲，则立即发送数据；若忙碌，则等待一段时间至信道中的信息传送结束之后在发送数据。若同时有两个或两个以上节点同时发送请求，则判定为冲突。若侦听到冲突，则立即停止发送数据，等待一段时间再重新尝试。先听后发，边听边发，冲突停发，随机延迟后重发。</p>
 </li>
+<li><p>ARP<br>Address Resolution Protocol<br>地址解析协议,根据IP地址获取物理地址的一个TCP/IP协议</p>
+</li>
+<li><p>ICMP<br>Internet Control Message Protocol<br>internet控制报文协议<br>用于在IP主机、路由器之间传递控制消息。主要用于在主机与路由器之间传递控制信息，包括报告错误、交换受限控制和状态信息等等。</p>
+</li>
+<li><p>OSPF<br>Open Shortest Path First 开放式最短路径优先<br>用于在单一自治系统内决策路由，通过路由器之间通告网络接口的状态来建立链路状态数据库，生成最短路径树，每个OSPF路由器使用这些最短路径构造路由表。</p>
+</li>
+<li><p>BGP<br>Border Gateway Protocol 边界网关协议<br>允许一个AS与另一个AS进行通信。和其他的BGP系统交换网络可达信息。</p>
+</li>
+<li><p>DNS<br>Domain Name System 域名系统<br>作为域名和IP地址相互映射的一个分布式数据库，能够使用户更方便的访问互联网，为不用去记住能够被机器直接读取的IP数串</p>
+</li>
+<li><p>VPN<br>Virtual Private Network 虚拟专用网咯<br>在公用网络上建立专用网络，进行加密通讯。VPN网关通过对数据包的加密和数据包目的地址的转换实现远程访问。</p>
+</li>
+<li><p>HTTP<br>HyperText Transfer Protocol 超文本传输协议<br>用于从www服务器传输超文本到本地浏览器传输协议。</p>
+</li>
+<li><p>MPLS<br>Multiple Protocol Label Switching 多协议标签交换<br>在开放的通信网上利用标签引导数据告诉、高效传输的新技术。<br>MPLS是利用标记进行数据转发的。当分组进入网络时，要为其分配固定长度的短的标记，并将标记与分组封装在一起，在整个转发过程中，交换节点仅根据标记进行转发。</p>
+</li>
+<li><p>SCTP<br>Stream Control Transmission Protocol，流控制传输协议<br>SCTP是一个面向连接的流传输协议，它可以在两个端点之间提供稳定有序的数据传递服务。</p>
+</li>
+<li><p>UDP<br>User Datagram Protocol，用户数据报协议<br><br>该协议是互联网协议族中传输层的协议，UDP只是在IP数据包服务上增加了分用、复用和差错检测功能。UDP是面向无连接的,发送数据不需要建立连接；使用尽最大努力交付，即不可靠交付；UDP是面向报文的，发送方UDP对应用程序交下来的报文既不合并也不拆分。</p>
+</li>
+<li><p>带宽<br><br>在计算机网络中，带宽用来表示网络的通信线路传送数据的能力，因此带宽表示在单位时间内从网络中的某一节点到另一节点所通过的最高数据率，带宽的单位是“比特每秒”，b/s。</p>
+</li>
+<li><p>网络体系结构<br><br>为了完成计算机之间的通信合作，把每个计算机互连的功能划分成定义明确的层次，规定了同层次进程通信协议及相邻层之间的接口及服务。将这些同层间通信的协议以及相邻层接口统称为网络体系结构。</p>
+</li>
+<li><p>ADSL<br><br>Asymmetric Digital Subscriber Line，非对称数字用户线<br><br>是用数字技术对现有模拟电话用户线进行改造，使之能够承载宽带数字业务。ADSL的非对称是指下行带宽都远远大于上行带宽。</p>
+</li>
+<li><p>VLAN<br><br>Virtual LAN，虚拟局域网<br><br>是由局域网段构成的与物理位置无关的逻辑组，而这些网段具有某些共同的需求，每一个VLAN的帧都有一个明确的标识符，指明发送这个帧的工作站是属于哪一个VLAN。</p>
+</li>
+<li><p>CIDR<br><br>Classless InterDomain Routing 无类别域间路由选择<br><br>消除了A类，B类，C类地址以及划分子网的概念，同时CIDR把网络前缀都相同的连续IP地址组成一个“CIDR地址块”</p>
+</li>
+<li><p>SMTP<br><br>Simple Mail Transfer Protocol，简单邮件传送协议<br><br>规定了在两个相互通信的SMTP进程之间应如何交换信息。SMTP采用客户——服务器方式，负责发送邮件的SMTP进程就是SMTP客户，负责接收邮件的进程就是SMTP服务器，至于邮件内部的格式，邮件如何储存以及邮件系统应如以多快的速度来发送邮件，SMTP都未作出规定。</p>
+</li>
+<li><p>SNMP<br><br>Simple Network Management Protocol，简单网络管理协议<br><br>SNMP中管理程序和代理程序按客户——服务器方式工作。管理程序运行SNMP客户程序，而代理程序运行SNMP服务器程序。</p>
+</li>
+<li><p>MAC<br><br>Media Access Control，媒体访问控制</p>
+</li>
+<li><p>RTT<br><br>Round-Trip Time往返时间</p>
+</li>
+<li><p>CRC<br><br>Cyclic Redundancy Check 循环冗余检查</p>
+</li>
+<li><p>VLAN<br><br>Virtual Private Network 虚拟专用网</p>
+</li>
+<li><p>移动自组网络<br>是一种无固定设施的无线局域网，其中的每一个移动站都要参与路由的发现和维护</p>
+</li>
+<li><p>AS<br>Autonomous System，自治系统</p>
+</li>
+</ol>
+<h2 id="简答题"><a href="#简答题" class="headerlink" title="简答题"></a>简答题</h2><ol>
+<li><p>评价一个网络性能的优劣，有哪几个重要指标？<br><br>带宽，延迟，吞吐量，丢包率</p>
+</li>
+<li><p>无线网络都有哪几种类型？<br><br>WPAN，WLAN，WMAN，WWAN</p>
+</li>
+<li><p>Wi-Fi和5G各属于哪类无线网络<br><br>Wi-Fi属于无线局域网，5G属于无线广域网</p>
+</li>
+<li><p>路由器是重要的IP数据包转发设备，在考虑子网的情况下，根据你自己的理解写出路由算法的主要步骤（分步骤用文字描述即可）。<br></p>
+</li>
+<li><p>试简述RIP，OSPF和BGP路由选择协议的主要特点。<br><br>RIP是一种分布式的基于距离向量的路由选择协议，是互联网的标准协议，其最大的优点就是简单。RIP协议的特点是：(1) 仅和相邻路由器交换信息。(2) 路由器交换的信息是当前本路由器所知道的全部信息，即自己的路由表。(3) 按笃定的时间间隔交换信息。 <br><br>OSPF最主要的特征就是使用分布式的链路状态协议。OSPF协议的特点是：(1)向本自治系统中所有的路由器发送信息。(2)发送的信息就是与本路由器相邻的所有路由器的链路状态(3)只有当链路状态发生变化时，路由器才向所有路由器用泛洪法发送此信息。<br><br>BGP是不同自治系统的路由器之间交换路由器信息的协议，它采用路径响亮路由选择协议。BGP的主要特点是：(1)BGP在自治系统之间交换可达性信息。(2)自治系统之间的路由选择协议必须考虑有关策略(3)BGP只能是力求寻找一条能够到达目的网络且比较好的路由，而并非要寻找一条最佳路由。</p>
+</li>
+<li><p>试说明运输层在协议栈中的地位和作用。运输层的通信和网络层的通信有什么重要的区别？为什么运输层是必不可少的？<br><br>(1)从通信和信息处理的角度看，运输层向它上面的应用层提供通信服务，它属于面向通信部分的最高层，同时也是用户功能中的最低层。当网络的边缘部分中的两个主机使用网络的核心功能进行端到端的通信是，只有主机的协议栈才有运输层，而网络核心部分中的路由器在转发分组时都只用到下三层的功能。<br><br>(2)网络层提供点到点即主机与主机之间的逻辑通信，而运输层提供端到端应用进程之间的逻辑通信。<br><br>(3)网络层只能将实现两个主机之间的通信，而真正需要通信的是主机中的应用进程，因此提供进程之间通信的传输层是必不可少的。<br></p>
+</li>
+<li><p>试举例说明有哪些应用进程宁愿采用不可靠的UDP，也不愿意采用可靠的TCP。<br>(1)对于实时数据传输，如果宁可丢失少量分组也不要等待太晚到达的分组。<br><br>(2)在连续的音频或视频流传输中，很少量的分组丢失对播放效果影响并不大。<br><br>(3)当出现网络拥塞时，可能有的应用程序不愿放慢其报文段的发送速度<br><br>(4)有的应用程序不需要TCP的可靠传输。<br></p>
+</li>
+<li><p>为什么说UDP是面向报文的，而TCP是面向字节流的？<br>发送方的UDP对应用程序交下来的报文，在添加首部后就向下交付IP层。UDP对应用层交下来的报文，既不合并，也不拆分，而是保留这些报文的边界。在接收方的UDP，对IP层交上来的UDP用户数据报，在去除首部后就原封不动地交付上层的应用进程，。也就是说UDP一次交付一个完整的报文。</p>
+</li>
+<li><p>一个UDP用户数据报的数据字段为8192字节。在链路层要使用以太网来传送。试问应当划分几个IP数据报片？说明每一个IP数据报片的数据字段长度和片偏移字段的值。<br><br>UDP首部为8B，所以此UDP数据报长度为8192+2=8200B<br><br>以太网数据字段的最大长度为1500B。若IP首部为20B，则IP数据报的数据部分最多只能有1480B。8200=1480✖️5+800，因此划分的数据报片为6个。</p>
+</li>
+<li><p>一个TCP连接下面使用256kbit/s的链路，其端到端时延为128ms。经测试，发现吞<br>吐量只有120 kbit/s。 试问发送窗口W是多少? (提示: 可以有两种答案，取决于接<br>收端发出确认的时机。)<br><br>两种个情况<br><br>(1)接收端在收完一批</p>
+</li>
+<li><p>在TCP拥塞控制中，什么是慢开始、拥塞避免、快重传和快恢复算法？这里每一种算法各起什么作用？“乘法减小”和“加法增大”各用在什么情况下？<br><br>慢开始：由小到大逐渐增大拥塞窗口数值。<br><br>拥塞避免：当拥塞窗口大于慢开始门限ssthresh时，停止慢开始算法开始拥塞避免算法。拥塞避免算法是让拥塞窗口cwnd缓慢增大，即每经过一个往返时间RTT就把发送方的拥塞窗口加1。<br><br>快重传：快重传算法要求接受方每收到一个失序的报文段后就立即发出重复确认,发送方接收到三个冗余确认后立即重传。<br><br>快恢复：快重传之后进行乘法减小，门限值减半，后执行拥塞避免加法增大。<br><br>乘法减小：只要发生拥塞，门限值就会减小到二分之一。<br><br>加法增大：拥塞避免算法中。<br></p>
+</li>
+<li><p>5-39<br></p>
+</li>
+<li><p>5-41<br><br>TCP三次握手建立连接，四次挥手释放连接；</p>
+</li>
+<li><p>5-46-使用具体例子说明为什么在运输层连接建立时要使用三报文握手。说明如果不这样做可能会出现什么情况。<br><br>在上一个连接中，A向B发送的连接请求SYN报文滞留在网络中。于是A超时重传，与B建立了TCP连接，交换了数据，最后也释放了连接。<br><br>但滞留在网络中的SYN报文段突然传送到了B。如果不使用三报文握手，B就会以为A现在请求建立TCP连接，于是就分配资源，等待A传送数据。但是A并没有要建立连接，也不会传送数据，于是B就白白等待A传送数据，浪费了资源。<br><br>如果使用三报文握手，那么在B收到A发送的陈旧SYN报文后，就向A发送SYN报文段，A接收到此报文段后，根据ack=x+1就可以知道不应当理睬此报文段，因为A当前并没有发送seq=x的报文段。这时A返回复位报文段，拒绝建立连接。B收到后就知道不能建立TCP连接，就不会耗费资源等待A发送数据了。</p>
+</li>
+<li><p>TCP连接的吞吐量应当是每秒发送的数据字节数，还是每秒发送的首部和数据之和的字节数？吞吐量应当是每秒发送的字节数，还是每秒发送的比特数？<br><br>TCP的吞吐量是每秒发送的数据字节数；吞吐量是每秒发送的字节数。</p>
+</li>
+<li><p>流量控制和拥塞控制最主要的区别是什么？发送窗口的大小取决于流量控制还是拥塞控制？<br><br>流量控制是在一条TCP连接中接受端用于限制发送端发送报文段速率的措施，流量控制只控制一个发送端;<br><br>拥塞控制是用来控制TCP连接中发送端发送报文的速率，以免使互联网中的某处产生过载。拥塞控制可以控制多个发送端。<br><br>当发送窗口小于拥塞窗口时，其取决于流量控制，即接受端的接收能力；当发送窗口大于拥塞窗口时，其取决于拥塞控制，即整个网络拥塞情况。</p>
+</li>
+<li><p>5-35<br><br>时延 = 发送时延+传播时延+处理时延+排队时延<br><br>发送时延：发送时延是主机或路由器发送数据帧所需要的时间，也就是从发送数据的第一个比特算起，到该帧最后一个比特发送完毕所需要的时间；<br>发送时延=数据帧长度/信道带宽<br><br>传播时延：传播时延是电磁波在信道中传送需要的时间；<br>传播时延=信道长度/电磁波在信道上的传播速率<br></p>
+</li>
+<li><p><em>1-03.试从多个方面比较电路交换、报文交换和分组交换的主要优缺点。</em></p>
+</li>
+<li><p><em>1-14.计算机网络有哪些常用的性能指标？</em><br></p>
+</li>
+</ol>
+<ul>
+<li>速率：指连接在计算机网络上的主机在数字信道上传送数据的速率，也称为数据率或比特率。</li>
+<li>带宽：用来表示网络的通信线路传送数据的能力，网络带宽表示在单位时间内从网络中的一点到另一点所能通过的“最高数据率”。</li>
+<li>吞吐量：指在单位时间内通过某个网络的数据量。</li>
+<li>时延：指数据从网络的一端传送到另一端所需的时间。包括发送时延，传播时延，处理时延和排队时延。</li>
+<li>时延带宽积：是传播时延和带宽的乘积。链路的时延带宽积又称为以比特为单位的链路长度。</li>
+<li>往返时间：从发送方发送数据开始，到发送方接收到来自接受方的确认。</li>
+<li>利用率：</li>
+</ul>
+<ol start="20">
+<li><p>1-20.网络体系结构为什么要采用分层次的结构？<br>网络体系结构采用分层次的结构，是因为分层可以把庞大而复杂的问题转化为若干小的局部问题，而这些较小的局部问题比较易于研究和处理。</p>
+</li>
+<li><p><em>1-24.试述五层协议的网络体系结构的要点，包括各层的主要功能。</em><br></p>
+</li>
+</ol>
+<ul>
+<li>物理层——透明地传输比特流。</li>
+<li>数据链路层——将网络层的数据组装成帧，在两个相邻结点之间透明地传输帧中的数据。每一帧包括数据和必要的控制信息。</li>
+<li>网络层——负责为分组交换网上的不同主机提供通信服务。</li>
+<li>传输层——负责向两个主机中的进程提供通信服务。</li>
+<li>应用层——直接为用户的应用进程提供服务。</li>
+</ul>
+<ol start="22">
+<li><em>1-26.试解释一下名词：协议栈、实体、对等层、协议数据单元、服务访问节点、客户、服务器、客户-服务器方式。</em><br></li>
+</ol>
+<ul>
+<li>协议栈：由于计算机网络的体系结构采用了分层结构，因此不论在主机还是路由器中的协议都有好几层。这一层一层的协议很像堆栈的结构，所以就把这些协议层称为协议栈。</li>
+<li>实体：表示任何可发送或接收信息的硬件或软件进程。在许多情况下，实体就是一个特定的软件模块。</li>
+<li>对等层：在网络体系结构中，通信双方实现了同样功能的层。</li>
+<li>协议数据单元：通常记为PDU，它是对等实体之间进行信息交换的数据单元。</li>
+<li>服务访问节点：通常记为SAP，在同一系统中相邻两层的实体进行交互的地方，通常称为服务访问节点。</li>
+<li>客户：在计算机网络中进行通信的应用进程的服务请求方。</li>
+<li>服务器：在计算机网络中进行通信的应用进程的服务提供方。</li>
+<li>客户-服务器方式：C/S</li>
+</ul>
+<ol start="23">
+<li><p><em>2-01.物理层要解决那些问题？物理层的主要特点是什么？</em><br><br>物理层考虑的是怎样才能在连接各种计算机的传输媒体上传输数据比特流，它的任务就是透明地传送比特流。</p>
+</li>
+<li><p><em>2-04.试解释一下名词：数据，信号，模拟数据，模拟信号，基带信号，带通信号，数字数据，数字信号，码元，单工通信，半双工通信，全双工通信，串行传输，并行传输。</em><br></p>
+</li>
+</ol>
+<ul>
+<li>数据：是运送消息的实体。</li>
+<li>信号：是数据的电气或电磁的表现。</li>
+<li>模拟数据：即连续数据，即数据的变化是连续的，如人说话的声音数据。</li>
+<li>模拟信号：即连续信号，其特点是代表消息的参数的取值是连续的。入门打电话时，声波通过话筒变成了连续变化的电信号。</li>
+<li>基带信号：即来自信源的信号，也就是基本频带信号。如计算机输出的代表各种文字或图像文件的数据信号。</li>
+<li>带通信号：把基带信号的频率范围搬移到较高的频段以便在信道中传输。</li>
+<li>数字数据：离散数据，即数据的变化是不连续的。</li>
+<li>数字信号：离散信号，其特点是代表消息的参数的取值是离散的。</li>
+<li>码元：码是信号元素和字符之间的事先约定好的转换。码元是码所包含的元素，在简单的二进制编码中，一个码元就是一个比特；在比较复杂的编码中，一个码元可一包含多个比特。</li>
+<li>单工通信：单向通信，只能有一个方向的通信而没有反方向的交互。</li>
+<li>半双工通信：双向交替通信，通信的双方都可以发送消息，但不能同时发送。</li>
+<li>全双工通信：双向同时通信，通信的双方可以同时发送或接收消息。</li>
+<li>串行传输：数据在传输时是逐个比特按照时间顺序传输的。</li>
+<li>并行传输：数据在传输时采用了n个并行的信道。在每一条信道上，数据仍然是串行传输。</li>
+</ul>
+<ol start="25">
+<li>2-09.香农公式</li>
+<li>2-13.为什么要使用信道复用技术？常用的信道复用技术有哪些？<br>许多用户通过复用技术就可以共同使用一个共享信道来进行通信。<br><br>常用的复用技术有：频分复用，时分复用，波分复用和码分复用。</li>
+<li>2-14.试写出下列英文缩写的全文，并进行简单解释。</li>
+</ol>
+<ul>
+<li>FDM：Frequency Division Multiplexing，频分复用。给每个信号分配唯一的载波频率并通过单一媒体来传输多个独立信号的方法。</li>
+<li>TDM：Time Division Multiplexing，时分复用。把多个信号复用到单个硬件传输信道。</li>
+<li>STDM：Statistic TDM，统计时分复用。又称异步时分复用，是一种改进的时分复用，它能明显地提高信道的利用率。</li>
+<li>WDM：Wavelength Division Multiplexing，波分复用。就是光的频分复用。人们借用载波电话的频分复用的概念，就能做到使用一根光纤来同时传输多个频率很接近的光载波信号。</li>
+<li>DWDM：Dense WDM，密集波分复用。是波分复用的一种表现形式。</li>
 <li></li>
+</ul>
+<ol start="27">
+<li><p>3-01.数据链路与链路有何区别？电路接通了与数据链路接通了的区别何在？<br>链路就是从一个节点到相邻结点的一段物理线路，中间没有任何交换节点；数据链路是在链路的基础上增加了必要的通信协议。</p>
+</li>
+<li><p>3-02.数据链路层中的链路控制包括哪些功能？试讨论把数据链路层做成可靠的链路层有哪些优点和缺点。<br>数据链路层的功能：封装成帧、透明传输和差错检测。<br><br>可靠链路的优点是可以是网络中的某个节点及早发现传输中出了差错，因而可以通过数据链路层的重传来纠正这个差错。<br><br>缺点：又是高层协议使用的是不可靠传输UDP。UDP并不需要求重传有差错的数据。此时可靠的链路层就会牺牲了UDP的实时性。</p>
+</li>
+<li><p>3-14.常用的局域网的网络拓扑有哪些种类？现在最流行的是那种结构？为什么早期的以太网选择选择总线拓扑结构而不是用星型拓扑结构，而现在却改用星型拓扑结构？<br>常用的局域网的网络拓扑有星型网、环形网和总线网。<br><br>现在最流行的是星型网。<br><br>在局域网发展的早期，人们都认为有源器件比较容易出故障，所以认为无源的总线网会更加可靠，而星型拓扑结构的中心使用了有源器件。但是实践证明，连接有大量站点的总线式以太网，由于接插件的插口较多，反而很容易出现故障，现在专用的ASIC芯片的使用可以吧星型结构的集线器做得非常牢靠。因此现在的以太网一般都使用星型结构的拓扑。</p>
+</li>
+<li><p>3-15.什么叫做传统以太网？以太网有哪两个标准？<br>传统以太网就是最早流行的10Mbit/s速率的以太网。<br><br>主要有的两个标准：DIX Ethernet V2和IEEE 802.3</p>
+</li>
+<li><p>3-19.以太网使用的CSMA/CD协议是以争用方式接入到共享信道的。这与传统的时分复用TDM相比优缺点如何？<br>网络上负荷较轻时，CSMA/CD协议很灵活，哪个站向发送就可以发送，而且发生碰撞的概率很小，但是此时使用TDM效率就很低；但是当网络负荷较大时，CSMA/CD引起的碰撞很多，重传经常发生，因而效率大大降低，而此时TDM效率很高。</p>
+</li>
+<li><p>3-25.</p>
+</li>
+<li><p>3-26.</p>
+</li>
+<li><p>3-29.以太网交换机有何特点？用它怎样组成虚拟局域网？<br>以太网交换机实质上就是一个多接口的网桥，它与工作在物理层的转换器和集线器有很大差别。</p>
+</li>
 </ol>
 
       
@@ -1182,7 +859,7 @@ Docker也不关心你要把容器运到何方：我们可以在自己的笔记�
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color3">计算机组成原理</a>
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">计算机网络</a>
         		</li>
       		
 		</ul>
@@ -1192,7 +869,405 @@ Docker也不关心你要把容器运到何方：我们可以在自己的笔记�
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2019/12/06/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/">展开全文 >></a>
+          <a class="article-more-a" href="/2019/10/27/network-%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-JVM-类加载" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/22/JVM-%E7%B1%BB%E5%8A%A0%E8%BD%BD/">类加载</a>
+    </h1>
+  
+
+        
+        <a href="/2019/10/22/JVM-%E7%B1%BB%E5%8A%A0%E8%BD%BD/" class="archive-article-date">
+  	<time datetime="2019-10-22T09:13:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="类加载"><a href="#类加载" class="headerlink" title="类加载"></a>类加载</h1><ul>
+<li>在Java代码中，类型的加载、连接和初始化过程都是在程序运行期间完成的。</li>
+</ul>
+<h2 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h2><p>Java虚拟机结束生命周期的情况</p>
+<ol>
+<li>执行了System.exit()方法</li>
+<li>程序正常执行结束</li>
+<li>程序在执行过程中遇到了异常或者错误</li>
+<li>操作系统出现错误</li>
+</ol>
+<h2 id="类的加载、连接和初始化概述"><a href="#类的加载、连接和初始化概述" class="headerlink" title="类的加载、连接和初始化概述"></a>类的加载、连接和初始化概述</h2><ul>
+<li>加载：查找并加载类的二进制数据，</li>
+<li>连接：三个阶段<br></li>
+</ul>
+<p>1.验证：确保被加载的类的正确性<br><br>2.准备：为类的静态变量分配内存，并将其初始化为默认值<br><br>3.解析：把类中的符号引用转换为直接引用<br></p>
+<ul>
+<li>初始化：为类的静态变量赋予正确的初始值</li>
+</ul>
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    <span class="comment">//在准备阶段会为a分配内存，并赋值为默认值0，</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    <span class="comment">//在初始化阶段才会将1赋值给a</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> a = <span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+<h2 id="类的加载"><a href="#类的加载" class="headerlink" title="类的加载"></a>类的加载</h2><ul>
+<li>加载：把二进制文件加载到内存里，将其放在运行时数据区的方法区内，然后在内存中创建一个java.lang.Class对象用来封装类在方法区内的数据结构。<h3 id="加载-class文件的方式"><a href="#加载-class文件的方式" class="headerlink" title="加载.class文件的方式"></a>加载.class文件的方式</h3></li>
+<li>从本地系统直接加载</li>
+<li>通过网络下载class文件</li>
+<li>从zip,jar等归档文件中加载.class文件</li>
+<li>从专有数据库中提取</li>
+<li>将java源文件动态编译为.class文件 </li>
+</ul>
+<h2 id="类的使用"><a href="#类的使用" class="headerlink" title="类的使用"></a>类的使用</h2><ul>
+<li>Java程序对类的使用可分为两种，主动使用和被动使用</li>
+<li>所有Java虚拟机实现必须在每个类或接口被Java程序 <em>首次主动使用</em> 时才初始化他们</li>
+</ul>
+<h3 id="主动使用（七种）"><a href="#主动使用（七种）" class="headerlink" title="主动使用（七种）"></a>主动使用（七种）</h3><ul>
+<li>除了这七种情况，其他使用Java类的方法都被看作是对类的 <em>被动使用</em> ，都不会导致类的初始化</li>
+<li>常量在编译阶段会存入到调用这个方法的类的常量池中，本质上，调用类并没有直接引用到定义常量的类，所以不会触发定义常量的类的初始化。</li>
+</ul>
+<ol>
+<li>创建类的实例</li>
+<li>访问某个类的接口的静态变量，或者对该静态变量赋值</li>
+<li>调用类的静态方法</li>
+<li>反射</li>
+<li>初始化一个类的子类</li>
+<li>Java虚拟机启动时被标明为启动类的类</li>
+<li>根据java.lang.invoke.MethodHandle实例的解析结果进行初始化</li>
+</ol>
+<h3 id="例如"><a href="#例如" class="headerlink" title="例如"></a>例如</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test1</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">        <span class="comment">/**</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         * 输出结果</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         * this is parent</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         * this is children</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         * child,s str</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         * </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         * parent和child都初始化了</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">        System.out.println(Children.str2);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">        <span class="comment">/**</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         * 输出结果</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         * this is parent</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         * parent's str</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         * </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         * 初始化了parent而没有初始化child</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">        System.out.println(Children.str);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">        <span class="comment">/**</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         * 输出结果</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         * MM's str</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         *</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         * final是常量，不会初始化MM类</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">30</span></pre></td><td class="code"><pre><span class="line">        System.out.println(MM.s);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">31</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">32</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">33</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">34</span></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Parent</span></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">35</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">36</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String str = <span class="string">"parent's str"</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">37</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">38</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">static</span> &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">39</span></pre></td><td class="code"><pre><span class="line">        System.out.println(<span class="string">"this is parent"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">40</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">41</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">42</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">43</span></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Children</span> <span class="keyword">extends</span> <span class="title">Parent</span></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">44</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">45</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String str2 = <span class="string">"child,s str"</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">46</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">47</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">static</span> &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">48</span></pre></td><td class="code"><pre><span class="line">        System.out.println(<span class="string">"this is children"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">49</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">50</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">51</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">52</span></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MM</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">53</span></pre></td><td class="code"><pre><span class="line">    <span class="comment">//引用s字符串时不会触发MM类的初始化</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">54</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String s = <span class="string">"MM's str"</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">55</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">56</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">static</span> &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">57</span></pre></td><td class="code"><pre><span class="line">        System.out.println(<span class="string">"this is MM"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">58</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">59</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<h3 id="类的加载、主动使用过程"><a href="#类的加载、主动使用过程" class="headerlink" title="类的加载、主动使用过程"></a>类的加载、主动使用过程</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> classloader;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test6</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">        P p = P.getInstance();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">        System.out.println(<span class="string">"counter1: "</span> + p.counter1);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">        System.out.println(<span class="string">"counter2: "</span> + p.counter2);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">        <span class="comment">/**</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         * 输出：</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         * counter1: 1</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         * counter2: 0</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         *</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         * 在准备阶段为静态变量分配内存并赋值为默认值，即counter1=0，counter2=0，p=null</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         * main方法使用了类P中的静态方法 getInstance()，即对类的主动使用，对类进行初始化</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         * 初始化的过程从上到下进行赋值</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line"><span class="comment">         */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">P</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> counter1;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> P p = <span class="keyword">new</span> P();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">P</span><span class="params">()</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">        counter1++;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">        counter2++;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">30</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">31</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">32</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> counter2 = <span class="number">0</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">33</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">34</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> P <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">35</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">return</span> p;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">36</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">37</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+<h2 id="接口的加载"><a href="#接口的加载" class="headerlink" title="接口的加载"></a>接口的加载</h2><p>在不直接使用父接口中时，父接口不会初始化。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color4">jvm</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/10/22/JVM-%E7%B1%BB%E5%8A%A0%E8%BD%BD/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-idea快捷键-For-Mac" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/20/idea%E5%BF%AB%E6%8D%B7%E9%94%AE-For-Mac/">idea快捷键-For-Mac</a>
+    </h1>
+  
+
+        
+        <a href="/2019/10/20/idea%E5%BF%AB%E6%8D%B7%E9%94%AE-For-Mac/" class="archive-article-date">
+  	<time datetime="2019-10-20T03:18:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-20</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Mac-键盘符号和修饰键说明"><a href="#Mac-键盘符号和修饰键说明" class="headerlink" title="Mac 键盘符号和修饰键说明"></a>Mac 键盘符号和修饰键说明</h2><p>⌘ ——&gt; Command<br>⇧ ——&gt; Shift<br>⌥ ——&gt; Option<br>⌃ ——&gt; Control<br>↩︎ ——&gt; Return/Enter<br>⌫ ——&gt; Delete<br>⌦ ——&gt; 向前删除键(Fn + Delete)<br>↑ ——&gt; 上箭头<br>↓ ——&gt; 下箭头<br>← ——&gt; 左箭头<br>→ ——&gt; 右箭头<br>⇞ ——&gt; Page Up(Fn + ↑)<br>⇟ ——&gt; Page Down(Fn + ↓)<br>⇥ ——&gt; 右制表符(Tab键)<br>⇤ ——&gt; 左制表符(Shift + Tab)<br>⎋ ——&gt; Escape(Esc)<br>End ——&gt; Fn + →<br>Home ——&gt; Fn + ←</p>
+<h2 id="Part-1：Editing（编辑）"><a href="#Part-1：Editing（编辑）" class="headerlink" title="Part 1：Editing（编辑）"></a>Part 1：Editing（编辑）</h2><p>快捷键    作用<br>Control + Space    基本的代码补全（补全任何类、方法、变量）<br>Control + Shift + Space    智能代码补全（过滤器方法列表和变量的预期类型）<br>Command + Shift + Enter    自动结束代码，行末自动添加分号<br>Command + P    显示方法的参数信息<br>Control + J    快速查看文档<br>Shift + F1    查看外部文档（在某些代码上会触发打开浏览器显示相关文档）<br>Command + 鼠标放在代码上    显示代码简要信息<br>Command + F1    在错误或警告处显示具体描述信息<br>Command + N, Control + Enter, Control + N    生成代码（getter、setter、hashCode、equals、toString、构造函数等）<br>Control + O    覆盖方法（重写父类方法）<br>Control + I    实现方法（实现接口中的方法）<br>Command + Option + T    包围代码（使用if…else、try…catch、for、synchronized等包围选中的代码）<br>Command + /    注释 / 取消注释与行注释<br>Command + Option + /    注释 / 取消注释与块注释<br>Option + 方向键上    连续选中代码块<br>Option + 方向键下    减少当前选中的代码块<br>Control + Shift + Q    显示上下文信息<br>Option + Enter    显示意向动作和快速修复代码<br>Command + Option + L    格式化代码<br>Control + Option + O    优化 import<br>Control + Option + I    自动缩进线<br>Tab / Shift + Tab    缩进代码 / 反缩进代码<br>Command + X    剪切当前行或选定的块到剪贴板<br>Command + C    复制当前行或选定的块到剪贴板<br>Command + V    从剪贴板粘贴<br>Command + Shift + V    从最近的缓冲区粘贴<br>Command + D    复制当前行或选定的块<br>Command + Delete    删除当前行或选定的块的行<br>Control + Shift + J    智能的将代码拼接成一行<br>Command + Enter    智能的拆分拼接的行<br>Shift + Enter    开始新的一行<br>Command + Shift + U    大小写切换<br>Command + Shift + ] / Command + Shift + [    选择直到代码块结束 / 开始<br>Option + Fn + Delete    删除到单词的末尾<br>Option + Delete    删除到单词的开头<br>Command + 加号 / Command + 减号    展开 / 折叠代码块<br>Command + Shift + 加号    展开所以代码块<br>Command + Shift + 减号    折叠所有代码块<br>Command + W    关闭活动的编辑器选项卡<br>Part 2：Search / Replace（查询/替换）<br>快捷键    作用<br>Double Shift    查询任何东西<br>Command + F    文件内查找<br>Command + G    查找模式下，向下查找<br>Command + Shift + G    查找模式下，向上查找<br>Command + R    文件内替换<br>Command + Shift + F    全局查找（根据路径）<br>Command + Shift + R    全局替换（根据路径）<br>Command + Shift + S    查询结构（Ultimate Edition 版专用，需要在 Keymap 中设置）<br>Command + Shift + M    替换结构（Ultimate Edition 版专用，需要在 Keymap 中设置）<br>Part 3：Usage Search（使用查询）<br>快捷键    作用<br>Option + F7 / Command + F7    在文件中查找用法 / 在类中查找用法<br>Command + Shift + F7    在文件中突出显示的用法<br>Command + Option + F7    显示用法<br>Part 4：Compile and Run（编译和运行）<br>快捷键    作用<br>Command + F9    编译 Project<br>Command + Shift + F9    编译选择的文件、包或模块<br>Control + Option + R    弹出 Run 的可选择菜单<br>Control + Option + D    弹出 Debug 的可选择菜单<br>Control + R    运行<br>Control + D    调试<br>Control + Shift + R, Control + Shift + D    从编辑器运行上下文环境配置<br>Part 5：Debugging（调试）<br>快捷键    作用<br>F8    进入下一步，如果当前行断点是一个方法，则不进入当前方法体内<br>F7    进入下一步，如果当前行断点是一个方法，则进入当前方法体内，如果该方法体还有方法，则不会进入该内嵌的方法中<br>Shift + F7    智能步入，断点所在行上有多个方法调用，会弹出进入哪个方法<br>Shift + F8    跳出<br>Option + F9    运行到光标处，如果光标前有其他断点会进入到该断点<br>Option + F8    计算表达式（可以更改变量值使其生效）<br>Command + Option + R    恢复程序运行，如果该断点下面代码还有断点则停在下一个断点上<br>Command + F8    切换断点（若光标当前行有断点则取消断点，没有则加上断点）<br>Command + Shift + F8    查看断点信息<br>Part 6：Navigation（导航）<br>快捷键    作用<br>Command + O    查找类文件<br>Command + Shift + O    查找所有类型文件、打开文件、打开目录，打开目录需要在输入的内容前面或后面加一个反斜杠/<br>Command + Option + O    前往指定的变量 / 方法<br>Control + 方向键左 / Control + 方向键右    左右切换打开的编辑 tab 页<br>F12    返回到前一个工具窗口<br>Esc    从工具窗口进入代码文件窗口<br>Shift + Esc    隐藏当前或最后一个活动的窗口，且光标进入代码文件窗口<br>Command + Shift + F4    关闭活动 run/messages/find/… tab<br>Command + L    在当前文件跳转到某一行的指定处<br>Command + E    显示最近打开的文件记录列表<br>Option + 方向键左 / Option + 方向键右    光标跳转到当前单词 / 中文句的左 / 右侧开头位置<br>Command + Option + 方向键左 / Command + Option + 方向键右    退回 / 前进到上一个操作的地方<br>Command + Shift + Delete    跳转到最后一个编辑的地方<br>Option + F1    显示当前文件选择目标弹出层，弹出层中有很多目标可以进行选择(如在代码编辑窗口可以选择显示该文件的 Finder)<br>Command + B / Command + 鼠标点击    进入光标所在的方法/变量的接口或是定义处<br>Command + Option + B    跳转到实现处，在某个调用的方法名上使用会跳到具体的实现处，可以跳过接口<br>Option + Space, Command + Y    快速打开光标所在方法、类的定义<br>Control + Shift + B    跳转到类型声明处<br>Command + U    前往当前光标所在方法的父类的方法 / 接口定义<br>Control + 方向键下 / Control + 方向键上    当前光标跳转到当前文件的前一个 / 后一个方法名位置<br>Command + ] / Command + [    移动光标到当前所在代码的花括号开始 / 结束位置<br>Command + F12    弹出当前文件结构层，可以在弹出的层上直接输入进行筛选（可用于搜索类中的方法）<br>Control + H    显示当前类的层次结构<br>Command + Shift + H    显示方法层次结构<br>Control + Option + H    显示调用层次结构<br>F2 / Shift + F2    跳转到下一个 / 上一个突出错误或警告的位置<br>F4 / Command + 方向键下    编辑 / 查看代码源<br>Option + Home    显示到当前文件的导航条<br>F3    选中文件 / 文件夹 / 代码行，添加 / 取消书签<br>Option + F3    选中文件 / 文件夹/代码行，使用助记符添加 / 取消书签<br>Control + 0…Control + 9    定位到对应数值的书签位置<br>Command + F3    显示所有书签<br>Part 7：Refactoring（重构）<br>快捷键    作用<br>F5    复制文件到指定目录<br>F6    移动文件到指定目录<br>Command + Delete    在文件上为安全删除文件，弹出确认框<br>Shift + F6    重命名文件<br>Command + F6    更改签名<br>Command + Option + N    一致性<br>Command + Option + M    将选中的代码提取为方法<br>Command + Option + V    提取变量<br>Command + Option + F    提取字段<br>Command + Option + C    提取常量<br>Command + Option + P    提取参数<br>Part 8：VCS / Local History（版本控制 / 本地历史记录）<br>快捷键    作用<br>Command + K    提交代码到版本控制器<br>Command + T    从版本控制器更新代码<br>Option + Shift + C    查看最近的变更记录<br>Control + C    快速弹出版本控制器操作面板<br>Part 9：Live Templates（动态代码模板）<br>快捷键    作用<br>Command + Option + J    弹出模板选择窗口，将选定的代码使用动态模板包住<br>Command + J    插入自定义动态代码模板<br>Part 10：General（通用）<br>快捷键    作用<br>Command + 1…Command + 9    打开相应编号的工具窗口<br>Command + S    保存所有<br>Command + Option + Y    同步、刷新<br>Control + Command + F    切换全屏模式<br>Command + Shift + F12    切换最大化编辑器<br>Option + Shift + F    添加到收藏夹<br>Option + Shift + I    检查当前文件与当前的配置文件<br>Control + `    快速切换当前的 scheme（切换主题、代码样式等）<br>Command + ,    打开 IDEA 系统设置<br>Command + ;    打开项目结构对话框<br>Shift + Command + A    查找动作（可设置相关选项）<br>Control + Shift + Tab    编辑窗口标签和工具窗口之间切换（如果在切换的过程加按上 delete，则是关闭对应选中的窗口）</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color4">快捷键</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/10/20/idea%E5%BF%AB%E6%8D%B7%E9%94%AE-For-Mac/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-network-可靠数据传输" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/17/network-%E5%8F%AF%E9%9D%A0%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93/">可靠数据传输的基本原理</a>
+    </h1>
+  
+
+        
+        <a href="/2019/10/17/network-%E5%8F%AF%E9%9D%A0%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93/" class="archive-article-date">
+  	<time datetime="2019-10-17T09:54:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>渐进地设计可靠数据传输协议的发送方和接收方<br>只考虑单项数据传输<br>利用状态机刻画传输协议</p>
+<h2 id="rdt1-0-可靠信道上的可靠数据传输"><a href="#rdt1-0-可靠信道上的可靠数据传输" class="headerlink" title="rdt1.0:可靠信道上的可靠数据传输"></a>rdt1.0:可靠信道上的可靠数据传输</h2><p>底层信道完全可靠：不会发生错误，不会丢失分组 <br><br>发送方和接受方的FSM独立</p>
+<h2 id="rdt2-0-产生位错误的信道"><a href="#rdt2-0-产生位错误的信道" class="headerlink" title="rdt2.0:产生位错误的信道"></a>rdt2.0:产生位错误的信道</h2><p>引入新的机制：<br>差错检验、确认机制、重传</p>
+<h4 id="错误校验"><a href="#错误校验" class="headerlink" title="错误校验"></a>错误校验</h4><p>利用校验和检测为错误</p>
+<h4 id="如何从错误中恢复？"><a href="#如何从错误中恢复？" class="headerlink" title="如何从错误中恢复？"></a>如何从错误中恢复？</h4><ul>
+<li>确认机制（Acknowledegments,ACK）：接收方显式地告诉发送方分组已经正确接受</li>
+<li>NAK：接收方显式地告知发送方分组有错误</li>
+<li>发送方接收到NAK后，重传分组<br>基于这种重传机制的rdt协议称为ARQ（Automatic Repeat reQuest）协议 <br></li>
+</ul>
+<h2 id="rdt2-1和2-2"><a href="#rdt2-1和2-2" class="headerlink" title="rdt2.1和2.2"></a>rdt2.1和2.2</h2><p>rdt2.0的缺陷：ACK和NAK可能发生错误。 </p>
+<h2 id="rdt3-0：信道既可能发生错误，也可能丢失分组。"><a href="#rdt3-0：信道既可能发生错误，也可能丢失分组。" class="headerlink" title="rdt3.0：信道既可能发生错误，也可能丢失分组。"></a>rdt3.0：信道既可能发生错误，也可能丢失分组。</h2><p>发送方等待合理时间，如果没收到ACK，重传；如果只是延迟而不是丢了，序列号机制能解决。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/10/17/network-%E5%8F%AF%E9%9D%A0%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-JVM-Java内存区域与内存溢出异常" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/02/JVM-Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/">Java内存区域与内存溢出异常</a>
+    </h1>
+  
+
+        
+        <a href="/2019/10/02/JVM-Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/" class="archive-article-date">
+  	<time datetime="2019-10-02T11:46:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>对于Java程序员来说，在虚拟机自动内存管理机制的帮助下，不再需要为每一个new操作去写配对的delete/free代码，不容易出现内存泄露和内存溢出问题，有虚拟机管理内存这一切看起来都很美好。不过，也正是因为Java程序员吧把内存控制的权利交给了Java虚拟机，一旦出现内存泄露和溢出方面的问题，如果不了解虚拟机是怎样使用内存的，那么排查错误将会成为一项异常艰难的工作。</p>
+<h1 id="运行时数据区域"><a href="#运行时数据区域" class="headerlink" title="运行时数据区域"></a>运行时数据区域</h1><p>方法区、堆，虚拟机栈、本地方法栈、程序计数器</p>
+<h2 id="程序计数器（Program-Counter-Register）"><a href="#程序计数器（Program-Counter-Register）" class="headerlink" title="程序计数器（Program Counter Register）"></a>程序计数器（Program Counter Register）</h2><p>程序计数器是一块较小的内存空间，它可以看作是当前线程所执行的字节码的行号指示器。</p>
+<p>每条线程都需要有一个独立的程序计数器，各线程之间计数器互不影响，独立储存，这类内存区域成为<strong>“线程私有”</strong>的内存。</p>
+<h2 id="Java虚拟机栈（Java-Virtual-Machine-Stacks）"><a href="#Java虚拟机栈（Java-Virtual-Machine-Stacks）" class="headerlink" title="Java虚拟机栈（Java Virtual Machine Stacks）"></a>Java虚拟机栈（Java Virtual Machine Stacks）</h2><p>同程序计数器，也是<strong>线程私有内存</strong>。</p>
+<p>虚拟机栈描述的是Java方法执行的内存模型：每个方法在执行的同时都会创建一个栈帧（Stack Frame，栈帧是方法运行时的基础数据结构）用于存放局部变量表、操作数栈、动态链接、方法出口等信息。每一个方法从调用直至执行完成的过程，就对应着一个栈帧在虚拟机栈中入栈到出栈的过程。</p>
+<p>局部变量表存放了编译期可知的各种基本数据类型（boolean、byte、char、short、int、float、long、double）、对象引用（reference类型）、和returnAddress类型（指向一条字节码指令的地址）。</p>
+<p>局部变量表所需的内存空间在编译期间完成分配，当进入一个方法时，这个方法需要在帧中分配多大的局部变量空间是完全确定的，在方法运行期间不会改变局部变量表的大小。</p>
+<p>在Java虚拟机规范中，对这个区域规定了两种异常状况：</p>
+<ul>
+<li>如果线程请求的栈深度大于虚拟机所允许的深度，将抛出StackOverflowError异常；</li>
+<li>如多虚拟机栈可以动态扩展，如果扩展时无法申请到足够的内存，就会抛出OutOfMemoryError异常。</li>
+</ul>
+<h2 id="本地方法栈（Native-Method-Stack）"><a href="#本地方法栈（Native-Method-Stack）" class="headerlink" title="本地方法栈（Native Method Stack）"></a>本地方法栈（Native Method Stack）</h2><p>本地方法栈和虚拟机栈所发挥的作用非常相似，虚拟机栈为虚拟机执行Java方法（也就是字节码）服务，而本地方法栈则为虚拟机使用到的Native方法服务。</p>
+<p>同样，本地方法栈区域也会抛出StackOverflowError异常和OutOfMemoryError异常。</p>
+<h2 id="Java堆（Java-Heap）"><a href="#Java堆（Java-Heap）" class="headerlink" title="Java堆（Java Heap）"></a>Java堆（Java Heap）</h2><p>对于大多数应用来说，Java 堆是 Java 虚机所管理的内存中最大的一块。Java 堆是被所有<strong>线程共享</strong>的一块内存区域，在虚拟机启动时创建。此内存区域的唯一目的就是存放对象实例，兀乎所有的对象实例都在这里分配内存。</p>
+<p>根据 Java 虚拟机规范的规定，Java 堆可以处于物理上不连续的内存空间中，只要逻辑上是连续的即可，就像我们的磁盘空间一样。在实现时，既可以实现成固定大小的，也可以是可扩展的。如果在堆中没有内存完成实例分配，并且堆也无法再扩展时，将会抛出Outofmemoryerror 异常。</p>
+<h2 id="方法区（Method-Area）"><a href="#方法区（Method-Area）" class="headerlink" title="方法区（Method Area）"></a>方法区（Method Area）</h2><p>方法区与 Java 雄一样，是各个<strong>线程共享</strong>的内存区域，它用于存储已被虚机加载的类信息、常量、静态变量一即时绵译器编译后的代码等数据。虽然 Java 虚拟机规范把方法区描述为堆的一个逻辑部分，但是它却有一个别名叫做 Non-Heap（非堆），目的应该是与 Java 堆区分开来。</p>
+<p>对Hotspot虚拟机来说，方法区还被称为永久代。但在JDK1.8后，Hotspot虚拟机取消了永久代，改为元空间，类的元信息被存储在元空间中。元空间没有使用堆内存，而是与堆不相连的本地内存区域。所以，理论上系统可以使用的内存有多大，元空间就有多大，所以不会出现永久代存在时的内存溢出问题。</p>
+<p>Java 虚拟机规范对方法区的限制非常宽松，除了和 Java 堆一样不需要连续的内存和可以选择固定大小或者可扩展外，还可以选择不实现垃圾收集。</p>
+<p>根据 Java 虚拟机规范的规定，当方法区无法满足内存分配需求时，将抛出 OutOfMemoryError 异常。</p>
+<h2 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h2><p>运行时常量池（Runtime Constant Pool）是方法区的一部分。Cass 文件中除了有类的版本、字段、方法、接口等描述信息外，还有一项信息是常量池（Constant Pool Table），用于存放编译期生成的各种字面量和符号引用，这部分内容将在类加载后进入方法区的运行时常量池中存放。</p>
+<p>运行时常量池是方法区的一部分，受到方法区内存的限制，当常量池无法再申请到内存时会抛出 OutOfMemoryError 异常。</p>
+<h2 id="直接内存（Direct-Memory）"><a href="#直接内存（Direct-Memory）" class="headerlink" title="直接内存（Direct Memory）"></a>直接内存（Direct Memory）</h2><p>在 JDK1.4 中新加入了 NIO (New Input/Output)类,引入了一种基于通道（Channel）与缓冲区（Buffer）的 IO 方式，它可以使用 Native 函数库直接分配堆外内存，然后通过个存储在 Java 堆中的 Direct Byte Buffer 对象作为这块内存的引用进行操作。这样能在一些场景中显著提高性能，因为避免了在 Java 堆和 Native 堆中来回复制数据。</p>
+<h1 id="Hotspot虚拟机对象"><a href="#Hotspot虚拟机对象" class="headerlink" title="Hotspot虚拟机对象"></a>Hotspot虚拟机对象</h1><h2 id="对象的创建"><a href="#对象的创建" class="headerlink" title="对象的创建"></a>对象的创建</h2><ul>
+<li>当虚拟机遇到一条new指令时，首先将去检查这个指令的参数是否能在常量池中定位到一个类的符号引用，并检查这个符号引用代表的类是否已经被加载、解析和初始化过。若没有，必须先执行相应的类加载过程。</li>
+<li>类加载检查通过后，虚拟机将为新生对象分配内存。对象所需内存的大小在类加载完成后便可完全确定，为对象分配内存等同于把一块确定大小的内存从Java堆中划分出来。</li>
+<li>内存分配完成后，虚拟机需要将分配到的内存空间都初始化为零值（不包括对象头），如果使用TLAB，这一工作过程也可以提前至TLAB分配时进行。这一步保证了对象的实力字段在Java代码中可以不赋初始值就直接使用，程序能访问到这些字段的数据类型所对应的零值。</li>
+<li>接下来，虚拟机要对对象进行对象头的设置。</li>
+<li>执行<init>方法，把对象按照程序员的意愿进行初始化。至此，一个真正可用的对象才算完全产生出来。</init></li>
+</ul>
+<h2 id="对象的内存布局"><a href="#对象的内存布局" class="headerlink" title="对象的内存布局"></a>对象的内存布局</h2><p>在 Hotspot 虚拟机中，对象在内存中存储的布局可以分为 3 块区域：对象头（Header）、实例数据（Instance Data）和对齐填充（Padding）。</p>
+<ul>
+<li><strong>对象头：Hotspot 虚拟机的对象头包括两部分信息</strong>：</li>
+</ul>
+<p>第一部分用于存储对象自身的运行时数据，如哈希码（Hashcode）、GC分代年龄、锁状态标志、线程持有的锁、偏向线程ID、偏向时间戳等，这部分数据的长度在 32 位和 64 位的虚拟机（未开启压缩指针）中分别为 32 bit 和 64 bit，官方称它为“Mark Word”。</p>
+<p>对象头的另外一部分是类型指针，即对象指向它的类元数据的指针，虚拟机通过这个指针来确定这个对象是哪个类的实例。并不是所有的虚拟机实现都必须在对象数据上保留类型指针，即查找对象的元数据信息并不一定要经过对象本身。</p>
+<p>如果对象是一个Java数组，那么对象头中还必须有一块用于记录数组长度的数组。因为虚拟机无法通过数组的元数据中确定数组的大小。</p>
+<ul>
+<li><strong>对象真正存储的有效信息，也是在程序代码中所定义的各种类型的字段内容。</strong></li>
+</ul>
+<p>无论是从父类继承下来的，还是在子类中定义的，都需要记录起来。</p>
+<ul>
+<li><strong>第三部分对齐填充</strong></li>
+</ul>
+<p>并不是必然存在的，也没有特別的含义，它仅仅起着占位符的作用。因为Hotspot虚拟机中对象的大小必须是8字节的整数倍。</p>
+<h2 id="对象的访问定位"><a href="#对象的访问定位" class="headerlink" title="对象的访问定位"></a>对象的访问定位</h2><p>对象实例数据和对象类型数据：</p>
+<p>对象实例数据就是Java堆中实例化的对象数据，包括对象头，实例数据和对齐填充；对象类型数据则是实例化这个对象的类，这样可以调用类中的方法。</p>
+<ul>
+<li>句柄访问：Java堆中会划分出一块内存作为句柄池，reference中存储的就是对象的句柄地址，而句柄中包含了对象实例数据与类型数组各自的具体地址信息。</li>
+</ul>
+<p><img src="/2019/10/02/JVM-Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/%E5%8F%A5%E6%9F%84%E8%AE%BF%E9%97%AE.png" alt="句柄访问"></p>
+<ul>
+<li>直接指针访问：Java堆对象的布局中就必须考虑如何放置访问类型数据的相关信息，而 reference 中存储的直接就是对象地址。</li>
+</ul>
+<p><img src="/2019/10/02/JVM-Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/%E7%9B%B4%E6%8E%A5%E8%AE%BF%E9%97%AE.png" alt="直接访问"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color4">jvm</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/10/02/JVM-Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/">展开全文 >></a>
         </p>
       
 
@@ -1224,7 +1299,7 @@ Docker也不关心你要把容器运到何方：我们可以在自己的笔记�
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/2/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/">Next &amp;raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/2/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">Next &amp;raquo;</a>
     </nav>
   
 
@@ -1323,15 +1398,27 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">ElasticSearch</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">jvm</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">Linux</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">Kafka</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">redis</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">Linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1343,11 +1430,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">Spring Boot</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">mysql</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">Spring实战</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">Spring Boot</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1359,6 +1446,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">HashMap</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">macOS小问题</a>
               </li>
              
@@ -1367,39 +1462,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">FPGA计组课设</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">MongoDB</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">剑指offer</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">Java多线程</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">Java正则表达式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">计算机组成原理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">编译原理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">设计模式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">ElasticSearch</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">MongoDB</a>
               </li>
             
             <div class="clearfix"></div>
