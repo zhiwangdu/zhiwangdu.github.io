@@ -6,13 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Tag: Kafka | 杜志旺的博客</title>
+  <title>Redis缓存相关故障 | 杜志旺的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="杜志旺的博客">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;tags&#x2F;Kafka&#x2F;index.html">
+  <meta name="description" content="缓存穿透 场景  查询根本不存在的数据，使得请求直达数据库，导致其负载过大甚至宕机。 解决方案  1.缓存空对象数据库未命中后仍然将空值存入缓存层，之后再次访问该数据时，缓存层可直接返回空值。  2.布隆过滤器在缓存层之前增加一层布隆过滤器，将所有存在的key预先存入布隆过滤器，在请求访问缓存层之前先被拦截，若请求的是不存在的key，则可直接返回空值。缓存击穿 场景  一份数据的访问量非常大，再这">
+<meta name="keywords" content="Redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis缓存相关故障">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;05&#x2F;01&#x2F;redis-3&#x2F;index.html">
 <meta property="og:site_name" content="杜志旺的博客">
+<meta property="og:description" content="缓存穿透 场景  查询根本不存在的数据，使得请求直达数据库，导致其负载过大甚至宕机。 解决方案  1.缓存空对象数据库未命中后仍然将空值存入缓存层，之后再次访问该数据时，缓存层可直接返回空值。  2.布隆过滤器在缓存层之前增加一层布隆过滤器，将所有存在的key预先存入布隆过滤器，在请求访问缓存层之前先被拦截，若请求的是不存在的key，则可直接返回空值。缓存击穿 场景  一份数据的访问量非常大，再这">
 <meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-05-01T08:44:18.951Z">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="杜志旺的博客" type="application/atom+xml">
@@ -149,60 +153,175 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-redis-3" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/04/24/Kafka/" class="archive-article-date">
-  	<time datetime="2020-04-23T17:22:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-04-24</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/04/24/Kafka/">Kafka</a>
+    <h1 class="article-title" itemprop="name">
+      Redis缓存相关故障
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2020/05/01/redis-3/" class="archive-article-date">
+  	<time datetime="2020-05-01T08:06:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h1><ul>
+<li>场景<br>  查询根本不存在的数据，使得请求直达数据库，导致其负载过大甚至宕机。</li>
+<li>解决方案<br>  1.缓存空对象<pre><code>数据库未命中后仍然将空值存入缓存层，之后再次访问该数据时，缓存层可直接返回空值。</code></pre>  2.布隆过滤器<pre><code>在缓存层之前增加一层布隆过滤器，将所有存在的key预先存入布隆过滤器，在请求访问缓存层之前先被拦截，若请求的是不存在的key，则可直接返回空值。</code></pre><h1 id="缓存击穿"><a href="#缓存击穿" class="headerlink" title="缓存击穿"></a>缓存击穿</h1></li>
+<li>场景<br>  一份数据的访问量非常大，再这个数据的缓存失效瞬间，大量请求直达数据库，导致服务崩溃。</li>
+<li>解决方案<br>  1.加互斥锁<pre><code>对数据库的访问加互斥锁，当一个线程访问的时候其他线程只能等待，在这个线程访问过后，数据会重新载入缓存，此时其他线程可以直接从缓存取值。</code></pre>  2.永不过期<pre><code>物理上不设置过期时间。
+逻辑上不过期，缓存到期后动态重建缓存。</code></pre><h1 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h1></li>
+<li>场景<br>  由于缓存中大量数据同时到期，导致大量请求直达数据库，导致数据库压力过大甚至崩溃。</li>
+<li>解决方案<br>  1.避免同时过期<pre><code>设置过期时间的同时，附加一个随机数，避免大量的key同时到期。</code></pre>  2.构建高可用的Redis缓存<pre><code>部署多个Redis实例，个别节点宕机，依然可以保持服务的整体可用。</code></pre>  3.构建多级缓存<pre><code>增加本地缓存，降低请求直达数据库的几率。</code></pre>  4.启用限流和降级措施<pre><code>对存储层增加限流措施，当请求超出限制时，对其提供降级服务。</code></pre></li>
+</ul>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" target="_blank" rel="noopener" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">Kafka</a>
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">Redis</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" target="_blank" rel="noopener" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" target="_blank" rel="noopener" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" target="_blank" rel="noopener" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;" target="_blank" rel="noopener"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/05/01/redis-3/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2020/05/01/redis-2/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Redis的过期策略</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -225,9 +344,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,

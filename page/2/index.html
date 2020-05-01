@@ -151,6 +151,218 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-JVM-垃圾收集器与内存分配策略" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/26/JVM-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/">JVM-垃圾收集器与内存分配策略</a>
+    </h1>
+  
+
+        
+        <a href="/2020/02/26/JVM-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/" class="archive-article-date">
+  	<time datetime="2020-02-26T11:52:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="垃圾判断的算法"><a href="#垃圾判断的算法" class="headerlink" title="垃圾判断的算法"></a>垃圾判断的算法</h1><h2 id="引用计数算法"><a href="#引用计数算法" class="headerlink" title="引用计数算法"></a>引用计数算法</h2><h2 id="根搜索算法"><a href="#根搜索算法" class="headerlink" title="根搜索算法"></a>根搜索算法</h2><h1 id="方法区的回收"><a href="#方法区的回收" class="headerlink" title="方法区的回收"></a>方法区的回收</h1><p>主要回收两部分内容：废弃常量和无用类</p>
+<p>类回收的条件：</p>
+<h1 id="JVM常见GC算法"><a href="#JVM常见GC算法" class="headerlink" title="JVM常见GC算法"></a>JVM常见GC算法</h1><h2 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h2><h2 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h2><h2 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h2><h2 id="分代算法（Generation-GC）"><a href="#分代算法（Generation-GC）" class="headerlink" title="分代算法（Generation GC）"></a>分代算法（Generation GC）</h2><ul>
+<li><p>年轻代</p>
+<ul>
+<li>1</li>
+<li>2</li>
+<li>3</li>
+</ul>
+</li>
+<li><p>老年代</p>
+<ul>
+<li>存放了经过一次或多次GC还存活的对象</li>
+<li>一般采用Mark-Sweep或着Mark-Compact算法进行GC</li>
+<li>有多种垃圾收集器可以选择</li>
+</ul>
+</li>
+<li><p>永久代（JDK8之前）</p>
+<ul>
+<li>并不属于堆，但GC也会涉及</li>
+<li>存放了各Class的结构信息</li>
+</ul>
+</li>
+</ul>
+<h1 id="内存结构"><a href="#内存结构" class="headerlink" title="内存结构"></a>内存结构</h1><h1 id="内存分配"><a href="#内存分配" class="headerlink" title="内存分配"></a>内存分配</h1><p>堆上分配</p>
+<p>栈上分配</p>
+<h1 id="内存回收"><a href="#内存回收" class="headerlink" title="内存回收"></a>内存回收</h1><p>引用类型</p>
+<h1 id="GC的时机"><a href="#GC的时机" class="headerlink" title="GC的时机"></a>GC的时机</h1><ul>
+<li>在分代模型的基础上，gc从时机上分为两种</li>
+</ul>
+<p>scavenge GC</p>
+<p>出发时机：新对象生成时，eden空间满了</p>
+<p>理论上eden区大多数对象会在</p>
+<p>full gc</p>
+<p>对整个jvm进行整理，</p>
+<p>主要触发时机：Old满了、Perm满了、system.gc()</p>
+<p>效率很低，尽量减少Full GC</p>
+<h1 id="垃圾回收器"><a href="#垃圾回收器" class="headerlink" title="垃圾回收器"></a>垃圾回收器</h1><h2 id="Serial收集器"><a href="#Serial收集器" class="headerlink" title="Serial收集器"></a>Serial收集器</h2><p>单线程收集器</p>
+<h2 id="ParNew收集器"><a href="#ParNew收集器" class="headerlink" title="ParNew收集器"></a>ParNew收集器</h2><p>是Serial的多线程版本</p>
+<h2 id="Parallel-New"><a href="#Parallel-New" class="headerlink" title="Parallel New"></a>Parallel New</h2><h2 id="CMS收集器"><a href="#CMS收集器" class="headerlink" title="CMS收集器"></a>CMS收集器</h2><h2 id="G1收集器"><a href="#G1收集器" class="headerlink" title="G1收集器"></a>G1收集器</h2><h1 id="Java内存泄漏的经典原因"><a href="#Java内存泄漏的经典原因" class="headerlink" title="Java内存泄漏的经典原因"></a>Java内存泄漏的经典原因</h1><ol>
+<li>对象定义在错误的范围（Wrong Scope）</li>
+<li>异常（Exception）处理不当</li>
+<li>集合数据管理不当</li>
+</ol>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color4">jvm</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/02/26/JVM-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-git-github速度提高" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/24/git-github%E9%80%9F%E5%BA%A6%E6%8F%90%E9%AB%98/">github速度提高</a>
+    </h1>
+  
+
+        
+        <a href="/2020/02/24/git-github%E9%80%9F%E5%BA%A6%E6%8F%90%E9%AB%98/" class="archive-article-date">
+  	<time datetime="2020-02-24T10:17:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-24</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li>查找域名对应的ip地址，并修改hosts文件，依次输入以下命令：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">nslookup github.global.ssl.fastly.Net</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">nslookup github.com</span></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>将得到的adderss加入到/etc/hosts文件中，如下：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">151.101.76.249 http:&#x2F;&#x2F;global-ssl.fastly.net</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">192.30.255.113 http:&#x2F;&#x2F;github.com</span></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>刷新DNS缓存</li>
+</ol>
+<p>linux：</p>
+<p><code>sudo /etc/init.d/networking restart</code></p>
+<p>Windows:</p>
+<p><code>ipconfig /flushdns</code></p>
+<p>macOS：</p>
+<p><code>sudo killall -HUP mDNSResponder</code></p>
+<ol start="4">
+<li>完成，git clone速度显著提升。</li>
+</ol>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color4">git</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/02/24/git-github%E9%80%9F%E5%BA%A6%E6%8F%90%E9%AB%98/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-ElasticSearch" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1276,285 +1488,6 @@
 
 
   
-    <article id="post-Docker-3常用命令" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/08/Docker-3%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">Docker常用命令</a>
-    </h1>
-  
-
-        
-        <a href="/2020/02/08/Docker-3%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="archive-article-date">
-  	<time datetime="2020-02-08T04:57:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><h2 id="镜像相关命令"><a href="#镜像相关命令" class="headerlink" title="镜像相关命令"></a>镜像相关命令</h2><h3 id="查看镜像"><a href="#查看镜像" class="headerlink" title="查看镜像"></a>查看镜像</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker images</span></pre></td></tr></table></figure>
-
-<p>REPOSITORY：镜像名称</p>
-<p>TAG：镜像标签</p>
-<p>IMAGE ID：镜像ID</p>
-<p>CREATED：镜像的创建日期（不是获取该镜像的日期）</p>
-<p>SIZE：镜像大小</p>
-<p>这些镜像都是存储在Docker宿主机的/var/lib/docker目录下</p>
-<h3 id="搜索镜像"><a href="#搜索镜像" class="headerlink" title="搜索镜像"></a>搜索镜像</h3><p>如果你需要从网络中查找需要的镜像，可以通过以下命令搜索</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker search 镜像名称</span></pre></td></tr></table></figure>
-
-<p>NAME：仓库名称</p>
-<p>DESCRIPTION：镜像描述</p>
-<p>STARS：用户评价，反应一个镜像的受欢迎程度</p>
-<p>OFFICIAL：是否官方</p>
-<p>AUTOMATED：自动构建，表示该镜像由Docker Hub自动构建流程创建的</p>
-<h3 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h3><p>拉取镜像就是从中央仓库中下载镜像到本地</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker pull 镜像名称</span></pre></td></tr></table></figure>
-
-<p>例如，我要下载centos7镜像</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker pull centos:7</span></pre></td></tr></table></figure>
-
-<h3 id="删除镜像"><a href="#删除镜像" class="headerlink" title="删除镜像"></a>删除镜像</h3><p>按镜像ID删除镜像</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker rmi 镜像ID</span></pre></td></tr></table></figure>
-
-<p>删除所有镜像</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker rmi &#96;docker images -q&#96;</span></pre></td></tr></table></figure>
-
-<h2 id="容器相关命令"><a href="#容器相关命令" class="headerlink" title="容器相关命令"></a>容器相关命令</h2><h3 id="查看容器"><a href="#查看容器" class="headerlink" title="查看容器"></a>查看容器</h3><p>查看正在运行的容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker ps</span></pre></td></tr></table></figure>
-
-<p>查看所有容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker ps –a</span></pre></td></tr></table></figure>
-
-<p>查看最后一次运行的容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker ps –l</span></pre></td></tr></table></figure>
-
-<p>查看停止的容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker ps -f status&#x3D;exited</span></pre></td></tr></table></figure>
-
-<h3 id="创建与启动容器"><a href="#创建与启动容器" class="headerlink" title="创建与启动容器"></a>创建与启动容器</h3><p>创建容器常用的参数说明：</p>
-<p>创建容器命令：docker run</p>
-<p> -i：表示运行容器</p>
-<p> -t：表示容器启动后会进入其命令行。加入这两个参数后，容器创建就能登录进去。即分配一个伪终端。</p>
-<p> –name :为创建的容器命名。</p>
-<p> -v：表示目录映射关系（前者是宿主机目录，后者是映射到宿主机上的目录），可以使用多个－v做多个目录或文件映射。注意：最好做目录映射，在宿主机上做修改，然后共享到容器上。</p>
-<p> -d：在run后面加上-d参数,则会创建一个守护式容器在后台运行（这样创建容器后不会自动登录容器，如果只加-i -t两个参数，创建后就会自动进去容器）。</p>
-<p> -p：表示端口映射，前者是宿主机端口，后者是容器内的映射端口。可以使用多个-p做多个端口映射</p>
-<p>（1）交互式方式创建容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker run -it --name&#x3D;容器名称 镜像名称:标签 &#x2F;bin&#x2F;bash</span></pre></td></tr></table></figure>
-
-<p>这时我们通过ps命令查看，发现可以看到启动的容器，状态为启动状态  </p>
-<p>退出当前容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">exit</span></pre></td></tr></table></figure>
-
-<p>（2）守护式方式创建容器：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker run -di --name&#x3D;容器名称 镜像名称:标签</span></pre></td></tr></table></figure>
-
-<p>登录守护式容器方式：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker exec -it 容器名称 (或者容器ID)  &#x2F;bin&#x2F;bash</span></pre></td></tr></table></figure>
-
-<h3 id="停止与启动容器"><a href="#停止与启动容器" class="headerlink" title="停止与启动容器"></a>停止与启动容器</h3><p>停止容器：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker stop 容器名称（或者容器ID）</span></pre></td></tr></table></figure>
-
-<p>启动容器：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker start 容器名称（或者容器ID）</span></pre></td></tr></table></figure>
-
-<h3 id="文件拷贝"><a href="#文件拷贝" class="headerlink" title="文件拷贝"></a>文件拷贝</h3><p>如果我们需要将文件拷贝到容器内可以使用cp命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker cp 需要拷贝的文件或目录 容器名称:容器目录</span></pre></td></tr></table></figure>
-
-<p>也可以将文件从容器内拷贝出来</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker cp 容器名称:容器目录 需要拷贝的文件或目录</span></pre></td></tr></table></figure>
-
-<h3 id="目录挂载"><a href="#目录挂载" class="headerlink" title="目录挂载"></a>目录挂载</h3><p>我们可以在创建容器的时候，将宿主机的目录与容器内的目录进行映射，这样我们就可以通过修改宿主机某个目录的文件从而去影响容器。<br>创建容器 添加-v参数 后边为   宿主机目录:容器目录，例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker run -di -v &#x2F;usr&#x2F;local&#x2F;myhtml:&#x2F;usr&#x2F;local&#x2F;myhtml --name&#x3D;mycentos3 centos:7</span></pre></td></tr></table></figure>
-
-<p>如果你共享的是多级的目录，可能会出现权限不足的提示。</p>
-<p>这是因为CentOS7中的安全模块selinux把权限禁掉了，我们需要添加参数  –privileged=true  来解决挂载的目录没有权限的问题</p>
-<h3 id="查看容器IP地址"><a href="#查看容器IP地址" class="headerlink" title="查看容器IP地址"></a>查看容器IP地址</h3><p>我们可以通过以下命令查看容器运行的各种数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker inspect 容器名称（容器ID）</span></pre></td></tr></table></figure>
-
-<p>也可以直接执行下面的命令直接输出IP地址</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker inspect --format&#x3D;&#39;&#123;&#123;.NetworkSettings.IPAddress&#125;&#125;&#39; 容器名称（容器ID）</span></pre></td></tr></table></figure>
-
-<h3 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h3><p>删除指定的容器：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker rm 容器名称（容器ID）</span></pre></td></tr></table></figure>
-
-<h1 id><a href="#" class="headerlink" title></a></h1>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">Docker</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/08/Docker-3%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Docker-2安装" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/07/Docker-2%E5%AE%89%E8%A3%85/">Docker安装</a>
-    </h1>
-  
-
-        
-        <a href="/2020/02/07/Docker-2%E5%AE%89%E8%A3%85/" class="archive-article-date">
-  	<time datetime="2020-02-07T11:55:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Docker安装与启动"><a href="#Docker安装与启动" class="headerlink" title="Docker安装与启动"></a>Docker安装与启动</h1><h2 id="CentOS-安装Docker"><a href="#CentOS-安装Docker" class="headerlink" title="CentOS 安装Docker"></a>CentOS 安装Docker</h2><p>​    Docker官方建议在Ubuntu中安装，因为Docker是基于Ubuntu发布的，而且一般Docker出现的问题Ubuntu是最先更新或者打补丁的。在很多版本的CentOS中是不支持更新最新的一些补丁包的。</p>
-<p>（1）yum 包更新到最新</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">sudo yum update</span></pre></td></tr></table></figure>
-
-<p>（2）安装需要的软件包， yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">sudo yum install -y yum-utils device-mapper-persistent-data lvm2</span></pre></td></tr></table></figure>
-
-<p>（3）设置yum源为阿里云</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">sudo yum-config-manager --add-repo http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;docker-ce&#x2F;linux&#x2F;centos&#x2F;docker-ce.repo</span></pre></td></tr></table></figure>
-
-<p>（4）安装docker</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">sudo yum install docker-ce</span></pre></td></tr></table></figure>
-
-<p>（5）安装后查看docker版本</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker -v</span></pre></td></tr></table></figure>
-
-<h2 id="设置ustc的镜像"><a href="#设置ustc的镜像" class="headerlink" title="设置ustc的镜像"></a>设置ustc的镜像</h2><p>ustc是老牌的linux镜像服务提供者了，还在遥远的ubuntu 5.04版本的时候就在用。ustc的docker镜像加速器速度很快。ustc docker mirror的优势之一就是不需要注册，是真正的公共服务。</p>
-<p><a href="https://lug.ustc.edu.cn/wiki/mirrors/help/docker" target="_blank" rel="noopener">https://lug.ustc.edu.cn/wiki/mirrors/help/docker</a></p>
-<p>编辑该文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">vi &#x2F;etc&#x2F;docker&#x2F;daemon.json</span></pre></td></tr></table></figure>
-
-<p>在该文件中输入如下内容：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">&quot;registry-mirrors&quot;: [&quot;https:&#x2F;&#x2F;docker.mirrors.ustc.edu.cn&quot;]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
-
-<h2 id="Docker的启动与停止"><a href="#Docker的启动与停止" class="headerlink" title="Docker的启动与停止"></a>Docker的启动与停止</h2><p><strong>systemctl</strong>命令是系统服务管理器指令</p>
-<p>启动docker：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">systemctl start docker</span></pre></td></tr></table></figure>
-
-<p>停止docker：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">systemctl stop docker</span></pre></td></tr></table></figure>
-
-<p>重启docker：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">systemctl restart docker</span></pre></td></tr></table></figure>
-
-<p>查看docker状态：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">systemctl status docker</span></pre></td></tr></table></figure>
-
-<p>开机启动：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">systemctl enable docker</span></pre></td></tr></table></figure>
-
-<p>查看docker概要信息</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker info</span></pre></td></tr></table></figure>
-
-<p>查看docker帮助文档</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker --help</span></pre></td></tr></table></figure>
-
-<h1 id><a href="#" class="headerlink" title></a></h1>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">Docker</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/07/Docker-2%E5%AE%89%E8%A3%85/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next &amp;raquo;</a>
@@ -1668,11 +1601,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">MySQL</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">mysql</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">redis</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1688,7 +1625,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">mysql</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">debug方法</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1696,11 +1633,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">debug方法</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">git</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">git</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1708,7 +1645,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">MongoDB</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1720,7 +1657,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">MongoDB</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">Redis</a>
               </li>
              
               <li class="article-tag-list-item">

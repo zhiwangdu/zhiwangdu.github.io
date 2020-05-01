@@ -151,6 +151,182 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-redis-3" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/01/redis-3/">Redis缓存相关故障</a>
+    </h1>
+  
+
+        
+        <a href="/2020/05/01/redis-3/" class="archive-article-date">
+  	<time datetime="2020-05-01T08:06:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h1><ul>
+<li>场景<br>  查询根本不存在的数据，使得请求直达数据库，导致其负载过大甚至宕机。</li>
+<li>解决方案<br>  1.缓存空对象<pre><code>数据库未命中后仍然将空值存入缓存层，之后再次访问该数据时，缓存层可直接返回空值。</code></pre>  2.布隆过滤器<pre><code>在缓存层之前增加一层布隆过滤器，将所有存在的key预先存入布隆过滤器，在请求访问缓存层之前先被拦截，若请求的是不存在的key，则可直接返回空值。</code></pre><h1 id="缓存击穿"><a href="#缓存击穿" class="headerlink" title="缓存击穿"></a>缓存击穿</h1></li>
+<li>场景<br>  一份数据的访问量非常大，再这个数据的缓存失效瞬间，大量请求直达数据库，导致服务崩溃。</li>
+<li>解决方案<br>  1.加互斥锁<pre><code>对数据库的访问加互斥锁，当一个线程访问的时候其他线程只能等待，在这个线程访问过后，数据会重新载入缓存，此时其他线程可以直接从缓存取值。</code></pre>  2.永不过期<pre><code>物理上不设置过期时间。
+逻辑上不过期，缓存到期后动态重建缓存。</code></pre><h1 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h1></li>
+<li>场景<br>  由于缓存中大量数据同时到期，导致大量请求直达数据库，导致数据库压力过大甚至崩溃。</li>
+<li>解决方案<br>  1.避免同时过期<pre><code>设置过期时间的同时，附加一个随机数，避免大量的key同时到期。</code></pre>  2.构建高可用的Redis缓存<pre><code>部署多个Redis实例，个别节点宕机，依然可以保持服务的整体可用。</code></pre>  3.构建多级缓存<pre><code>增加本地缓存，降低请求直达数据库的几率。</code></pre>  4.启用限流和降级措施<pre><code>对存储层增加限流措施，当请求超出限制时，对其提供降级服务。</code></pre></li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">Redis</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/05/01/redis-3/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-redis-2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/01/redis-2/">Redis的过期策略</a>
+    </h1>
+  
+
+        
+        <a href="/2020/05/01/redis-2/" class="archive-article-date">
+  	<time datetime="2020-05-01T07:35:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Redis设置过期时间的方法"><a href="#Redis设置过期时间的方法" class="headerlink" title="Redis设置过期时间的方法"></a>Redis设置过期时间的方法</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">  EXPIRE &lt;KEY&gt; &lt;TTL&gt;   &#x2F;&#x2F; 将键的生存时间设为 ttl 秒</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">  PEXPIRE &lt;KEY&gt; &lt;TTL&gt;   &#x2F;&#x2F; 将键的生存时间设为 ttl 毫秒</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">  EXPIREAT &lt;KEY&gt; &lt;timestamp&gt;   &#x2F;&#x2F; 将键的过期时间设为 timestamp 所指定的秒数时间戳</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">  PEXPIREAT &lt;KEY&gt; &lt;timestamp&gt;   &#x2F;&#x2F; 将键的过期时间设为 timestamp 所指定的毫秒数时间戳.</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">PERSIST命令可以移除过期时间</span></pre></td></tr></table></figure>
+<h1 id="Redis过期删除策略"><a href="#Redis过期删除策略" class="headerlink" title="Redis过期删除策略"></a>Redis过期删除策略</h1><p>Redis会把设置了过期时间的key放进一个单独的字典中，这个字典中包含了所有key的过期时间，在key过期的时候并不会立即删除它，而是通过两种策略相结合进行删除。</p>
+<h2 id="惰性删除"><a href="#惰性删除" class="headerlink" title="惰性删除"></a>惰性删除</h2><p>当客户端访问某个key的时候，Redis会检查该key是否过期，若过期则删除。</p>
+<h2 id="定期扫描"><a href="#定期扫描" class="headerlink" title="定期扫描"></a>定期扫描</h2><p>Redis默认每秒执行10次过期扫描，扫描策略如下：</p>
+<ol>
+<li>从过期字典中随机选择20个key；</li>
+<li>删除这20个key中过期的key；</li>
+<li>如果过期的key比例超过25，则重复步骤1。<h1 id="Redis淘汰策略"><a href="#Redis淘汰策略" class="headerlink" title="Redis淘汰策略"></a>Redis淘汰策略</h1>当Redis占用内存超出最大限制时，可采用以下策略，让Redis淘汰一些数据，以腾出空间继续提供读写服务。</li>
+</ol>
+<ul>
+<li>noeviction：对可能导致增大内存的命令返回错误（大多数写命令，DEL除外）；</li>
+<li>volatile-ttl：在设置了过期时间的key中，选择剩余寿命（ttl）最短的key，将其淘汰；</li>
+<li>volatile-lru：在设置了过期时间的key中，选择最少使用的key（LRU）将其淘汰；</li>
+<li>volatile-random：在设置了过期时间的key中，随机选择一些key淘汰；</li>
+<li>allkeys-lru：在所有的的key中，选择最少使用的key（LRU）将其淘汰；</li>
+<li>allkeys-random：在所有的key中，随机选择一些key淘汰；</li>
+</ul>
+<h2 id="淘汰策略的LRU算法"><a href="#淘汰策略的LRU算法" class="headerlink" title="淘汰策略的LRU算法"></a>淘汰策略的LRU算法</h2><ul>
+<li>LRU算法：维护一个链表，用于顺序存放访问过的key，将最新访问过的key移动至表头，最少访问的key在表尾。</li>
+<li>近似LRU算法：给每个key维护一个时间戳，淘汰时随机采样5个key，从中淘汰掉最旧的key。一直采样直到不超出内存限制。近似LRU算法比LRU算法更节约内存，但是依旧可以去的非常近似得效果。</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">Redis</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/05/01/redis-2/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-redis-1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -158,7 +334,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/30/redis-1/">redis</a>
+      <a class="article-title" href="/2020/04/30/redis-1/">Redis基本数据类型</a>
     </h1>
   
 
@@ -174,6 +350,12 @@
         <p>REmote DIctionary Server(Redis) 是一个由Salvatore Sanfilippo写的key-value存储系统。</p>
 <p>Redis是一个开源的使用ANSI C语言编写、遵守BSD协议、支持网络、可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API。</p>
 <p>它通常被称为数据结构服务器，因为值（value）可以是 字符串(String), 哈希(Hash), 列表(list), 集合(sets) 和 有序集合(sorted sets)等类型。</p>
+<p><strong>Redis的速度很快，因为</strong></p>
+<ul>
+<li>redis完全基于内存，内存的读写速度非常快。</li>
+<li>数据结构简单，对数据操作也简单。</li>
+<li>使用多路复用I/O模型，多个网络连接复用同一个线程，可以让单个线程高效处理多个请求，避免了上下文切换的时间和性能损耗。</li>
+</ul>
 <h1 id="Redis五种数据类型"><a href="#Redis五种数据类型" class="headerlink" title="Redis五种数据类型"></a>Redis五种数据类型</h1><h2 id="String（字符串）"><a href="#String（字符串）" class="headerlink" title="String（字符串）"></a>String（字符串）</h2><p>String类型是二进制安全的，可以包含任何数据。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">存入数据：SET test:count 1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">取出数据：GET test:count</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">自增：incr test:count</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">自减：decr test:count</span></pre></td></tr></table></figure>
 <p>以上实例中，使用了redis的set、get、incr和decr命令，键为test:count，值为1。一个键最大能储存512M数据。</p>
@@ -226,11 +408,6 @@
 <td align="left">1、排行榜 2、带权重的消息队列</td>
 </tr>
 </tbody></table>
-<h1 id="Redis的过期策略"><a href="#Redis的过期策略" class="headerlink" title="Redis的过期策略"></a>Redis的过期策略</h1><h1 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h1><h1 id="缓存击穿"><a href="#缓存击穿" class="headerlink" title="缓存击穿"></a>缓存击穿</h1><h1 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h1><h1 id="Redis实现分布式锁"><a href="#Redis实现分布式锁" class="headerlink" title="Redis实现分布式锁"></a>Redis实现分布式锁</h1><h1 id="Redis速度很快的原因"><a href="#Redis速度很快的原因" class="headerlink" title="Redis速度很快的原因"></a>Redis速度很快的原因</h1><ul>
-<li>redis完全基于内存，内存的读写速度非常快。</li>
-<li>数据结构简单，对数据操作也简单。</li>
-<li>使用多路复用I/O模型，多个网络连接复用同一个线程，可以让单个线程高效处理多个请求，避免了上下文切换的时间和性能损耗。</li>
-</ul>
 
       
 
@@ -244,7 +421,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">redis</a>
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">Redis</a>
         		</li>
       		
 		</ul>
@@ -950,218 +1127,6 @@
 
 
   
-    <article id="post-JVM-垃圾收集器与内存分配策略" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/26/JVM-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/">JVM-垃圾收集器与内存分配策略</a>
-    </h1>
-  
-
-        
-        <a href="/2020/02/26/JVM-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/" class="archive-article-date">
-  	<time datetime="2020-02-26T11:52:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="垃圾判断的算法"><a href="#垃圾判断的算法" class="headerlink" title="垃圾判断的算法"></a>垃圾判断的算法</h1><h2 id="引用计数算法"><a href="#引用计数算法" class="headerlink" title="引用计数算法"></a>引用计数算法</h2><h2 id="根搜索算法"><a href="#根搜索算法" class="headerlink" title="根搜索算法"></a>根搜索算法</h2><h1 id="方法区的回收"><a href="#方法区的回收" class="headerlink" title="方法区的回收"></a>方法区的回收</h1><p>主要回收两部分内容：废弃常量和无用类</p>
-<p>类回收的条件：</p>
-<h1 id="JVM常见GC算法"><a href="#JVM常见GC算法" class="headerlink" title="JVM常见GC算法"></a>JVM常见GC算法</h1><h2 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h2><h2 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h2><h2 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h2><h2 id="分代算法（Generation-GC）"><a href="#分代算法（Generation-GC）" class="headerlink" title="分代算法（Generation GC）"></a>分代算法（Generation GC）</h2><ul>
-<li><p>年轻代</p>
-<ul>
-<li>1</li>
-<li>2</li>
-<li>3</li>
-</ul>
-</li>
-<li><p>老年代</p>
-<ul>
-<li>存放了经过一次或多次GC还存活的对象</li>
-<li>一般采用Mark-Sweep或着Mark-Compact算法进行GC</li>
-<li>有多种垃圾收集器可以选择</li>
-</ul>
-</li>
-<li><p>永久代（JDK8之前）</p>
-<ul>
-<li>并不属于堆，但GC也会涉及</li>
-<li>存放了各Class的结构信息</li>
-</ul>
-</li>
-</ul>
-<h1 id="内存结构"><a href="#内存结构" class="headerlink" title="内存结构"></a>内存结构</h1><h1 id="内存分配"><a href="#内存分配" class="headerlink" title="内存分配"></a>内存分配</h1><p>堆上分配</p>
-<p>栈上分配</p>
-<h1 id="内存回收"><a href="#内存回收" class="headerlink" title="内存回收"></a>内存回收</h1><p>引用类型</p>
-<h1 id="GC的时机"><a href="#GC的时机" class="headerlink" title="GC的时机"></a>GC的时机</h1><ul>
-<li>在分代模型的基础上，gc从时机上分为两种</li>
-</ul>
-<p>scavenge GC</p>
-<p>出发时机：新对象生成时，eden空间满了</p>
-<p>理论上eden区大多数对象会在</p>
-<p>full gc</p>
-<p>对整个jvm进行整理，</p>
-<p>主要触发时机：Old满了、Perm满了、system.gc()</p>
-<p>效率很低，尽量减少Full GC</p>
-<h1 id="垃圾回收器"><a href="#垃圾回收器" class="headerlink" title="垃圾回收器"></a>垃圾回收器</h1><h2 id="Serial收集器"><a href="#Serial收集器" class="headerlink" title="Serial收集器"></a>Serial收集器</h2><p>单线程收集器</p>
-<h2 id="ParNew收集器"><a href="#ParNew收集器" class="headerlink" title="ParNew收集器"></a>ParNew收集器</h2><p>是Serial的多线程版本</p>
-<h2 id="Parallel-New"><a href="#Parallel-New" class="headerlink" title="Parallel New"></a>Parallel New</h2><h2 id="CMS收集器"><a href="#CMS收集器" class="headerlink" title="CMS收集器"></a>CMS收集器</h2><h2 id="G1收集器"><a href="#G1收集器" class="headerlink" title="G1收集器"></a>G1收集器</h2><h1 id="Java内存泄漏的经典原因"><a href="#Java内存泄漏的经典原因" class="headerlink" title="Java内存泄漏的经典原因"></a>Java内存泄漏的经典原因</h1><ol>
-<li>对象定义在错误的范围（Wrong Scope）</li>
-<li>异常（Exception）处理不当</li>
-<li>集合数据管理不当</li>
-</ol>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color4">jvm</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/26/JVM-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-git-github速度提高" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/24/git-github%E9%80%9F%E5%BA%A6%E6%8F%90%E9%AB%98/">github速度提高</a>
-    </h1>
-  
-
-        
-        <a href="/2020/02/24/git-github%E9%80%9F%E5%BA%A6%E6%8F%90%E9%AB%98/" class="archive-article-date">
-  	<time datetime="2020-02-24T10:17:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-24</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ol>
-<li>查找域名对应的ip地址，并修改hosts文件，依次输入以下命令：</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">nslookup github.global.ssl.fastly.Net</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">nslookup github.com</span></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>将得到的adderss加入到/etc/hosts文件中，如下：</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">151.101.76.249 http:&#x2F;&#x2F;global-ssl.fastly.net</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">192.30.255.113 http:&#x2F;&#x2F;github.com</span></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>刷新DNS缓存</li>
-</ol>
-<p>linux：</p>
-<p><code>sudo /etc/init.d/networking restart</code></p>
-<p>Windows:</p>
-<p><code>ipconfig /flushdns</code></p>
-<p>macOS：</p>
-<p><code>sudo killall -HUP mDNSResponder</code></p>
-<ol start="4">
-<li>完成，git clone速度显著提升。</li>
-</ol>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color4">git</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/24/git-github%E9%80%9F%E5%BA%A6%E6%8F%90%E9%AB%98/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
@@ -1275,11 +1240,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">MySQL</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">mysql</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">redis</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1295,7 +1264,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">mysql</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">debug方法</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1303,11 +1272,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">debug方法</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">git</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">git</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1315,7 +1284,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">MongoDB</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1327,7 +1296,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">MongoDB</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">Redis</a>
               </li>
              
               <li class="article-tag-list-item">
