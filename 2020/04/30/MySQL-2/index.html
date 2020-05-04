@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="杜志旺的博客">
 <meta property="og:description" content="事务（Transaction）在MySQL中，只有使用了InnoDB存储引擎的数据库或表才支持事务，一般来说事务必须满足四个条件（ACID）：原子性（Atomicity），一致性（Consistency），隔离型（Isolation），持久性（Durability）。  原子性：一个事物中的所有操作，要么都完成，要么都不完成，不可拆分，不会结束在中间某个环节。 一致性：在事务开始之前和结束之后，数">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-04-30T14:08:36.605Z">
+<meta property="og:updated_time" content="2020-05-04T09:21:30.511Z">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="杜志旺的博客" type="application/atom+xml">
@@ -240,9 +240,9 @@
 </thead>
 <tbody><tr>
 <td align="left">读未提交</td>
-<td align="left">n</td>
 <td align="left">y</td>
-<td align="left">n</td>
+<td align="left">y</td>
+<td align="left">y</td>
 <td align="left">y</td>
 <td align="left">y</td>
 </tr>
@@ -271,14 +271,11 @@
 <td align="left">n</td>
 </tr>
 </tbody></table>
-<h3 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h3><ul>
-<li>悲观锁<ol>
-<li>共享锁（S锁）：事务A对某数据加了共享锁之后，其它事务只能对该数据加共享锁，不能加排他锁。</li>
-<li>排他锁：事务A对某数据加了排他锁之后，其他事务对该数据既不能加共享锁，也不能加排他锁。</li>
+<h2 id="隔离级别的原理：MVCC和锁"><a href="#隔离级别的原理：MVCC和锁" class="headerlink" title="隔离级别的原理：MVCC和锁"></a>隔离级别的原理：MVCC和锁</h2><h3 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h3><p>MVCC（Mutil-Version Concurrency Control），即多版本并发控制，是在系统行为上通过非加锁的方式来实现并发访问的手段，可以有效地提升数据库的并发能力。<br>InnoDB的MVCC，通过在每行记录的后面保存两个隐藏的字段，一个保存该行的创建时间，一个保存行过期时间。但储存的并不是实际的时间值，而是系统版本号。每开始一个事务，系统版本号都会递增。事务开始时刻的系统版本号会作为事务的版本号，用来和查询到的每行记录的版本号进行比较。<br><strong>SELECT：</strong><br>InnoDB会根据两个条件检查每行记录：<br>    1. InnoDB只查找版本早于当前事务版本的数据行，即行的版本号小于或等于事务的系统版本号，这样就可以保证读取到的行，要么是在事务开始之前就已经存在，要么是事务自身插入或者修改过的。<br>    2. 行的删除版本要么未定义，要么大于当前事务版本号。这样可以保证事务读取到的行在事务开始之前未被删除。<br><strong>INSERT：</strong><br>InnoDB为新插入的每一行保存当前系统版本号为行版本号。<br><strong>DELETE：</strong><br>InnoDB为删除的每一行保存当前系统版本号作为行删除标识。<br><strong>UPDATE：</strong><br>InnoDB将更新后的列作为新的行插入数据库（并不是覆盖），并保存当前系统版本号作为该行的行版本号，同时保存当前系统版本号到原来的行作为行删除标识。</p>
+<h3 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h3><ol>
+<li>共享锁（S锁）：事务A对某数据加了共享锁之后，其他事务只能读该数据，且其它事务只能对该数据加共享锁，不能加排他锁。</li>
+<li>排他锁：事务A对某数据加了排他锁之后，只有A事务可以读取和修改该数据，且其他事务对该数据既不能加共享锁，也不能加排他锁。<br>在数据库的增删改查功能中，insert、update、delete都会默认加排他锁，select只有显式声明才会加锁。</li>
 </ol>
-</li>
-<li>乐观锁（自定义）<br>  使用版本号、时间戳等，在更新数据前，检查版本号是否发生变化，若变化则取消本次更新，否则更新数据且版本号+1.</li>
-</ul>
 
       
 
@@ -532,19 +529,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">Kafka</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">mysql</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">redis</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -552,7 +541,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">RabbitMQ</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">MySQL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">redis</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -560,7 +553,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">debug方法</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">RabbitMQ</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -568,11 +561,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">git</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color2">Spring</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">debug方法</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -580,7 +573,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">MongoDB</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">git</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -592,11 +589,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">Redis</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">MongoDB</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">Java多线程</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">Redis</a>
               </li>
              
               <li class="article-tag-list-item">

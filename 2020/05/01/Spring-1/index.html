@@ -6,17 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Docker迁移与备份 | 杜志旺的博客</title>
+  <title>Spring IOC | 杜志旺的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="迁移与备份容器保存为镜像我们可以通过以下命令将容器保存为镜像 1docker commit mynginx mynginx_i  镜像备份我们可以通过以下命令将镜像保存为tar 文件 1docker  save -o mynginx.tar mynginx_i  镜像恢复与迁移首先我们先删除掉mynginx_img镜像  然后执行此命令进行恢复 1docker load -i mynginx.ta">
-<meta name="keywords" content="Docker">
+  <meta name="description" content="IOC原理Spring IOC应用BeanDefinitionBeanDefinitionRegistryBeanFactory">
+<meta name="keywords" content="Spring">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Docker迁移与备份">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;08&#x2F;Docker-6%E8%BF%81%E7%A7%BB%E4%B8%8E%E5%A4%87%E4%BB%BD&#x2F;index.html">
+<meta property="og:title" content="Spring IOC">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;05&#x2F;01&#x2F;Spring-1&#x2F;index.html">
 <meta property="og:site_name" content="杜志旺的博客">
-<meta property="og:description" content="迁移与备份容器保存为镜像我们可以通过以下命令将容器保存为镜像 1docker commit mynginx mynginx_i  镜像备份我们可以通过以下命令将镜像保存为tar 文件 1docker  save -o mynginx.tar mynginx_i  镜像恢复与迁移首先我们先删除掉mynginx_img镜像  然后执行此命令进行恢复 1docker load -i mynginx.ta">
+<meta property="og:description" content="IOC原理Spring IOC应用BeanDefinitionBeanDefinitionRegistryBeanFactory">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-02-08T08:34:24.546Z">
+<meta property="og:updated_time" content="2020-05-01T14:44:11.713Z">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="杜志旺的博客" type="application/atom+xml">
@@ -153,38 +153,27 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Docker-6迁移与备份" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-Spring-1" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      Docker迁移与备份
+      Spring IOC
     </h1>
   
 
         
-        <a href="/2020/02/08/Docker-6%E8%BF%81%E7%A7%BB%E4%B8%8E%E5%A4%87%E4%BB%BD/" class="archive-article-date">
-  	<time datetime="2020-02-08T08:28:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-08</time>
+        <a href="/2020/05/01/Spring-1/" class="archive-article-date">
+  	<time datetime="2020-05-01T11:43:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-01</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="迁移与备份"><a href="#迁移与备份" class="headerlink" title="迁移与备份"></a>迁移与备份</h1><h2 id="容器保存为镜像"><a href="#容器保存为镜像" class="headerlink" title="容器保存为镜像"></a>容器保存为镜像</h2><p>我们可以通过以下命令将容器保存为镜像</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker commit mynginx mynginx_i</span></pre></td></tr></table></figure>
-
-<h2 id="镜像备份"><a href="#镜像备份" class="headerlink" title="镜像备份"></a>镜像备份</h2><p>我们可以通过以下命令将镜像保存为tar 文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker  save -o mynginx.tar mynginx_i</span></pre></td></tr></table></figure>
-
-<h2 id="镜像恢复与迁移"><a href="#镜像恢复与迁移" class="headerlink" title="镜像恢复与迁移"></a>镜像恢复与迁移</h2><p>首先我们先删除掉mynginx_img镜像  然后执行此命令进行恢复</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker load -i mynginx.tar</span></pre></td></tr></table></figure>
-
-<p>-i 输入的文件</p>
-<p>执行后再次查看镜像，可以看到镜像已经恢复</p>
-
+        <h1 id="IOC原理"><a href="#IOC原理" class="headerlink" title="IOC原理"></a>IOC原理</h1><h1 id="Spring-IOC应用"><a href="#Spring-IOC应用" class="headerlink" title="Spring IOC应用"></a>Spring IOC应用</h1><h2 id="BeanDefinition"><a href="#BeanDefinition" class="headerlink" title="BeanDefinition"></a>BeanDefinition</h2><h2 id="BeanDefinitionRegistry"><a href="#BeanDefinitionRegistry" class="headerlink" title="BeanDefinitionRegistry"></a>BeanDefinitionRegistry</h2><h2 id="BeanFactory"><a href="#BeanFactory" class="headerlink" title="BeanFactory"></a>BeanFactory</h2>
       
 
       
@@ -218,7 +207,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">Docker</a>
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">Spring</a>
         		</li>
       		
 		</ul>
@@ -274,7 +263,7 @@
     <a class="close js-modal-close" href="javascript:;" target="_blank" rel="noopener"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/02/08/Docker-6%E8%BF%81%E7%A7%BB%E4%B8%8E%E5%A4%87%E4%BB%BD/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/05/01/Spring-1/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -288,18 +277,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2020/02/08/MacOS-%E5%AE%89%E8%A3%85redis/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2020/05/01/Java-1/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          MacOS安装redis
+          Java-IO
         
       </div>
     </a>
   
   
-    <a href="/2020/02/08/Docker-4%E5%BA%94%E7%94%A8%E9%83%A8%E7%BD%B2/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Docker应用部署</div>
+    <a href="/2020/05/01/redis-3/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Redis缓存相关故障</div>
       <i class="icon-circle-right"></i>
     </a>
   
