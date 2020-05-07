@@ -6,17 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>MySQL事务的隔离性 | 杜志旺的博客</title>
+  <title>MySQL事务的隔离性（InnoDB） | 杜志旺的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="事务（Transaction）在MySQL中，只有使用了InnoDB存储引擎的数据库或表才支持事务，一般来说事务必须满足四个条件（ACID）：原子性（Atomicity），一致性（Consistency），隔离型（Isolation），持久性（Durability）。  原子性：一个事物中的所有操作，要么都完成，要么都不完成，不可拆分，不会结束在中间某个环节。 一致性：在事务开始之前和结束之后，数">
 <meta name="keywords" content="MySQL">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MySQL事务的隔离性">
+<meta property="og:title" content="MySQL事务的隔离性（InnoDB）">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;04&#x2F;30&#x2F;MySQL-2&#x2F;index.html">
 <meta property="og:site_name" content="杜志旺的博客">
 <meta property="og:description" content="事务（Transaction）在MySQL中，只有使用了InnoDB存储引擎的数据库或表才支持事务，一般来说事务必须满足四个条件（ACID）：原子性（Atomicity），一致性（Consistency），隔离型（Isolation），持久性（Durability）。  原子性：一个事物中的所有操作，要么都完成，要么都不完成，不可拆分，不会结束在中间某个环节。 一致性：在事务开始之前和结束之后，数">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-05-04T09:21:30.511Z">
+<meta property="og:updated_time" content="2020-05-07T05:58:13.106Z">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="杜志旺的博客" type="application/atom+xml">
@@ -160,7 +160,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      MySQL事务的隔离性
+      MySQL事务的隔离性（InnoDB）
     </h1>
   
 
@@ -178,7 +178,8 @@
 <li><strong>原子性</strong>：一个事物中的所有操作，要么都完成，要么都不完成，不可拆分，不会结束在中间某个环节。</li>
 <li><strong>一致性</strong>：在事务开始之前和结束之后，数据库的完整性不能被破坏。</li>
 <li><strong>隔离性</strong>：数据库允许多个并发事务同时访问，隔离性用于防止多个事务并发交叉执行导致数据的不一致。</li>
-<li><strong>持久性</strong>：事务处理结束后，对数据的修改时永久的，即使系统损坏也不会丢失。<h2 id="MySQL的隔离性"><a href="#MySQL的隔离性" class="headerlink" title="MySQL的隔离性"></a>MySQL的隔离性</h2><h3 id="常见的数据库并发异常"><a href="#常见的数据库并发异常" class="headerlink" title="常见的数据库并发异常"></a>常见的数据库并发异常</h3>丢失更新、脏读、不可重复读、幻读。<h4 id="第一类丢失更新"><a href="#第一类丢失更新" class="headerlink" title="第一类丢失更新"></a>第一类丢失更新</h4>一个事务回滚，导致另一个事务已更新的数据丢失。<table>
+<li><strong>持久性</strong>：事务处理结束后，对数据的修改时永久的，即使系统损坏也不会丢失。<h2 id="MySQL的隔离性"><a href="#MySQL的隔离性" class="headerlink" title="MySQL的隔离性"></a>MySQL的隔离性</h2><h3 id="MySQL的四种隔离级别"><a href="#MySQL的四种隔离级别" class="headerlink" title="MySQL的四种隔离级别"></a>MySQL的四种隔离级别</h3>隔离性研究的是不同事务之间的相互影响，事务的隔离性可以解决以上的并发问题，事务的隔离分为不同级别：<br>读未提交（read uncommitted）、读提交（read committed）、可重复读（repeated read）、串行化（Serializable）。一般来说，隔离级别越低，系统的开销越低，只支持的并发性越高，但隔离性也越差。串行化强制所有事务串行处理，并发效率很低，一般只有当对数据一致性要求极高且可以接受不能并发时使用。</li>
+<li>读未提交<h3 id="常见的数据库并发异常"><a href="#常见的数据库并发异常" class="headerlink" title="常见的数据库并发异常"></a>常见的数据库并发异常</h3>丢失更新、脏读、不可重复读、幻读。<h4 id="第一类丢失更新"><a href="#第一类丢失更新" class="headerlink" title="第一类丢失更新"></a>第一类丢失更新</h4>一个事务回滚，导致另一个事务已更新的数据丢失。<table>
 <thead>
 <tr>
 <th align="left">时刻</th>
@@ -226,7 +227,7 @@
 <p>事务2读取了事务1未提交的n=2，而事务1最后回滚n=1，导致事务2读取的数据是错误的。</p>
 <h4 id="不可重复读"><a href="#不可重复读" class="headerlink" title="不可重复读"></a>不可重复读</h4><p>一个事务对同一个数据前后读取的结果不一致。幻读是读取了未提交的数据，不可重复读是读取的前一个事务提交的数据，两次读取结果不一致。<br>| 时刻 | 事务1 | 事务2 |<br>|:–|:–|:–|<br>| 0 | read:n=1 |  |<br>| 1 |  | read:n=1 |<br>| 3 | write:n=2 |  |<br>| 4 | commit:n=2 |  |<br>| 5 |  | read:n=2 |</p>
 <h4 id="幻读"><a href="#幻读" class="headerlink" title="幻读"></a>幻读</h4><p>一个事务对同一个表前后查询到的行数不一致。<br>| 时刻 | 事务1 | 事务2 |<br>|:–|:–|:–|<br>| 0 |  | select:id&lt;10(1,2,3) |<br>| 1 | insert:id=4 |  |<br>| 3 | commit:id(1,2,3,4) |  |<br>| 4 |  | select:id&lt;10(1,2,3,4) |</p>
-<h3 id="事务的隔离级别"><a href="#事务的隔离级别" class="headerlink" title="事务的隔离级别"></a>事务的隔离级别</h3><p>隔离性研究的是不同事务之间的相互影响，事务的隔离性可以解决以上的并发问题，事务的隔离分为不同级别：<br>读未提交（read uncommitted）、读提交（read committed）、可重复读（repeated read）、串行化（Serializable）。一般来说，隔离级别越低，系统的开销越低，只支持的并发性越高，但隔离性也越差。串行化强制所有事务串行处理，并发效率很低，一般只有当对数据一致性要求极高且可以接受不能并发时使用。<br>下表是隔离级别对以上并发异常的解决情况(y表示仍然存在，n表示可以解决)：</p>
+<h3 id="事务的隔离级别对以上问题的解决情况"><a href="#事务的隔离级别对以上问题的解决情况" class="headerlink" title="事务的隔离级别对以上问题的解决情况"></a>事务的隔离级别对以上问题的解决情况</h3><p>下表是隔离级别对以上并发异常的解决情况(y表示仍然存在，n表示可以解决)：</p>
 <table>
 <thead>
 <tr>
@@ -586,6 +587,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">Redis</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">数据结构</a>
               </li>
              
               <li class="article-tag-list-item">

@@ -151,6 +151,160 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-数据结构-1-一致性哈希" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-1-%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C/">一致性哈希</a>
+    </h1>
+  
+
+        
+        <a href="/2020/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-1-%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C/" class="archive-article-date">
+  	<time datetime="2020-05-07T07:13:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="一致性哈希"><a href="#一致性哈希" class="headerlink" title="一致性哈希"></a>一致性哈希</h1><blockquote>
+<p>一致性哈希算法在1997年由麻省理工学院提出，是一种特殊的哈希算法，目的是解决分布式缓存的问题。在移除或者添加一个服务器时，能够尽可能小地改变已存在的服务请求与处理请求服务器之间的映射关系。一致性哈希解决了简单哈希算法在分布式哈希表(Distributed Hash Table，DHT)中存在的动态伸缩等问题 —百度百科<br>伴随着系统流量的增大，出现了大量的应用集群，若采用服务请求和服务器之间一一对应的方式去处理请求，无法做到对整个系统的负载均衡，且如果某个节点发生故障，则会直接导致一些请求无法被处理；若通过简单哈希算法对服务请求进行转化，然后对转换后的结果进行取模运算，根据结果对应处理请求的服务器，这种方式解决了节点失效的问题，当某个节点发生宕机，服务请求可以通过hash算法重新分配到别的服务器上。但是简单哈希的方法伸缩性很差，当新增或下线服务器节点的时候，需要花费很大的代价转移数据。一致性哈希解决了伸缩性很差的问题。</p>
+</blockquote>
+<h2 id="一致性哈希算法的原理"><a href="#一致性哈希算法的原理" class="headerlink" title="一致性哈希算法的原理"></a>一致性哈希算法的原理</h2><p>一致性哈希和简单哈希的思想类似，只是简单哈希对节点数量进行了取模操作，而一致性哈希对整个哈希域取模。简单来说就是一致性哈希算法将整个哈希域看作一个圆环，哈希值直接映射到环上。<br>假设目前有四台服务器，根据一定规则进行哈希运算映射到哈希环上，这里假定使用IP地址进行运算。</p>
+<p><img src="/2020/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-1-%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C/1.png" alt="1"></p>
+<p>映射完成后，每个节点沿着逆时针方向直到另一个节点之间的范围，就是属于这个节点的范围。例如，请求a和c经过哈希运算之后分别映射到了a点和c点，则a和c请求则分别映射到节点A和节点C。<br><img src="/2020/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-1-%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C/2.png" alt="2"><br>若有某个节点故障或下线，只需要把故障节点的数据转移；若是增加节点，只需要把当前段上的一部分数据迁移到新节点上即可。<br>例如上图的C节点宕机，则C负责的区域转移到D节点；若在AB之间增加一个节点E，则需要在将AE段的请求及数据迁移到E节点，B节点删除AE段的数据。<br>但是这样显而易见有一个问题，当服务器节点数量很少时，就无法均匀地映射到整个哈希环上，如下图：<br><img src="/2020/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-1-%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C/3.png" alt="3"><br>使用虚拟节点技术可以解决节点分布不均匀的问题。</p>
+<h2 id="虚拟节点技术"><a href="#虚拟节点技术" class="headerlink" title="虚拟节点技术"></a>虚拟节点技术</h2><p>为避免数据倾斜的问题，一致性hash算法因素了虚拟节点的机制。虚拟节点技术为每个服务器分配N个虚拟节点，将这些虚拟节点映射到哈希环上，使用这样的方式使节点在环上均匀分布，同时请求分配的方法不变。<br>在下图中，D1、D2为两台服务器，为每个服务器分配了三个虚拟节点，即D1#1、D1#2、D1#3，定位到三个虚拟节点的范围上的数据均定位到D1服务器上。这样使得很少的服务器也能做到相对均匀的数据分布。<br><img src="/2020/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-1-%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C/4.png" alt="4"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color5">数据结构</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-1-%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-redis-4" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/05/redis-4/">HyperLogLog和Bitmap</a>
+    </h1>
+  
+
+        
+        <a href="/2020/05/05/redis-4/" class="archive-article-date">
+  	<time datetime="2020-05-05T09:39:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-05</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="HyperLogLog"><a href="#HyperLogLog" class="headerlink" title="HyperLogLog"></a>HyperLogLog</h1><p>采用一种基数算法，用于完成独立总数的统计。</p>
+<h1 id="Bitmap"><a href="#Bitmap" class="headerlink" title="Bitmap"></a>Bitmap</h1>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">Redis</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/05/05/redis-4/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-redis-3" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -468,7 +622,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/30/MySQL-2/">MySQL事务的隔离性</a>
+      <a class="article-title" href="/2020/04/30/MySQL-2/">MySQL事务的隔离性（InnoDB）</a>
     </h1>
   
 
@@ -486,7 +640,8 @@
 <li><strong>原子性</strong>：一个事物中的所有操作，要么都完成，要么都不完成，不可拆分，不会结束在中间某个环节。</li>
 <li><strong>一致性</strong>：在事务开始之前和结束之后，数据库的完整性不能被破坏。</li>
 <li><strong>隔离性</strong>：数据库允许多个并发事务同时访问，隔离性用于防止多个事务并发交叉执行导致数据的不一致。</li>
-<li><strong>持久性</strong>：事务处理结束后，对数据的修改时永久的，即使系统损坏也不会丢失。<h2 id="MySQL的隔离性"><a href="#MySQL的隔离性" class="headerlink" title="MySQL的隔离性"></a>MySQL的隔离性</h2><h3 id="常见的数据库并发异常"><a href="#常见的数据库并发异常" class="headerlink" title="常见的数据库并发异常"></a>常见的数据库并发异常</h3>丢失更新、脏读、不可重复读、幻读。<h4 id="第一类丢失更新"><a href="#第一类丢失更新" class="headerlink" title="第一类丢失更新"></a>第一类丢失更新</h4>一个事务回滚，导致另一个事务已更新的数据丢失。<table>
+<li><strong>持久性</strong>：事务处理结束后，对数据的修改时永久的，即使系统损坏也不会丢失。<h2 id="MySQL的隔离性"><a href="#MySQL的隔离性" class="headerlink" title="MySQL的隔离性"></a>MySQL的隔离性</h2><h3 id="MySQL的四种隔离级别"><a href="#MySQL的四种隔离级别" class="headerlink" title="MySQL的四种隔离级别"></a>MySQL的四种隔离级别</h3>隔离性研究的是不同事务之间的相互影响，事务的隔离性可以解决以上的并发问题，事务的隔离分为不同级别：<br>读未提交（read uncommitted）、读提交（read committed）、可重复读（repeated read）、串行化（Serializable）。一般来说，隔离级别越低，系统的开销越低，只支持的并发性越高，但隔离性也越差。串行化强制所有事务串行处理，并发效率很低，一般只有当对数据一致性要求极高且可以接受不能并发时使用。</li>
+<li>读未提交<h3 id="常见的数据库并发异常"><a href="#常见的数据库并发异常" class="headerlink" title="常见的数据库并发异常"></a>常见的数据库并发异常</h3>丢失更新、脏读、不可重复读、幻读。<h4 id="第一类丢失更新"><a href="#第一类丢失更新" class="headerlink" title="第一类丢失更新"></a>第一类丢失更新</h4>一个事务回滚，导致另一个事务已更新的数据丢失。<table>
 <thead>
 <tr>
 <th align="left">时刻</th>
@@ -534,7 +689,7 @@
 <p>事务2读取了事务1未提交的n=2，而事务1最后回滚n=1，导致事务2读取的数据是错误的。</p>
 <h4 id="不可重复读"><a href="#不可重复读" class="headerlink" title="不可重复读"></a>不可重复读</h4><p>一个事务对同一个数据前后读取的结果不一致。幻读是读取了未提交的数据，不可重复读是读取的前一个事务提交的数据，两次读取结果不一致。<br>| 时刻 | 事务1 | 事务2 |<br>|:–|:–|:–|<br>| 0 | read:n=1 |  |<br>| 1 |  | read:n=1 |<br>| 3 | write:n=2 |  |<br>| 4 | commit:n=2 |  |<br>| 5 |  | read:n=2 |</p>
 <h4 id="幻读"><a href="#幻读" class="headerlink" title="幻读"></a>幻读</h4><p>一个事务对同一个表前后查询到的行数不一致。<br>| 时刻 | 事务1 | 事务2 |<br>|:–|:–|:–|<br>| 0 |  | select:id&lt;10(1,2,3) |<br>| 1 | insert:id=4 |  |<br>| 3 | commit:id(1,2,3,4) |  |<br>| 4 |  | select:id&lt;10(1,2,3,4) |</p>
-<h3 id="事务的隔离级别"><a href="#事务的隔离级别" class="headerlink" title="事务的隔离级别"></a>事务的隔离级别</h3><p>隔离性研究的是不同事务之间的相互影响，事务的隔离性可以解决以上的并发问题，事务的隔离分为不同级别：<br>读未提交（read uncommitted）、读提交（read committed）、可重复读（repeated read）、串行化（Serializable）。一般来说，隔离级别越低，系统的开销越低，只支持的并发性越高，但隔离性也越差。串行化强制所有事务串行处理，并发效率很低，一般只有当对数据一致性要求极高且可以接受不能并发时使用。<br>下表是隔离级别对以上并发异常的解决情况(y表示仍然存在，n表示可以解决)：</p>
+<h3 id="事务的隔离级别对以上问题的解决情况"><a href="#事务的隔离级别对以上问题的解决情况" class="headerlink" title="事务的隔离级别对以上问题的解决情况"></a>事务的隔离级别对以上问题的解决情况</h3><p>下表是隔离级别对以上并发异常的解决情况(y表示仍然存在，n表示可以解决)：</p>
 <table>
 <thead>
 <tr>
@@ -1055,169 +1210,6 @@
 
 
   
-    <article id="post-RabbitMQ" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/27/RabbitMQ/">RabbitMQ</a>
-    </h1>
-  
-
-        
-        <a href="/2020/02/27/RabbitMQ/" class="archive-article-date">
-  	<time datetime="2020-02-27T10:48:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color4">RabbitMQ</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/27/RabbitMQ/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Linux-CentOS7安装JDK11" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/27/Linux-CentOS7%E5%AE%89%E8%A3%85JDK11/">Linux-CentOS7安装JDK11</a>
-    </h1>
-  
-
-        
-        <a href="/2020/02/27/Linux-CentOS7%E5%AE%89%E8%A3%85JDK11/" class="archive-article-date">
-  	<time datetime="2020-02-27T03:15:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>官网下载JDK11，macOS终端上传到centOS虚拟机root目录下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">scp 文件路径 root@ip地址:~</span></pre></td></tr></table></figure>
-
-
-<p>上传完成后解压并将解压后的文件夹移动到/opt/下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">tar zxvf jdk-11.0.6_linux-x64_bin.tar.gz</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">mv jdk-11.0.5 &#x2F;opt&#x2F;</span></pre></td></tr></table></figure>
-
-<p>然后配置环境变量：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;profile</span></pre></td></tr></table></figure>
-
-<p>添加如下配置</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">export JAVA_HOME&#x3D;&#x2F;opt&#x2F;jdk-11.0.6</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">export JRE_HOME&#x3D;$JAVA_HOME&#x2F;jre</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">export CLASSPATH&#x3D;.:$JAVA_HOME&#x2F;lib:$JRE_HOME&#x2F;lib</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">export PATH&#x3D;$JAVA_HOME&#x2F;bin:$PATH</span></pre></td></tr></table></figure>
-
-<p>保存后退出，执行：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">source &#x2F;etc&#x2F;profile</span></pre></td></tr></table></figure>
-
-<p>Java -version 检查是否安装成功：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">java version &quot;11.0.6&quot; 2020-01-14 LTS</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">Java(TM) SE Runtime Environment 18.9 (build 11.0.6+8-LTS)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.6+8-LTS, mixed mode)</span></pre></td></tr></table></figure>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">Linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/27/Linux-CentOS7%E5%AE%89%E8%A3%85JDK11/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
@@ -1384,6 +1376,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">Redis</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color5">数据结构</a>
               </li>
              
               <li class="article-tag-list-item">

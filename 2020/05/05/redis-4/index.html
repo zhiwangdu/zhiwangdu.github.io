@@ -6,17 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>SSM-Invalid bound statement (not found) | 杜志旺的博客</title>
+  <title>HyperLogLog和Bitmap | 杜志旺的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Invalid bound statement (not found)1org.apache.ibatis.binding.BindingException: Invalid bound statement (not found): com.shopssm.dao.IShopDao.insertShop  问题分析 SQL语句有没有写错，没有问题。 方法名称与映射器接口是否一致，没有问题。 配置文">
-<meta name="keywords" content="SSM框架">
+  <meta name="description" content="HyperLogLog采用一种基数算法，用于完成独立总数的统计。 Bitmap">
+<meta name="keywords" content="Redis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SSM-Invalid bound statement (not found)">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;09&#x2F;19&#x2F;SSM-Invalid-bound-statement-not-found&#x2F;index.html">
+<meta property="og:title" content="HyperLogLog和Bitmap">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;05&#x2F;05&#x2F;redis-4&#x2F;index.html">
 <meta property="og:site_name" content="杜志旺的博客">
-<meta property="og:description" content="Invalid bound statement (not found)1org.apache.ibatis.binding.BindingException: Invalid bound statement (not found): com.shopssm.dao.IShopDao.insertShop  问题分析 SQL语句有没有写错，没有问题。 方法名称与映射器接口是否一致，没有问题。 配置文">
+<meta property="og:description" content="HyperLogLog采用一种基数算法，用于完成独立总数的统计。 Bitmap">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-09-19T07:42:28.000Z">
+<meta property="og:updated_time" content="2020-05-05T12:46:06.326Z">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="杜志旺的博客" type="application/atom+xml">
@@ -153,41 +153,28 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-SSM-Invalid-bound-statement-not-found" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-redis-4" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      SSM-Invalid bound statement (not found)
+      HyperLogLog和Bitmap
     </h1>
   
 
         
-        <a href="/2019/09/19/SSM-Invalid-bound-statement-not-found/" class="archive-article-date">
-  	<time datetime="2019-09-19T07:34:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-19</time>
+        <a href="/2020/05/05/redis-4/" class="archive-article-date">
+  	<time datetime="2020-05-05T09:39:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-05</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="Invalid-bound-statement-not-found"><a href="#Invalid-bound-statement-not-found" class="headerlink" title="Invalid bound statement (not found)"></a>Invalid bound statement (not found)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">org.apache.ibatis.binding.BindingException: Invalid bound statement (not found): com.shopssm.dao.IShopDao.insertShop</span></pre></td></tr></table></figure>
-
-<h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><ul>
-<li>SQL语句有没有写错，没有问题。</li>
-<li>方法名称与映射器接口是否一致，没有问题。</li>
-<li>配置文件中的路径，发现映射器配置出错。</li>
-</ul>
-<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>将sping-dao.xml中的配置进行更正</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--映射器--&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapperLocations"</span> <span class="attr">value</span>=<span class="string">"classpath:mapper/AreaMapper.xml"</span>/&gt;</span></span></pre></td></tr></table></figure>
-
-<p>改为</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--映射器--&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapperLocations"</span> <span class="attr">value</span>=<span class="string">"classpath:mapper/*Mapper.xml"</span>/&gt;</span></span></pre></td></tr></table></figure>
-
-<p>问题解决。</p>
-
+        <h1 id="HyperLogLog"><a href="#HyperLogLog" class="headerlink" title="HyperLogLog"></a>HyperLogLog</h1><p>采用一种基数算法，用于完成独立总数的统计。</p>
+<h1 id="Bitmap"><a href="#Bitmap" class="headerlink" title="Bitmap"></a>Bitmap</h1>
       
 
       
@@ -221,7 +208,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">SSM框架</a>
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color1">Redis</a>
         		</li>
       		
 		</ul>
@@ -277,7 +264,7 @@
     <a class="close js-modal-close" href="javascript:;" target="_blank" rel="noopener"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/09/19/SSM-Invalid-bound-statement-not-found/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/05/05/redis-4/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -291,18 +278,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/09/29/idea%E5%BF%AB%E6%8D%B7%E9%94%AE/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2020/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-1-%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          idea快捷键 For Windows
+          一致性哈希
         
       </div>
     </a>
   
   
-    <a href="/2019/09/13/Spring-Boot-%E5%B1%9E%E6%80%A7%E6%B3%A8%E5%85%A5/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Spring Boot学习笔记①：属性注入</div>
+    <a href="/2020/05/01/redis-3/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Redis缓存相关故障</div>
       <i class="icon-circle-right"></i>
     </a>
   
