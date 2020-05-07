@@ -151,6 +151,101 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-hashmap" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/01/hashmap/">HashMap</a>
+    </h1>
+  
+
+        
+        <a href="/2020/03/01/hashmap/" class="archive-article-date">
+  	<time datetime="2020-03-01T03:58:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Java-7-和-Java-8的区别"><a href="#Java-7-和-Java-8的区别" class="headerlink" title="Java 7 和 Java 8的区别"></a>Java 7 和 Java 8的区别</h1><p>Java7的HashMap结构为数组+链表，Java8中为数组+链表/红黑树。</p>
+<h2 id="加入红黑树的原因"><a href="#加入红黑树的原因" class="headerlink" title="加入红黑树的原因"></a>加入红黑树的原因</h2><p>当hash碰撞过多时，链表长度会过长，哈希表的查询效率会退化为O(n),此时将链表改为红黑树结构可以提高效率至O(logn)。</p>
+<h1 id="HashMap中常量的意义"><a href="#HashMap中常量的意义" class="headerlink" title="HashMap中常量的意义"></a>HashMap中常量的意义</h1><ul>
+<li><code>static final int DEFAULT_INITIAL_CAPACITY = 1 &lt;&lt; 4;</code><br>默认数组的长度为16，且数组长度必须为2的幂。<br>原因：计算数组下标的方式为：(length-1) &amp; hash,只有2的幂减一和hash值做与运算才能算出下标。若不是2的幂，length-1后和hash做与运算有某些位置永远都为0，导致某些位置永远都是空值，增加了哈希碰撞的几率。</li>
+<li><code>static final float DEFAULT_LOAD_FACTOR = 0.75f;</code><br>负载因子，是判断是否需要扩容的条件，当容量大于当前容量和负载因子的乘积时进行扩容。</li>
+<li><code>static final int TREEIFY_THRESHOLD = 8;</code><br>链表是否需要变为红黑树的判断条件，每个位置上元素的个数满足泊松分布，个数大于8的概率非常小，所以当位置上的元素大于8时才变为树结构。</li>
+</ul>
+<h1 id="put的过程"><a href="#put的过程" class="headerlink" title="put的过程"></a>put的过程</h1><ol>
+<li>计算key的hash值(key的高16位和key的哈希值做异或运算，增加随机性，减少哈希碰撞)</li>
+<li>根据hash值计算出下标，判断是否发生碰撞，若没有碰撞，则直接加入。</li>
+<li>如果散列表为空，则调用resize()方法初始化散列表。</li>
+<li>若发生碰撞，则判断此处为链表还是树，再进行插入。在向链表中插入时，若链表长度大于变为红黑树的阙值8，若大于，则转化为红黑树。</li>
+<li>加入完成后，判断散列表是否需要扩容。</li>
+</ol>
+<h1 id="get的过程"><a href="#get的过程" class="headerlink" title="get的过程"></a>get的过程</h1><p>根据key的hash值计算出下标，然后遍历数组下标处的链表或者红黑树，取出key对应的值。空间复杂度为O(1);</p>
+<h1 id="HashMap线程不安全"><a href="#HashMap线程不安全" class="headerlink" title="HashMap线程不安全"></a>HashMap线程不安全</h1><p>扩容时可能会出现环形链表，get的时候就会死循环，产生死锁。</p>
+<h1 id="HasMap适合以String，Integer作为key"><a href="#HasMap适合以String，Integer作为key" class="headerlink" title="HasMap适合以String，Integer作为key"></a>HasMap适合以String，Integer作为key</h1><ol>
+<li>都是final修饰的包装类，保证了key的不可变性。</li>
+<li>内部重写了equels()和hashCode()方法，不容易出现Hash值计算错误的情况。<h1 id="若想以自己定义的Object类作HashMap的key，需要做哪些操作"><a href="#若想以自己定义的Object类作HashMap的key，需要做哪些操作" class="headerlink" title="若想以自己定义的Object类作HashMap的key，需要做哪些操作"></a>若想以自己定义的Object类作HashMap的key，需要做哪些操作</h1></li>
+<li>重写hashCode()方法，用于计算存放的位置。</li>
+<li>重写equels()方法，用于哈希值相同的时候取值。</li>
+</ol>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color3">HashMap</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/03/01/hashmap/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-RabbitMQ" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1348,90 +1443,6 @@
 
 
   
-    <article id="post-Docker-6迁移与备份" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/08/Docker-6%E8%BF%81%E7%A7%BB%E4%B8%8E%E5%A4%87%E4%BB%BD/">Docker迁移与备份</a>
-    </h1>
-  
-
-        
-        <a href="/2020/02/08/Docker-6%E8%BF%81%E7%A7%BB%E4%B8%8E%E5%A4%87%E4%BB%BD/" class="archive-article-date">
-  	<time datetime="2020-02-08T08:28:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="迁移与备份"><a href="#迁移与备份" class="headerlink" title="迁移与备份"></a>迁移与备份</h1><h2 id="容器保存为镜像"><a href="#容器保存为镜像" class="headerlink" title="容器保存为镜像"></a>容器保存为镜像</h2><p>我们可以通过以下命令将容器保存为镜像</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker commit mynginx mynginx_i</span></pre></td></tr></table></figure>
-
-<h2 id="镜像备份"><a href="#镜像备份" class="headerlink" title="镜像备份"></a>镜像备份</h2><p>我们可以通过以下命令将镜像保存为tar 文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker  save -o mynginx.tar mynginx_i</span></pre></td></tr></table></figure>
-
-<h2 id="镜像恢复与迁移"><a href="#镜像恢复与迁移" class="headerlink" title="镜像恢复与迁移"></a>镜像恢复与迁移</h2><p>首先我们先删除掉mynginx_img镜像  然后执行此命令进行恢复</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker load -i mynginx.tar</span></pre></td></tr></table></figure>
-
-<p>-i 输入的文件</p>
-<p>执行后再次查看镜像，可以看到镜像已经恢复</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color2">Docker</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/02/08/Docker-6%E8%BF%81%E7%A7%BB%E4%B8%8E%E5%A4%87%E4%BB%BD/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next &amp;raquo;</a>
@@ -1557,11 +1568,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">RabbitMQ</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">SSM框架</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">SSM框架</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">RabbitMQ</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1577,11 +1588,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">HashMap</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">HashMap</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1593,11 +1604,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">计算机网络</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">Redis</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">Redis</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">计算机网络</a>
               </li>
              
               <li class="article-tag-list-item">

@@ -151,6 +151,87 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-数据结构与算法-2-布隆过滤器" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-2-%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/">布隆过滤器</a>
+    </h1>
+  
+
+        
+        <a href="/2020/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-2-%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/" class="archive-article-date">
+  	<time datetime="2020-05-07T08:42:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="布隆过滤器"><a href="#布隆过滤器" class="headerlink" title="布隆过滤器"></a>布隆过滤器</h1><blockquote>
+<p>布隆过滤器（Bloom Filter）是1970年由布隆提出的。它实际上是一个很长的二进制向量和一系列随机映射函数。布隆过滤器可以用于检索一个元素是否在一个集合中。它的优点是空间效率和查询时间都比一般的算法要好的多，缺点是有一定的误识别率和删除困难。                 ————百度百科</p>
+</blockquote>
+<h2 id="布隆过滤器的原理"><a href="#布隆过滤器的原理" class="headerlink" title="布隆过滤器的原理"></a>布隆过滤器的原理</h2><p>检测一个元素在不在一个集合中的方式有很多，一般思路就是将所有元素都保存起来然后再进行判断，哈希表、树等数据结构都可以实现。但是随着集合中的元素个数越来越多，哈希表等数据结构使用的内存空间会越来越大，如果用树或链表的话检索速度也会越来越慢。而布隆过滤器只需要很小的内存空间就可以判断，而且效率很高。<br>布隆过滤器是一个bit向量或者说是一个bit数组，放入元素时会将其中几位置为1，如下：<br><img src="/2020/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-2-%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/1.png" alt="1"></p>
+<h3 id="存入元素"><a href="#存入元素" class="headerlink" title="存入元素"></a>存入元素</h3><p>当向布隆过滤器中存入元素时，需要使用hash函数计算元素的哈希值，然后对bit数组长度取模，以得到的结果为下标，将bit数组下标处置为1，若已经为1则不变。假设要过滤一系列IP地址，使用多个独立的哈希函数求出该IP地址的多个哈希值，取模后将数组中的元素置1。假设结果为下图：<br><img src="/2020/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-2-%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/2.png" alt="2"></p>
+<h3 id="判断元素是否存在"><a href="#判断元素是否存在" class="headerlink" title="判断元素是否存在"></a>判断元素是否存在</h3><p>判断是否存在的时候，使用同样的哈希函数求出哈希值、取模，若bit数组对应的下标处全是 1，则认定布隆过滤器中存在元素；但是只要有一个位置处为0，则该元素一定不在布隆过滤器中。在断定存在某个元素的时候可能会有误差，因为不同元素算出的哈希值可能是一样的，当两个元素算出的多个哈希值全都相同时，就会出现误判的情况。但是判断某个元素不在的时候不会有误判，因为哈希值不同，两个元素一定不同。<br><img src="/2020/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-2-%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/3.png" alt="3"></p>
+<h3 id="如何选择哈希函数的个数和布隆过滤器长度"><a href="#如何选择哈希函数的个数和布隆过滤器长度" class="headerlink" title="如何选择哈希函数的个数和布隆过滤器长度"></a>如何选择哈希函数的个数和布隆过滤器长度</h3><p>根据数学公式选择：<br><img src="/2020/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-2-%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/4.png" alt="4"></p>
+<p>K为哈希函数个数，m为布隆过滤器长度，n为插入元素的个数，p为差错率。<br>推导过程暂时没有研究。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color5">数据结构</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-2-%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-数据结构-1-一致性哈希" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1115,101 +1196,6 @@
 
 
   
-    <article id="post-hashmap" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/01/hashmap/">HashMap</a>
-    </h1>
-  
-
-        
-        <a href="/2020/03/01/hashmap/" class="archive-article-date">
-  	<time datetime="2020-03-01T03:58:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Java-7-和-Java-8的区别"><a href="#Java-7-和-Java-8的区别" class="headerlink" title="Java 7 和 Java 8的区别"></a>Java 7 和 Java 8的区别</h1><p>Java7的HashMap结构为数组+链表，Java8中为数组+链表/红黑树。</p>
-<h2 id="加入红黑树的原因"><a href="#加入红黑树的原因" class="headerlink" title="加入红黑树的原因"></a>加入红黑树的原因</h2><p>当hash碰撞过多时，链表长度会过长，哈希表的查询效率会退化为O(n),此时将链表改为红黑树结构可以提高效率至O(logn)。</p>
-<h1 id="HashMap中常量的意义"><a href="#HashMap中常量的意义" class="headerlink" title="HashMap中常量的意义"></a>HashMap中常量的意义</h1><ul>
-<li><code>static final int DEFAULT_INITIAL_CAPACITY = 1 &lt;&lt; 4;</code><br>默认数组的长度为16，且数组长度必须为2的幂。<br>原因：计算数组下标的方式为：(length-1) &amp; hash,只有2的幂减一和hash值做与运算才能算出下标。若不是2的幂，length-1后和hash做与运算有某些位置永远都为0，导致某些位置永远都是空值，增加了哈希碰撞的几率。</li>
-<li><code>static final float DEFAULT_LOAD_FACTOR = 0.75f;</code><br>负载因子，是判断是否需要扩容的条件，当容量大于当前容量和负载因子的乘积时进行扩容。</li>
-<li><code>static final int TREEIFY_THRESHOLD = 8;</code><br>链表是否需要变为红黑树的判断条件，每个位置上元素的个数满足泊松分布，个数大于8的概率非常小，所以当位置上的元素大于8时才变为树结构。</li>
-</ul>
-<h1 id="put的过程"><a href="#put的过程" class="headerlink" title="put的过程"></a>put的过程</h1><ol>
-<li>计算key的hash值(key的高16位和key的哈希值做异或运算，增加随机性，减少哈希碰撞)</li>
-<li>根据hash值计算出下标，判断是否发生碰撞，若没有碰撞，则直接加入。</li>
-<li>如果散列表为空，则调用resize()方法初始化散列表。</li>
-<li>若发生碰撞，则判断此处为链表还是树，再进行插入。在向链表中插入时，若链表长度大于变为红黑树的阙值8，若大于，则转化为红黑树。</li>
-<li>加入完成后，判断散列表是否需要扩容。</li>
-</ol>
-<h1 id="get的过程"><a href="#get的过程" class="headerlink" title="get的过程"></a>get的过程</h1><p>根据key的hash值计算出下标，然后遍历数组下标处的链表或者红黑树，取出key对应的值。空间复杂度为O(1);</p>
-<h1 id="HashMap线程不安全"><a href="#HashMap线程不安全" class="headerlink" title="HashMap线程不安全"></a>HashMap线程不安全</h1><p>扩容时可能会出现环形链表，get的时候就会死循环，产生死锁。</p>
-<h1 id="HasMap适合以String，Integer作为key"><a href="#HasMap适合以String，Integer作为key" class="headerlink" title="HasMap适合以String，Integer作为key"></a>HasMap适合以String，Integer作为key</h1><ol>
-<li>都是final修饰的包装类，保证了key的不可变性。</li>
-<li>内部重写了equels()和hashCode()方法，不容易出现Hash值计算错误的情况。<h1 id="若想以自己定义的Object类作HashMap的key，需要做哪些操作"><a href="#若想以自己定义的Object类作HashMap的key，需要做哪些操作" class="headerlink" title="若想以自己定义的Object类作HashMap的key，需要做哪些操作"></a>若想以自己定义的Object类作HashMap的key，需要做哪些操作</h1></li>
-<li>重写hashCode()方法，用于计算存放的位置。</li>
-<li>重写equels()方法，用于哈希值相同的时候取值。</li>
-</ol>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag article-tag-list-link color3">HashMap</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/03/01/hashmap/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" target="_blank" rel="noopener" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
@@ -1335,11 +1321,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">RabbitMQ</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">SSM框架</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">SSM框架</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">RabbitMQ</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1355,11 +1341,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">HashMap</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color4">快捷键</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color3">HashMap</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1371,11 +1357,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">计算机网络</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">Redis</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">Redis</a>
+                <a href="javascript:void(0)" target="_blank" rel="noopener" class="js-tag color1">计算机网络</a>
               </li>
              
               <li class="article-tag-list-item">
