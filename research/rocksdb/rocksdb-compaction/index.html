@@ -1,0 +1,193 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="RocksDB Compaction Compaction is the background mechanism that controls LSM shape, read amplification, write amplification, space amplification, tombstone clean"><meta property="og:title" content="RocksDB Compaction | 杜志旺的博客"><meta property="og:description" content="RocksDB Compaction Compaction is the background mechanism that controls LSM shape, read amplification, write amplification, space amplification, tombstone clean"><meta property="og:type" content="website"><meta property="og:url" content="https://zhiwangdu.github.io/research/rocksdb/rocksdb-compaction/"><title>RocksDB Compaction | 杜志旺的博客</title><link rel="stylesheet" href="/_astro/BaseLayout.C_maKfi4.css"></head><body><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="首页"><span class="brand-mark">Z</span><span>杜志旺的博客</span></a><nav class="nav" aria-label="主导航"><a href="/">文章</a><a href="/research/">研究</a><a href="/archives/">归档</a><a href="/tags/">标签</a><a href="/rss.xml">RSS</a></nav></div></header><main class="shell">
+  <article class="article-page"><header class="article-hero"><div class="post-meta"><a href="/research/">RocksDB</a><time datetime="2026-06-22T12:03:14.000Z">2026/06/22</time></div><h1>RocksDB Compaction</h1><p>RocksDB Compaction Compaction is the background mechanism that controls LSM shape, read amplification, write amplification, space amplification, tombstone clean</p><p class="source-note">Source: <code>docs/rocksdb-compaction.md</code> · <code>cad43fd2c209</code></p></header><div class="prose"><h1 id="rocksdb-compaction">RocksDB Compaction</h1>
+<p>Compaction is the background mechanism that controls LSM shape, read
+amplification, write amplification, space amplification, tombstone cleanup, and
+blob garbage. This document focuses on code entry points and operational
+diagnostics.</p>
+<h2 id="1-source-map">1. Source Map</h2>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Source evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Scheduling</td>
+<td><code>db/db_impl/db_impl_compaction_flush.cc</code></td>
+</tr>
+<tr>
+<td>Common picker</td>
+<td><code>db/compaction/compaction_picker.h</code>, <code>db/compaction/compaction_picker.cc</code></td>
+</tr>
+<tr>
+<td>Level picker</td>
+<td><code>db/compaction/compaction_picker_level.cc</code></td>
+</tr>
+<tr>
+<td>Universal picker</td>
+<td><code>db/compaction/compaction_picker_universal.cc</code></td>
+</tr>
+<tr>
+<td>FIFO picker</td>
+<td><code>db/compaction/compaction_picker_fifo.cc</code></td>
+</tr>
+<tr>
+<td>Plan object</td>
+<td><code>db/compaction/compaction.h</code>, <code>db/compaction/compaction.cc</code></td>
+</tr>
+<tr>
+<td>Job execution</td>
+<td><code>db/compaction/compaction_job.h</code>, <code>db/compaction/compaction_job.cc</code></td>
+</tr>
+<tr>
+<td>Key transformation</td>
+<td><code>db/compaction/compaction_iterator.h</code>, <code>db/compaction/compaction_iterator.cc</code></td>
+</tr>
+<tr>
+<td>User filter</td>
+<td><code>include/rocksdb/compaction_filter.h</code></td>
+</tr>
+<tr>
+<td>Tests</td>
+<td><code>db/compaction/compaction_job_test.cc</code>, <code>db/compaction/compaction_picker_test.cc</code>, <code>db/db_compaction_test.cc</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-triggering">2. Triggering</h2>
+<p>Compaction is scheduled by <code>DBImpl::MaybeScheduleFlushOrCompaction</code>. Pickers are
+driven by <code>VersionStorageInfo::ComputeCompactionScore</code> and by explicit file
+markers. <code>LevelCompactionPicker::NeedsCompaction</code> checks expired TTL files,
+periodic files, bottommost/forced/blob-GC markers, read-triggered files, and
+per-level compaction scores. Universal and FIFO have their own
+<code>NeedsCompaction</code> implementations.</p>
+<p>Operational triggers:</p>
+<ul>
+<li>L0 file count reaches <code>level0_file_num_compaction_trigger</code>;</li>
+<li>pending compaction bytes exceed soft/hard limits;</li>
+<li>periodic/TTL compaction marks files;</li>
+<li>read-triggered compaction marks files;</li>
+<li>manual <code>CompactRange</code> or <code>CompactFiles</code>;</li>
+<li>FIFO size/TTL cleanup.</li>
+</ul>
+<h2 id="3-execution">3. Execution</h2>
+<p>Call chain:</p>
+<p><code>BackgroundCompaction</code>
+-&gt; picker returns <code>Compaction</code>
+-&gt; <code>CompactionJob::Prepare</code>
+-&gt; <code>CompactionJob::Run</code>
+-&gt; <code>CompactionJob::RunSubcompactions</code>
+-&gt; <code>CompactionJob::ProcessKeyValueCompaction</code>
+-&gt; <code>CreateInputIterator</code>
+-&gt; <code>CompactionIterator</code>
+-&gt; output SST creation
+-&gt; <code>CompactionJob::Install</code>
+-&gt; <code>InstallCompactionResults</code>
+-&gt; <code>VersionSet::LogAndApply</code>.</p>
+<p><code>CompactionJob::Run</code> collects subcompaction status, cleans aborted outputs,
+syncs output directories, verifies output files, aggregates job stats, and only
+then returns status for install.</p>
+<h2 id="4-compactioniterator-rules">4. CompactionIterator Rules</h2>
+<p><code>CompactionIterator</code> is where most correctness risk lives. It must:</p>
+<ul>
+<li>keep keys visible to active snapshots;</li>
+<li>drop older versions hidden by newer versions;</li>
+<li>drop point tombstones only when safe;</li>
+<li>handle range tombstones and range deletion blocks;</li>
+<li>resolve merge operands when safe;</li>
+<li>invoke <code>CompactionFilter</code> only in allowed cases;</li>
+<li>handle blob references and garbage collection;</li>
+<li>preserve internal key order for table builder output.</li>
+</ul>
+<p>Relevant metrics are <code>COMPACTION_KEY_DROP_NEWER_ENTRY</code>,
+<code>COMPACTION_KEY_DROP_OBSOLETE</code>, <code>COMPACTION_KEY_DROP_RANGE_DEL</code>,
+<code>COMPACTION_KEY_DROP_USER</code>, and <code>COMPACTION_RANGE_DEL_DROP_OBSOLETE</code>.</p>
+<h2 id="5-strategy-tradeoffs">5. Strategy Tradeoffs</h2>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Strength</th>
+<th>Risk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Leveled</td>
+<td>Predictable reads and space with non-overlapping L1+.</td>
+<td>Higher write amplification when data churn is high.</td>
+</tr>
+<tr>
+<td>Universal</td>
+<td>Lower write amp for write-heavy workloads.</td>
+<td>Higher temporary space amp and more sorted runs to search.</td>
+</tr>
+<tr>
+<td>FIFO</td>
+<td>Cheap time/size-window retention.</td>
+<td>Deletes by policy, not by key-level merge semantics; limited use cases.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6-trivial-move-and-subcompaction">6. Trivial Move and Subcompaction</h2>
+<p>Trivial move can commit metadata changes without rewriting files when key-range
+and level constraints allow. Subcompaction splits a large compaction into
+multiple key ranges. Both still commit through <code>VersionSet::LogAndApply</code>, so
+MANIFEST remains the visibility boundary.</p>
+<h2 id="7-operational-diagnostics">7. Operational Diagnostics</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause</th>
+<th>Signals</th>
+<th>Source entry</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L0 files grow</td>
+<td>Compaction not scheduled or too slow</td>
+<td>L0 file count, <code>level0_*</code> stalls, LOG compaction messages</td>
+<td><code>MaybeScheduleFlushOrCompaction</code>, level picker</td>
+</tr>
+<tr>
+<td>Write stalls</td>
+<td>Pending compaction debt or immutable memtables</td>
+<td><code>STALL_MICROS</code>, <code>WRITE_STALL</code>, pending bytes</td>
+<td>write controller and picker score</td>
+</tr>
+<tr>
+<td>Space amp high</td>
+<td>Snapshots/tombstones/compaction backlog</td>
+<td>live/obsolete file counts, compaction drops low</td>
+<td><code>CompactionIterator</code>, obsolete cleanup</td>
+</tr>
+<tr>
+<td>Iterator slow</td>
+<td>Hidden versions/range tombstones</td>
+<td>PerfContext skipped counters</td>
+<td><code>DBIter</code>, <code>MergingIterator</code>, <code>CompactionIterator</code></td>
+</tr>
+<tr>
+<td>Compaction CPU high</td>
+<td>Compression, filters, merge resolution</td>
+<td><code>COMPACTION_CPU_TIME</code>, <code>COMPACTION_CPU_TOTAL_TIME</code></td>
+<td><code>CompactionJob::ProcessKeyValueCompaction</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="8-development-checklist">8. Development Checklist</h2>
+<ul>
+<li>Check picker changes with overlap/in-progress invariants.</li>
+<li>Check <code>CompactionIterator</code> changes with snapshots, range deletion, merge,
+blob, and bottommost-level tests.</li>
+<li>Check manifest install failure windows.</li>
+<li>Check <code>EventListener</code> callback ordering: <code>OnCompactionBegin</code>,
+<code>OnSubcompactionBegin</code>, <code>OnCompactionPreCommit</code>, <code>OnCompactionCompleted</code>.</li>
+<li>Benchmark if changing picker strategy, output sizing, compression, or
+iterator hot loops.</li>
+</ul>
+</div></article>
+</main><footer class="site-footer"><div class="shell"><span>杜志旺</span><span>内容迁移自旧版静态博客。</span></div></footer></body></html>

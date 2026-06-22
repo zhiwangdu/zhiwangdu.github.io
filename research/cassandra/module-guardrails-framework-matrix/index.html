@@ -1,0 +1,152 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Guardrails Framework Matrix 本矩阵补齐 org.apache.cassandra.db.guardrails 的框架级知识：配置从 cassandra.yaml 进入 GuardrailsOptions，经 GuardrailsConfigProvider 被 Guardrails 中的各类"><meta property="og:title" content="Guardrails Framework Matrix | 杜志旺的博客"><meta property="og:description" content="Guardrails Framework Matrix 本矩阵补齐 org.apache.cassandra.db.guardrails 的框架级知识：配置从 cassandra.yaml 进入 GuardrailsOptions，经 GuardrailsConfigProvider 被 Guardrails 中的各类"><meta property="og:type" content="website"><meta property="og:url" content="https://zhiwangdu.github.io/research/cassandra/module-guardrails-framework-matrix/"><title>Guardrails Framework Matrix | 杜志旺的博客</title><link rel="stylesheet" href="/_astro/BaseLayout.C_maKfi4.css"></head><body><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="首页"><span class="brand-mark">Z</span><span>杜志旺的博客</span></a><nav class="nav" aria-label="主导航"><a href="/">文章</a><a href="/research/">研究</a><a href="/archives/">归档</a><a href="/tags/">标签</a><a href="/rss.xml">RSS</a></nav></div></header><main class="shell">
+  <article class="article-page"><header class="article-hero"><div class="post-meta"><a href="/research/">Cassandra</a><time datetime="2026-06-22T14:15:16.000Z">2026/06/22</time></div><h1>Guardrails Framework Matrix</h1><p>Guardrails Framework Matrix 本矩阵补齐 org.apache.cassandra.db.guardrails 的框架级知识：配置从 cassandra.yaml 进入 GuardrailsOptions，经 GuardrailsConfigProvider 被 Guardrails 中的各类</p><p class="source-note">Source: <code>research/module-guardrails-framework-matrix.md</code> · <code>09f819b87563</code></p></header><div class="prose"><h1 id="guardrails-framework-matrix">Guardrails Framework Matrix</h1>
+<p>本矩阵补齐 <code>org.apache.cassandra.db.guardrails</code> 的框架级知识：配置从 <code>cassandra.yaml</code> 进入 <code>GuardrailsOptions</code>，经 <code>GuardrailsConfigProvider</code> 被 <code>Guardrails</code> 中的各类 guardrail 动态读取；触发后走 client warning、tracing、diagnostic event 和异常/日志路径；运行时通过 JMX 与 nodetool 修改默认配置。</p>
+<h2 id="source-contract">Source Contract</h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Contract</th>
+<th>Source anchors</th>
+<th>Test anchors</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>guardrails_framework_entrypoint_contract</code></td>
+<td><code>Guardrails</code> 是唯一集中定义层，实现 <code>GuardrailsMBean</code>，注册 <code>org.apache.cassandra.db:type=Guardrails</code>，并持有 <code>CONFIG_PROVIDER</code> 与 <code>DEFAULT_CONFIG</code>。业务代码应引用 <code>Guardrails.&lt;name&gt;</code>，不要直接读取 <code>GuardrailsConfig</code>。</td>
+<td><code>src/java/org/apache/cassandra/db/guardrails/Guardrails.java:45</code>, <code>src/java/org/apache/cassandra/db/guardrails/Guardrails.java:50</code>, <code>src/java/org/apache/cassandra/db/guardrails/Guardrails.java:52</code>, <code>src/java/org/apache/cassandra/db/guardrails/GuardrailsConfig.java:29</code></td>
+<td><code>test/unit/org/apache/cassandra/db/guardrails/GuardrailsTest.java:38</code></td>
+</tr>
+<tr>
+<td><code>guardrails_config_provider_contract</code></td>
+<td>默认 provider 返回 <code>DatabaseDescriptor.getGuardrailsConfig()</code>；可用 <code>cassandra.custom_guardrails_config_provider_class</code> 装载自定义 provider，但接口声明为不稳定扩展面。</td>
+<td><code>src/java/org/apache/cassandra/db/guardrails/GuardrailsConfigProvider.java:27</code>, <code>src/java/org/apache/cassandra/db/guardrails/GuardrailsConfigProvider.java:48</code>, <code>src/java/org/apache/cassandra/db/guardrails/GuardrailsConfigProvider.java:66</code>, <code>src/java/org/apache/cassandra/config/CassandraRelevantProperties.java:179</code></td>
+<td><code>test/unit/org/apache/cassandra/db/guardrails/GuardrailsConfigProviderTest.java:35</code></td>
+</tr>
+<tr>
+<td><code>guardrails_options_validation_contract</code></td>
+<td>YAML 字段落在 <code>Config</code>，<code>DatabaseDescriptor</code> 构造 <code>GuardrailsOptions</code>，构造器与运行时 setter 都校验 warn/fail、集合、百分比、timestamp 和 size，并通过 <code>updatePropertyWithLogging</code> 更新。</td>
+<td><code>src/java/org/apache/cassandra/config/Config.java:862</code>, <code>src/java/org/apache/cassandra/config/DatabaseDescriptor.java:1116</code>, <code>src/java/org/apache/cassandra/config/GuardrailsOptions.java:61</code>, <code>conf/cassandra.yaml:2034</code>, <code>conf/cassandra_latest.yaml:2006</code></td>
+<td><code>test/unit/org/apache/cassandra/db/guardrails/GuardrailTester.java:164</code>, <code>test/unit/org/apache/cassandra/db/guardrails/GuardrailMaximumReplicationFactorTest.java:232</code></td>
+</tr>
+<tr>
+<td><code>guardrails_threshold_contract</code></td>
+<td><code>Threshold</code> 只处理正向启用值，<code>guard()</code> 先 fail 后 warn，支持 redacted diagnostic message；<code>MaxThreshold</code> 用 <code>Long.MAX_VALUE</code> 关闭，<code>MinThreshold</code> 用 <code>Long.MIN_VALUE</code> 关闭，<code>PercentageThreshold</code> 格式化百分比。</td>
+<td><code>src/java/org/apache/cassandra/db/guardrails/Threshold.java:80</code>, <code>src/java/org/apache/cassandra/db/guardrails/Threshold.java:128</code>, <code>src/java/org/apache/cassandra/db/guardrails/MaxThreshold.java:49</code>, <code>src/java/org/apache/cassandra/db/guardrails/MinThreshold.java:49</code>, <code>src/java/org/apache/cassandra/db/guardrails/PercentageThreshold.java:52</code></td>
+<td><code>test/unit/org/apache/cassandra/db/guardrails/GuardrailsTest.java:66</code>, <code>test/unit/org/apache/cassandra/db/guardrails/ThresholdTester.java:30</code></td>
+</tr>
+<tr>
+<td><code>guardrails_enable_flag_contract</code></td>
+<td><code>EnableFlag</code> 用 <code>ensureEnabled()</code> 在 query 入口禁止功能，也可配置 warned supplier；<code>isEnabled()</code> 在 guardrail 本身未启用时返回 true，方便 planner 判断。</td>
+<td><code>src/java/org/apache/cassandra/db/guardrails/EnableFlag.java:33</code>, <code>src/java/org/apache/cassandra/db/guardrails/EnableFlag.java:87</code>, <code>src/java/org/apache/cassandra/db/guardrails/EnableFlag.java:119</code></td>
+<td><code>test/unit/org/apache/cassandra/db/guardrails/GuardrailsTest.java:263</code>, <code>test/unit/org/apache/cassandra/db/guardrails/GuardrailAllowFilteringTest.java:30</code></td>
+</tr>
+<tr>
+<td><code>guardrails_values_predicates_contract</code></td>
+<td><code>Values</code> 先 disallow，再 ignored 并执行 ignore action，最后 warned；<code>Predicates</code> 先 failure predicate，再 warning predicate，适合 replica disk usage。</td>
+<td><code>src/java/org/apache/cassandra/db/guardrails/Values.java:103</code>, <code>src/java/org/apache/cassandra/db/guardrails/Predicates.java:81</code>, <code>src/java/org/apache/cassandra/db/guardrails/Guardrails.java:448</code></td>
+<td><code>test/unit/org/apache/cassandra/db/guardrails/GuardrailsTest.java:305</code>, <code>test/unit/org/apache/cassandra/db/guardrails/GuardrailsTest.java:426</code></td>
+</tr>
+<tr>
+<td><code>guardrails_diagnostics_event_contract</code></td>
+<td>warn/fail 都会进入 <code>ClientWarn</code>、<code>Tracing</code> 和 <code>GuardrailsDiagnostics</code>；diagnostic event type 只有 <code>WARNED</code>/<code>FAILED</code>，payload 包含 <code>name</code> 与 <code>message</code>。background fail 不抛异常，只发日志和事件。</td>
+<td><code>src/java/org/apache/cassandra/db/guardrails/Guardrail.java:98</code>, <code>src/java/org/apache/cassandra/db/guardrails/GuardrailsDiagnostics.java:41</code>, <code>src/java/org/apache/cassandra/db/guardrails/GuardrailEvent.java:31</code>, <code>src/java/org/apache/cassandra/db/guardrails/Guardrail.java:139</code></td>
+<td><code>test/unit/org/apache/cassandra/db/guardrails/GuardrailTester.java:541</code>, <code>test/unit/org/apache/cassandra/db/guardrails/GuardrailsTest.java:131</code></td>
+</tr>
+<tr>
+<td><code>guardrails_mbean_runtime_config_contract</code></td>
+<td><code>GuardrailsMBean</code> 是 JMX 友好接口；<code>Guardrails</code> getter/setter 转发到 <code>DEFAULT_CONFIG</code>，<code>NodeProbe</code> 通过 <code>JMX.newMBeanProxy</code> 访问。StorageService 还保留 keyspace/table/tombstone threshold 兼容入口。</td>
+<td><code>src/java/org/apache/cassandra/db/guardrails/GuardrailsMBean.java:24</code>, <code>src/java/org/apache/cassandra/db/guardrails/Guardrails.java:564</code>, <code>src/java/org/apache/cassandra/tools/NodeProbe.java:318</code>, <code>src/java/org/apache/cassandra/service/StorageService.java:7222</code></td>
+<td><code>test/unit/org/apache/cassandra/tools/nodetool/GuardrailsConfigCommandsTest.java:164</code></td>
+</tr>
+<tr>
+<td><code>guardrails_nodetool_runtime_config_contract</code></td>
+<td><code>getguardrailsconfig</code>/<code>setguardrailsconfig</code> 反射 <code>GuardrailsMBean</code>，按 <code>flags</code>/<code>thresholds</code>/<code>values</code>/<code>others</code> 分类，支持 <code>--expand</code>、snake_case 特例、threshold 参数 fail/warn 反转、<code>null</code>/<code>[]</code> reset。</td>
+<td><code>src/java/org/apache/cassandra/tools/nodetool/GuardrailsConfigCommand.java:55</code>, <code>src/java/org/apache/cassandra/tools/nodetool/GuardrailsConfigCommand.java:172</code>, <code>src/java/org/apache/cassandra/tools/nodetool/GuardrailsConfigCommand.java:281</code>, <code>src/java/org/apache/cassandra/tools/nodetool/GuardrailsConfigCommand.java:351</code></td>
+<td><code>test/unit/org/apache/cassandra/tools/nodetool/GuardrailsConfigCommandsTest.java:55</code>, <code>test/unit/org/apache/cassandra/tools/nodetool/GuardrailsConfigCommandsTest.java:164</code></td>
+</tr>
+<tr>
+<td><code>guardrails_client_bypass_contract</code></td>
+<td>guardrail 只有 daemon 初始化后且 `state == null</td>
+<td></td>
+<td>state.isOrdinaryUser()` 才启用；superuser 与 internal queries 绕过，background/null state 触发 fail 时不抛异常。</td>
+</tr>
+<tr>
+<td><code>guardrails_cql_schema_entrypoints_contract</code></td>
+<td>DDL guardrails 覆盖 keyspace/table/view/index/type/drop/truncate/alter：数量、SimpleStrategy、table properties、compression、COMPACT STORAGE、TWCS 0 TTL、RF、UDT fields。</td>
+<td><code>src/java/org/apache/cassandra/cql3/statements/schema/CreateKeyspaceStatement.java:71</code>, <code>src/java/org/apache/cassandra/cql3/statements/schema/CreateTableStatement.java:121</code>, <code>src/java/org/apache/cassandra/cql3/statements/schema/AlterTableStatement.java:280</code>, <code>src/java/org/apache/cassandra/cql3/statements/schema/CreateIndexStatement.java:120</code>, <code>src/java/org/apache/cassandra/cql3/statements/schema/CreateTypeStatement.java:70</code></td>
+<td><code>test/unit/org/apache/cassandra/db/guardrails/GuardrailKeyspacesTest.java:45</code>, <code>test/unit/org/apache/cassandra/db/guardrails/GuardrailTablePropertiesTest.java:54</code>, <code>test/unit/org/apache/cassandra/db/guardrails/GuardrailSecondaryIndexTest.java:33</code></td>
+</tr>
+<tr>
+<td><code>guardrails_read_write_entrypoints_contract</code></td>
+<td>SELECT 与 write path 覆盖 allow filtering、read/write consistency levels、page size、partition key IN、group by、intersect filtering、non-partition index query、user timestamps、timestamp bounds、replica disk usage。</td>
+<td><code>src/java/org/apache/cassandra/cql3/statements/SelectStatement.java:277</code>, <code>src/java/org/apache/cassandra/cql3/statements/SelectStatement.java:517</code>, <code>src/java/org/apache/cassandra/cql3/statements/ModificationStatement.java:282</code>, <code>src/java/org/apache/cassandra/cql3/statements/ModificationStatement.java:497</code>, <code>src/java/org/apache/cassandra/cql3/statements/BatchStatement.java:416</code></td>
+<td><code>test/unit/org/apache/cassandra/db/guardrails/GuardrailReadConsistencyLevelsTest.java:42</code>, <code>test/unit/org/apache/cassandra/db/guardrails/GuardrailWriteConsistencyLevelsTest.java:45</code>, <code>test/distributed/org/apache/cassandra/distributed/test/guardrails/IntersectFilteringQueryTest.java:93</code></td>
+</tr>
+<tr>
+<td><code>guardrails_storage_index_background_entrypoints_contract</code></td>
+<td>Non-query/background 入口包括 SSTable writer partition/collection checks、disk usage monitor、SAI query referenced index count 和 SAI term size。background fail 只能发事件/日志，不中断 compaction/SSTable write。</td>
+<td><code>src/java/org/apache/cassandra/io/sstable/format/SortedTableWriter.java:244</code>, <code>src/java/org/apache/cassandra/io/sstable/format/SortedTableWriter.java:395</code>, <code>src/java/org/apache/cassandra/service/disk/usage/DiskUsageMonitor.java:112</code>, <code>src/java/org/apache/cassandra/index/sai/plan/QueryController.java:331</code>, <code>src/java/org/apache/cassandra/index/sai/StorageAttachedIndex.java:208</code></td>
+<td><code>test/unit/org/apache/cassandra/db/guardrails/GuardrailDiskUsageTest.java:237</code>, <code>test/distributed/org/apache/cassandra/distributed/test/guardrails/GuardrailPartitionSizeTest.java:40</code>, <code>test/distributed/org/apache/cassandra/distributed/test/guardrails/GuardrailCollectionSizeOnSSTableWriteTest.java:39</code></td>
+</tr>
+<tr>
+<td><code>guardrails_existing_unit_tests_baseline</code></td>
+<td>单 JVM测试覆盖 guardrail 类型、bypass、diagnostic listener、config provider、所有主要 CQL guardrails 和 nodetool runtime config。</td>
+<td><code>test/unit/org/apache/cassandra/db/guardrails/GuardrailsTest.java</code>, <code>test/unit/org/apache/cassandra/db/guardrails/GuardrailTester.java</code>, <code>test/unit/org/apache/cassandra/tools/nodetool/GuardrailsConfigCommandsTest.java</code></td>
+<td>same</td>
+</tr>
+<tr>
+<td><code>guardrails_existing_distributed_tests_baseline</code></td>
+<td>distributed 测试覆盖 SSTable write/background guardrails、disk usage、non-partition restricted index query 和 intersect filtering query。</td>
+<td><code>test/distributed/org/apache/cassandra/distributed/test/guardrails/GuardrailTester.java</code>, <code>test/distributed/org/apache/cassandra/distributed/test/guardrails/GuardrailDiskUsageTest.java</code>, <code>test/distributed/org/apache/cassandra/distributed/test/guardrails/GuardrailNonPartitionRestrictedQueryTest.java</code>, <code>test/distributed/org/apache/cassandra/distributed/test/guardrails/IntersectFilteringQueryTest.java</code></td>
+<td>same</td>
+</tr>
+<tr>
+<td><code>guardrails_framework_ci_drift_checker_gap</code></td>
+<td>当前新增 checker 是 research 层 source-only gate，尚未接入 CircleCI/Ant；如果未来 CI 引入该脚本，需要更新本矩阵并删除 gap。</td>
+<td><code>.circleci/</code>, <code>build.xml</code>, <code>research/tools/check-guardrails-framework-drift.py</code></td>
+<td>none</td>
+</tr>
+</tbody>
+</table>
+<h2 id="guardrail-inventory">Guardrail Inventory</h2>
+<table>
+<thead>
+<tr>
+<th>Surface</th>
+<th>Guardrail fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Schema cardinality and properties</td>
+<td><code>keyspaces</code>, <code>tables</code>, <code>columnsPerTable</code>, <code>secondaryIndexesPerTable</code>, <code>createSecondaryIndexesEnabled</code>, <code>materializedViewsPerTable</code>, <code>tableProperties</code>, <code>alterTableEnabled</code>, <code>dropTruncateTableEnabled</code>, <code>dropKeyspaceEnabled</code>, <code>uncompressedTablesEnabled</code>, <code>compactTablesEnabled</code>, <code>zeroTTLOnTWCSEnabled</code>, <code>simpleStrategyEnabled</code>, <code>minimumReplicationFactor</code>, <code>maximumReplicationFactor</code>, <code>fieldsPerUDT</code></td>
+</tr>
+<tr>
+<td>Query planner/read</td>
+<td><code>groupByEnabled</code>, <code>intersectFilteringQueryEnabled</code>, <code>pageSize</code>, <code>partitionKeysInSelect</code>, <code>allowFilteringEnabled</code>, <code>inSelectCartesianProduct</code>, <code>readConsistencyLevels</code>, <code>nonPartitionRestrictedIndexQueryEnabled</code></td>
+</tr>
+<tr>
+<td>Write/mutation</td>
+<td><code>userTimestampsEnabled</code>, <code>readBeforeWriteListOperationsEnabled</code>, <code>writeConsistencyLevels</code>, <code>columnValueSize</code>, <code>collectionSize</code>, <code>itemsPerCollection</code>, <code>maximumAllowableTimestamp</code>, <code>minimumAllowableTimestamp</code>, <code>replicaDiskUsage</code></td>
+</tr>
+<tr>
+<td>Storage/background</td>
+<td><code>partitionSize</code>, <code>partitionTombstones</code>, <code>localDataDiskUsage</code></td>
+</tr>
+<tr>
+<td>Vector/SAI</td>
+<td><code>vectorTypeEnabled</code>, <code>vectorDimensions</code>, <code>saiSSTableIndexesPerQuery</code>, <code>saiStringTermSize</code>, <code>saiFrozenTermSize</code>, <code>saiVectorTermSize</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="operating-notes">Operating Notes</h2>
+<ul>
+<li>新增 guardrail 时至少要同步 <code>Guardrails</code> field、<code>GuardrailsConfig</code> getter、<code>Config</code> YAML field、<code>GuardrailsOptions</code> validation/getter/setter、<code>GuardrailsMBean</code> runtime method、<code>GuardrailsConfigCommand</code> reflected naming coverage、<code>conf/cassandra*.yaml</code> 注释模板、unit test 和本矩阵。</li>
+<li>对 query guardrail，fail 会抛 <code>GuardrailViolatedException</code>；对 background/null-state guardrail，fail 只通知日志、client warning ignore path、tracing ignore path 和 diagnostic event，不能中断 compaction/SSTable write。</li>
+<li><code>Values</code> 类型有 ignore action，最典型是 table properties；一致性级别使用 warned/disallowed，不使用 ignored。</li>
+<li>nodetool <code>setguardrailsconfig keyspaces_threshold &lt;fail&gt; &lt;warn&gt;</code> 会在调用 MBean setter 前反转为 setter 的 <code>&lt;warn&gt;, &lt;fail&gt;</code> 顺序，文档和 runbook 必须明确这一点。</li>
+</ul>
+</div></article>
+</main><footer class="site-footer"><div class="shell"><span>杜志旺</span><span>内容迁移自旧版静态博客。</span></div></footer></body></html>

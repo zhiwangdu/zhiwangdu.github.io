@@ -1,0 +1,98 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Streaming Transfer Compatibility Drift Checker 范围 research/tools/check-streaming-transfer-compatibility-drift.py 是 source-only drift check，用来保护 research/module-"><meta property="og:title" content="Streaming Transfer Compatibility Drift Checker | 杜志旺的博客"><meta property="og:description" content="Streaming Transfer Compatibility Drift Checker 范围 research/tools/check-streaming-transfer-compatibility-drift.py 是 source-only drift check，用来保护 research/module-"><meta property="og:type" content="website"><meta property="og:url" content="https://zhiwangdu.github.io/research/cassandra/module-streaming-transfer-compatibility-drift-checker/"><title>Streaming Transfer Compatibility Drift Checker | 杜志旺的博客</title><link rel="stylesheet" href="/_astro/BaseLayout.C_maKfi4.css"></head><body><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="首页"><span class="brand-mark">Z</span><span>杜志旺的博客</span></a><nav class="nav" aria-label="主导航"><a href="/">文章</a><a href="/research/">研究</a><a href="/archives/">归档</a><a href="/tags/">标签</a><a href="/rss.xml">RSS</a></nav></div></header><main class="shell">
+  <article class="article-page"><header class="article-hero"><div class="post-meta"><a href="/research/">Cassandra</a><time datetime="2026-06-22T13:06:27.000Z">2026/06/22</time></div><h1>Streaming Transfer Compatibility Drift Checker</h1><p>Streaming Transfer Compatibility Drift Checker 范围 research/tools/check-streaming-transfer-compatibility-drift.py 是 source-only drift check，用来保护 research/module-</p><p class="source-note">Source: <code>research/module-streaming-transfer-compatibility-drift-checker.md</code> · <code>0ae638514777</code></p></header><div class="prose"><h1 id="streaming-transfer-compatibility-drift-checker">Streaming Transfer Compatibility Drift Checker</h1>
+<h2 id="范围">范围</h2>
+<p><code>research/tools/check-streaming-transfer-compatibility-drift.py</code> 是 source-only drift check，用来保护 <code>research/module-streaming-transfer-compatibility-matrix.md</code> 中的 streaming transfer compatibility matrix。</p>
+<p>它不启动 Cassandra、不跑 JUnit，也不证明 mixed-version/TLS/<code>internode_compression</code> streaming 场景已经实现。它只做四件事：</p>
+<ul>
+<li>校验 streaming handshake、TLS optional fallback、inbound streaming pipeline、control/file multiplex、SSTable transfer writer/reader、stream compression format、zero-copy/TLS fallback、state/netstats/metrics 等源码合同仍存在。</li>
+<li>校验现有 unit/distributed tests 仍覆盖分层 baseline：serializer、semaphore/control failure、entire file count、netstats、<code>system_views.streaming</code>、ordinary internode encryption、messaging handshake optional fallback 和 isolated <code>internode_compression</code> config。</li>
+<li>校验研究文档和索引仍引用所有 compatibility 场景 ID。</li>
+<li>扫描 <code>test/distributed</code> 是否新增了同时包含 streaming marker、TLS marker、<code>internode_compression</code> marker 和 upgrade/mixed-version marker 的 Java 测试；如果发现，说明显式缺口已变化，必须更新矩阵。</li>
+</ul>
+<h2 id="覆盖场景">覆盖场景</h2>
+<table>
+<thead>
+<tr>
+<th>场景 ID</th>
+<th>保护内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>streaming_handshake_framing_contract</code></td>
+<td>streaming handshake MOD bit、version/framing flags 和 inbound <code>UNPROTECTED</code> streaming pipeline</td>
+</tr>
+<tr>
+<td><code>streaming_ssl_optional_fallback_contract</code></td>
+<td>optional TLS 下 streaming outbound fallback 策略</td>
+</tr>
+<tr>
+<td><code>streaming_inbound_tls_policy_contract</code></td>
+<td>inbound TLS policy handler 与 ordinary internode TLS 测试 baseline</td>
+</tr>
+<tr>
+<td><code>streaming_control_file_channel_contract</code></td>
+<td>control/file channel 分离、<code>NettyStreamingChannel.acquireOut()</code> 单文件约束</td>
+</tr>
+<tr>
+<td><code>streaming_file_semaphore_keepalive_contract</code></td>
+<td>file transfer semaphore、failure path 与 control failure baseline</td>
+</tr>
+<tr>
+<td><code>streaming_tls_zero_copy_fallback_contract</code></td>
+<td>TLS 下 entire SSTable zero-copy 回退到 user-space buffer</td>
+</tr>
+<tr>
+<td><code>streaming_internode_compression_boundary</code></td>
+<td><code>internode_compression</code> 只作用于 messaging frame，不作用于 streaming payload</td>
+</tr>
+<tr>
+<td><code>streaming_stream_compression_format_contract</code></td>
+<td><code>StreamCompressionSerializer</code> LZ4 chunk header/payload 格式</td>
+</tr>
+<tr>
+<td><code>streaming_outgoing_file_header_contract</code></td>
+<td><code>CassandraStreamHeader</code> wire header 与 outgoing file decision</td>
+</tr>
+<tr>
+<td><code>streaming_partial_uncompressed_contract</code></td>
+<td>partial uncompressed writer/reader 通过 stream compression 传输</td>
+</tr>
+<tr>
+<td><code>streaming_partial_compressed_contract</code></td>
+<td>compressed SSTable partial writer/reader 通过 compressed chunk bytes 传输</td>
+</tr>
+<tr>
+<td><code>streaming_entire_sstable_contract</code></td>
+<td>entire SSTable component manifest、writer/reader 和 count baseline</td>
+</tr>
+<tr>
+<td><code>streaming_state_netstats_observability_contract</code></td>
+<td><code>StreamingState</code>、<code>system_views.streaming</code>、<code>nodetool netstats</code> 和 streaming metrics</td>
+</tr>
+<tr>
+<td><code>streaming_receive_failure_contract</code></td>
+<td>receive/read failure 到 <code>session.onError()</code> 和 failure visibility</td>
+</tr>
+<tr>
+<td><code>streaming_existing_tests_baseline</code></td>
+<td>当前分层测试基线仍存在</td>
+</tr>
+<tr>
+<td><code>streaming_mixed_tls_compression_gap</code></td>
+<td>当前缺少 mixed-version + TLS + <code>internode_compression</code> + streaming transfer 组合 dtest</td>
+</tr>
+</tbody>
+</table>
+<h2 id="运行方式">运行方式</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">python3</span><span style="color:#9ECBFF"> research/tools/check-streaming-transfer-compatibility-drift.py</span></span>
+<span class="line"><span style="color:#B392F0">python3</span><span style="color:#9ECBFF"> research/tools/check-streaming-transfer-compatibility-drift.py</span><span style="color:#79B8FF"> --json</span></span></code></pre>
+<p>成功时输出源码检查、测试检查、gap scan、文档检查和场景数量。失败时列出具体缺失 token、缺失文档场景或新增的组合测试候选文件。</p>
+<h2 id="更新规则">更新规则</h2>
+<ul>
+<li>如果 <code>HandshakeProtocol</code>、<code>InboundConnectionInitiator</code>、<code>NettyStreamingConnectionFactory</code>、<code>StreamingMultiplexedChannel</code>、<code>AsyncStreamingOutputPlus</code> 或 <code>Cassandra*Stream*</code> reader/writer 的源码合同改变，先更新 <code>module-streaming-transfer-compatibility-matrix.md</code>，再调整 checker token。</li>
+<li>如果新增真正的 mixed-version/TLS/<code>internode_compression</code> streaming distributed/upgrade test，不要只放过 gap scan；应把 <code>streaming_mixed_tls_compression_gap</code> 改为具体覆盖项，并写明测试文件、触发操作、断言和剩余缺口。</li>
+<li>如果 upstream 把 <code>internode_compression</code> 或 TLS 配置测试迁移到别的文件，更新 test token checks，并确认它仍不是 streaming transfer compatibility coverage。</li>
+</ul>
+</div></article>
+</main><footer class="site-footer"><div class="shell"><span>杜志旺</span><span>内容迁移自旧版静态博客。</span></div></footer></body></html>

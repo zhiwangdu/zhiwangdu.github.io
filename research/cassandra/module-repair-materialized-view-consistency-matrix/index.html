@@ -1,0 +1,223 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Repair Materialized View Consistency Matrix 研究目标 Repair + Materialized View 的核心风险不是 streaming 能否完成，而是 streamed base table SSTable 在接收端是否重新经过普通 mutation write pa"><meta property="og:title" content="Repair Materialized View Consistency Matrix | 杜志旺的博客"><meta property="og:description" content="Repair Materialized View Consistency Matrix 研究目标 Repair + Materialized View 的核心风险不是 streaming 能否完成，而是 streamed base table SSTable 在接收端是否重新经过普通 mutation write pa"><meta property="og:type" content="website"><meta property="og:url" content="https://zhiwangdu.github.io/research/cassandra/module-repair-materialized-view-consistency-matrix/"><title>Repair Materialized View Consistency Matrix | 杜志旺的博客</title><link rel="stylesheet" href="/_astro/BaseLayout.C_maKfi4.css"></head><body><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="首页"><span class="brand-mark">Z</span><span>杜志旺的博客</span></a><nav class="nav" aria-label="主导航"><a href="/">文章</a><a href="/research/">研究</a><a href="/archives/">归档</a><a href="/tags/">标签</a><a href="/rss.xml">RSS</a></nav></div></header><main class="shell">
+  <article class="article-page"><header class="article-hero"><div class="post-meta"><a href="/research/">Cassandra</a><time datetime="2026-06-22T13:27:17.000Z">2026/06/22</time></div><h1>Repair Materialized View Consistency Matrix</h1><p>Repair Materialized View Consistency Matrix 研究目标 Repair + Materialized View 的核心风险不是 streaming 能否完成，而是 streamed base table SSTable 在接收端是否重新经过普通 mutation write pa</p><p class="source-note">Source: <code>research/module-repair-materialized-view-consistency-matrix.md</code> · <code>3dc91ea3e432</code></p></header><div class="prose"><h1 id="repair-materialized-view-consistency-matrix">Repair Materialized View Consistency Matrix</h1>
+<h2 id="研究目标">研究目标</h2>
+<p>Repair + Materialized View 的核心风险不是 streaming 能否完成，而是 streamed base table SSTable 在接收端是否重新经过普通 mutation write path，从而触发 view row 的创建、更新、旧 entry 删除、paired view replica 写入和本地 batchlog 兜底。这个矩阵把 <code>CassandraStreamReceiver</code>、<code>Keyspace.apply()</code>、<code>TableViews</code>、<code>ViewUpdateGenerator</code> 与 <code>StorageProxy.mutateMV()</code> 串成一条可验证的 correctness contract，并把当前缺少的 distributed 数据正确性测试显式固化为 gap。</p>
+<h2 id="场景矩阵">场景矩阵</h2>
+<table>
+<thead>
+<tr>
+<th>场景 ID</th>
+<th>保护内容</th>
+<th>源码/测试锚点</th>
+<th>风险</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>repair_mv_receiver_write_path_gate</code></td>
+<td>receiver 只有在 repair operation、base table 有 MV 且 <code>materialized_views_on_repair_enabled=true</code> 时为 MV 进入 write path；CDC 和 <code>streamToMemtable()</code> 是独立触发条件</td>
+<td><code>src/java/org/apache/cassandra/db/streaming/CassandraStreamReceiver.java:169-200</code>、<code>test/unit/org/apache/cassandra/db/streaming/CassandraStreamReceiverTest.java:69-152</code></td>
+<td>条件漂移会让 repair 直接 attach SSTable，MV 不会 replay</td>
+</tr>
+<tr>
+<td><code>repair_mv_stream_operation_gate</code></td>
+<td><code>StreamOperation.REPAIR</code> 和 <code>BULK_LOAD</code> 标记 <code>requiresViewBuild=true</code>，bootstrap/rebuild/decommission 不走同一 MV replay 语义</td>
+<td><code>src/java/org/apache/cassandra/streaming/StreamOperation.java:20-68</code></td>
+<td>错误扩散到 topology streaming 会改变 ingest 成本和 MV 行为</td>
+</tr>
+<tr>
+<td><code>repair_mv_config_toggle_contract</code></td>
+<td><code>materialized_views_on_repair_enabled</code> 默认 true，并由 <code>DatabaseDescriptor.is/setMaterializedViewsOnRepairEnabled()</code> 暴露给测试和运行时</td>
+<td><code>src/java/org/apache/cassandra/config/Config.java:595-600</code>、<code>src/java/org/apache/cassandra/config/DatabaseDescriptor.java:4227-4234</code></td>
+<td>配置默认值或 setter 漂移会改变 repair 后 MV 一致性预期</td>
+</tr>
+<tr>
+<td><code>repair_mv_replay_mutation_contract</code></td>
+<td>write-path repair 扫描接收 SSTable、按 <code>MAX_ROWS_PER_BATCH</code> 拆 partition、构造 <code>PartitionUpdate</code> 并调用 <code>Keyspace.apply()</code></td>
+<td><code>src/java/org/apache/cassandra/db/streaming/CassandraStreamReceiver.java:202-224</code></td>
+<td>大 partition 或大 repair range 会变成 mutation replay 压力；若跳过 apply，MV/2i/CDC 都可能不更新</td>
+</tr>
+<tr>
+<td><code>repair_mv_cleanup_flush_abort_contract</code></td>
+<td>replay 后 <code>cleanup()</code> 强制 flush <code>STREAMS_RECEIVED</code> 并 abort/delete streamed SSTable transaction，因为数据已通过 write path 写入</td>
+<td><code>src/java/org/apache/cassandra/db/streaming/CassandraStreamReceiver.java:291-301</code></td>
+<td>若未 flush 或未 abort，可能出现重复数据、泄漏 SSTable 或 commitlog/CDC 边界不清</td>
+</tr>
+<tr>
+<td><code>repair_mv_keyspace_apply_view_contract</code></td>
+<td><code>Keyspace.apply()</code> 先获取 MV lock，调用 <code>pushViewReplicaUpdates()</code>，再写 base table，并在 base 完成后更新 <code>baseComplete</code></td>
+<td><code>src/java/org/apache/cassandra/db/Keyspace.java:560-657</code></td>
+<td>view mutation 依赖 base completion latency；lock timeout 会以 <code>WriteType.VIEW</code> 暴露</td>
+</tr>
+<tr>
+<td><code>repair_mv_existing_row_read_contract</code></td>
+<td><code>TableViews.pushViewReplicaUpdates()</code> 读取 existing base rows，再用 streamed update 计算最小 view mutation</td>
+<td><code>src/java/org/apache/cassandra/db/view/TableViews.java:143-170</code>、<code>src/java/org/apache/cassandra/db/view/TableViews.java:390-467</code></td>
+<td>不读旧状态就无法删除旧 view PK entry 或判断 filter/liveness 变化</td>
+</tr>
+<tr>
+<td><code>repair_mv_update_action_contract</code></td>
+<td><code>ViewUpdateGenerator</code> 区分 <code>NEW_ENTRY</code>、<code>DELETE_OLD</code>、<code>UPDATE_EXISTING</code>、<code>SWITCH_ENTRY</code>，覆盖 view PK 非 base-PK 列、filter 和 liveness</td>
+<td><code>src/java/org/apache/cassandra/db/view/ViewUpdateGenerator.java:118-217</code>、<code>src/java/org/apache/cassandra/db/view/ViewUpdateGenerator.java:266-419</code></td>
+<td>修复只断言 insert 会漏掉 update/delete/switch entry 后的旧 view row 残留</td>
+</tr>
+<tr>
+<td><code>repair_mv_view_replica_write_contract</code></td>
+<td><code>StorageProxy.mutateMV()</code> 通过 base token 和 view token 找 paired endpoint，本地可直接 apply，远端通过 <code>Stage.VIEW_MUTATION</code> 写入</td>
+<td><code>src/java/org/apache/cassandra/service/StorageProxy.java:1010-1112</code></td>
+<td>只测单节点或 RF=1 不能证明远端 view replica 正确</td>
+</tr>
+<tr>
+<td><code>repair_mv_batchlog_pending_boundary</code></td>
+<td>启动/加入/移动、无 paired endpoint 或 pending endpoints 时使用本地 batchlog/ordinary write 兜底</td>
+<td><code>src/java/org/apache/cassandra/service/StorageProxy.java:1021-1106</code></td>
+<td>pending range 或拓扑变化时 repair+MV 可能依赖 batchlog replay 才最终一致</td>
+</tr>
+<tr>
+<td><code>repair_mv_metrics_observability_contract</code></td>
+<td>成本暴露在 <code>ViewReadTime</code>、<code>ViewWrite</code>、<code>ViewWriteLatency</code>、MV lock acquire 和 flush/write metrics 上</td>
+<td><code>src/java/org/apache/cassandra/db/view/TableViews.java:167</code>、<code>src/java/org/apache/cassandra/service/StorageProxy.java:1111</code>、<code>src/java/org/apache/cassandra/service/StorageProxy.java:1425-1442</code>、<code>src/java/org/apache/cassandra/db/Keyspace.java:616-623</code></td>
+<td>repair 成功但 MV 延迟或 backlog 异常需要从这些指标定位</td>
+</tr>
+<tr>
+<td><code>repair_mv_auto_repair_gate_contract</code></td>
+<td>auto-repair 已有 MV scheduling/config 计数测试，但不等价于 streaming repair 数据正确性测试</td>
+<td><code>test/unit/org/apache/cassandra/repair/autorepair/AutoRepairParameterizedTest.java:173-204</code>、<code>test/distributed/org/apache/cassandra/distributed/test/repair/AutoRepairFlagToggleTest.java:45-128</code></td>
+<td>auto-repair flag/describe 覆盖容易被误认为 MV repair correctness coverage</td>
+</tr>
+<tr>
+<td><code>repair_mv_existing_tests_baseline</code></td>
+<td>当前测试覆盖 receiver gate、MV update generator 普通 CQL 行为、repair dtest baseline 和 distributed MV schema/describe baseline，但没有交叉 correctness dtest</td>
+<td><code>test/unit/org/apache/cassandra/db/streaming/CassandraStreamReceiverTest.java:69-152</code>、<code>test/unit/org/apache/cassandra/cql3/ViewFiltering1Test.java:81-230</code>、<code>test/distributed/org/apache/cassandra/distributed/test/RepairTest.java:136-196</code>、<code>test/distributed/org/apache/cassandra/distributed/test/repair/AutoRepairFlagToggleTest.java:45-128</code></td>
+<td>分层测试都绿仍不能证明 repair streaming 后 MV 数据一致</td>
+</tr>
+<tr>
+<td><code>repair_mv_distributed_correctness_gap</code></td>
+<td>当前 <code>test/distributed</code> 没有同时创建 MV、执行 repair、并断言 base/view 数据一致的 Java test</td>
+<td><code>research/tools/check-repair-materialized-view-consistency-drift.py</code> gap scan</td>
+<td>需要新增真实 2+ node distributed test 才能关闭</td>
+</tr>
+</tbody>
+</table>
+<h2 id="调用图">调用图</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>repair streaming receive</span></span>
+<span class="line"><span>  -> StreamOperation.REPAIR.requiresViewBuild() == true</span></span>
+<span class="line"><span>  -> CassandraStreamReceiver.requiresWritePath(cfs)</span></span>
+<span class="line"><span>     -> cdcRequiresWriteCommitLog(cfs)</span></span>
+<span class="line"><span>     -> cfs.streamToMemtable()</span></span>
+<span class="line"><span>     -> hasViews(cfs)</span></span>
+<span class="line"><span>        -> View.findAll(cfs.metadata.keyspace, cfs.getTableName())</span></span>
+<span class="line"><span>     -> DatabaseDescriptor.isMaterializedViewsOnRepairEnabled()</span></span>
+<span class="line"><span>  -> CassandraStreamReceiver.finished()</span></span>
+<span class="line"><span>     -> sendThroughWritePath(cfs, readers)</span></span>
+<span class="line"><span>        -> reader.getScanner()</span></span>
+<span class="line"><span>        -> ThrottledUnfilteredIterator.throttle(scanner, MAX_ROWS_PER_BATCH)</span></span>
+<span class="line"><span>        -> PartitionUpdate.fromIterator(..., ColumnFilter.all(cfs.metadata()))</span></span>
+<span class="line"><span>        -> Keyspace.apply(new Mutation(update), writeCDCCommitLog, true, false)</span></span>
+<span class="line"><span>           -> acquire MV lock through ViewManager.acquireLockFor()</span></span>
+<span class="line"><span>           -> viewManager.forTable(baseTableId).pushViewReplicaUpdates(update, makeDurable, baseComplete)</span></span>
+<span class="line"><span>              -> updatedViews(update)</span></span>
+<span class="line"><span>              -> readExistingRowsCommand(update, views, nowInSec)</span></span>
+<span class="line"><span>              -> command.executeLocally()</span></span>
+<span class="line"><span>              -> generateViewUpdates(views, updates, existings, nowInSec, false)</span></span>
+<span class="line"><span>                 -> ViewUpdateGenerator.addBaseTableUpdate()</span></span>
+<span class="line"><span>                 -> NEW_ENTRY / DELETE_OLD / UPDATE_EXISTING / SWITCH_ENTRY</span></span>
+<span class="line"><span>              -> StorageProxy.mutateMV(baseKey, viewMutations, writeCommitLog, baseComplete, requestTime)</span></span>
+<span class="line"><span>                 -> ViewUtils.getViewNaturalEndpoint(replicationStrategy, baseToken, viewToken)</span></span>
+<span class="line"><span>                 -> local mutation.apply() or asyncWriteBatchedMutations(..., Stage.VIEW_MUTATION)</span></span>
+<span class="line"><span>                 -> local batchlog when topology/pending endpoint requires it</span></span>
+<span class="line"><span>           -> cfs.getWriteHandler().write(base update, ctx, updateIndexes=false)</span></span>
+<span class="line"><span>           -> baseComplete.set(currentTimeMillis())</span></span>
+<span class="line"><span>  -> CassandraStreamReceiver.cleanup()</span></span>
+<span class="line"><span>     -> cfs.forceBlockingFlush(STREAMS_RECEIVED)</span></span>
+<span class="line"><span>     -> abort streamed SSTable transaction</span></span></code></pre>
+<h2 id="配置项">配置项</h2>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th style="text-align: right">默认</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>materialized_views_enabled</code></td>
+<td style="text-align: right"><code>false</code></td>
+<td>是否允许 MV schema/use；测试通过 <code>DatabaseDescriptor.setMaterializedViewsEnabled(true)</code> 打开。见 <code>src/java/org/apache/cassandra/config/Config.java:595-596</code></td>
+</tr>
+<tr>
+<td><code>materialized_views_on_repair_enabled</code></td>
+<td style="text-align: right"><code>true</code></td>
+<td>repair/internode streaming 是否为 MV 走 write path replay。见 <code>src/java/org/apache/cassandra/config/Config.java:598-600</code></td>
+</tr>
+<tr>
+<td><code>cassandra.streaming.requires_cdc_replay</code> / CDC on repair</td>
+<td style="text-align: right">运行时属性/配置</td>
+<td>CDC table 可独立触发 write path，并决定 repair replay 是否写 commitlog。见 <code>src/java/org/apache/cassandra/db/streaming/CassandraStreamReceiver.java:174-183</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="metrics-与日志">Metrics 与日志</h2>
+<ul>
+<li><code>ViewReadTime</code> 记录为生成 view mutation 读取 existing base rows 的耗时，见 <code>src/java/org/apache/cassandra/db/view/TableViews.java:167</code> 与 <code>src/java/org/apache/cassandra/metrics/TableMetrics.java:796</code>。</li>
+<li><code>ViewWrite</code> 与 <code>ViewWriteLatency</code> 记录 view mutation dispatch 和 base-complete 延迟，见 <code>src/java/org/apache/cassandra/service/StorageProxy.java:1111</code>、<code>src/java/org/apache/cassandra/service/StorageProxy.java:1437-1441</code>、<code>src/java/org/apache/cassandra/metrics/ViewWriteMetrics.java:27-39</code>。</li>
+<li>MV lock acquire time 只为 droppable writes 记录，repair replay 需要结合 write stage、flush、view read/write metrics 观察，见 <code>src/java/org/apache/cassandra/db/Keyspace.java:616-623</code>。</li>
+<li>repair receiver attach path有 stream debug 日志；write-path replay 不走 <code>cfs.addSSTables()</code> 的 attach 日志，失败通常从 streaming session failure、view update error 和 flush/commitlog 异常定位，见 <code>src/java/org/apache/cassandra/db/streaming/CassandraStreamReceiver.java:258-285</code>、<code>src/java/org/apache/cassandra/db/Keyspace.java:641-649</code>。</li>
+</ul>
+<h2 id="运维关注点">运维关注点</h2>
+<ul>
+<li><code>materialized_views_on_repair_enabled=true</code> 把 repair 接收端变成 mutation replay：吞吐受 SSTable scan、partition throttling、MV existing-row read、view mutation write、flush 和 batchlog 共同影响。</li>
+<li><code>materialized_views_on_repair_enabled=false</code> 会恢复普通 SSTable attach 语义，但 repair 不负责把 base SSTable 中的数据 replay 到 MV；这是一致性语义改变，不只是性能开关。</li>
+<li>单节点或 RF=1 只能证明本地 MV mutation 生成，不足以证明 paired endpoint、pending endpoint 和 local batchlog 兜底。</li>
+<li>数据正确性测试应覆盖 insert、update 影响 view PK、delete/tombstone、filter/liveness 变化、repair 前后 base/view 对齐，以及至少一个远端 view replica 写入场景。</li>
+</ul>
+<h2 id="性能瓶颈">性能瓶颈</h2>
+<ul>
+<li><code>sendThroughWritePath()</code> 会扫描 repair 收到的每个 SSTable，并按 <code>MAX_ROWS_PER_BATCH</code> 拆 partition，宽 partition 会放大 heap 和 mutation apply 成本。</li>
+<li><code>readExistingRowsCommand()</code> 在 deletion 或 filter/liveness 判断场景下可能读取更多 base columns/rows；多个 views 会退化为 <code>ColumnFilter.all(metadata)</code>。</li>
+<li><code>StorageProxy.mutateMV()</code> 对非本地 paired endpoint 先写本地 batchlog，再异步发送 view mutation；view backlog 会增加 repair 完成后收敛时间。</li>
+<li><code>cleanup()</code> 的 <code>forceBlockingFlush(STREAMS_RECEIVED)</code> 会把 replay 产生的 memtable 压力转化为同步 flush 延迟。</li>
+</ul>
+<h2 id="常见故障">常见故障</h2>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>可能根因</th>
+<th>证据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>repair 成功但 MV 缺行</td>
+<td><code>materialized_views_on_repair_enabled=false</code>、receiver 未走 write path、或 distributed test 只验证 base table</td>
+<td><code>CassandraStreamReceiver.requiresWritePath()</code> 与 config token</td>
+</tr>
+<tr>
+<td>MV 有旧 view PK 残留</td>
+<td>update 改变 view PK 或 filter/liveness 时没有读 existing row 或没有触发 <code>DELETE_OLD</code>/<code>SWITCH_ENTRY</code></td>
+<td><code>TableViews.readExistingRowsCommand()</code>、<code>ViewUpdateGenerator.updateAction()</code></td>
+</tr>
+<tr>
+<td>repair 期间 view write 延迟增大</td>
+<td>paired endpoint 远端写、batchlog 兜底、pending range 或 view mutation stage backlog</td>
+<td><code>StorageProxy.mutateMV()</code>、<code>ViewWriteLatency</code></td>
+</tr>
+<tr>
+<td>streaming 接收后磁盘出现临时 SSTable</td>
+<td>write-path replay 后 cleanup 前的 offline transaction；最终应 flush replay 数据并 abort streamed SSTable</td>
+<td><code>CassandraStreamReceiver.cleanup()</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="测试覆盖与缺口">测试覆盖与缺口</h2>
+<ul>
+<li><code>CassandraStreamReceiverTest</code> 覆盖 repair/bulk-load、CDC、MV 和配置开关对 <code>requiresWritePath()</code> 的影响，见 <code>test/unit/org/apache/cassandra/db/streaming/CassandraStreamReceiverTest.java:69-152</code>。</li>
+<li><code>ViewFiltering*Test</code> 和 <code>ViewFiltering1Test</code> 覆盖普通 CQL 下 view row create/update/delete/filter 行为，见 <code>test/unit/org/apache/cassandra/cql3/ViewFiltering1Test.java:81-230</code>。</li>
+<li><code>AutoRepairParameterizedTest</code> 覆盖 MV repair scheduling/config metrics，但不是 streaming repair 数据正确性，见 <code>test/unit/org/apache/cassandra/repair/autorepair/AutoRepairParameterizedTest.java:173-204</code>、<code>test/unit/org/apache/cassandra/repair/autorepair/AutoRepairParameterizedTest.java:398-429</code>。</li>
+<li><code>AutoRepairFlagToggleTest</code> 是 distributed MV schema/describe/accessibility baseline；它没有执行 repair，见 <code>test/distributed/org/apache/cassandra/distributed/test/repair/AutoRepairFlagToggleTest.java:45-128</code>。</li>
+<li>当前缺口：需要新增 2+ node distributed test，创建 base table + MV，制造副本不一致，执行 <code>nodetool repair</code> 或 <code>StorageService.instance.repair()</code>，并断言 repair 后 base rows 与 MV rows 在本地/远端 view replica 上一致。</li>
+</ul>
+</div></article>
+</main><footer class="site-footer"><div class="shell"><span>杜志旺</span><span>内容迁移自旧版静态博客。</span></div></footer></body></html>

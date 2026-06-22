@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Repair Materialized View Consistency Drift Checker 范围 research/tools/check-repair-materialized-view-consistency-drift.py 是 source-only drift check，用来保护 research"><meta property="og:title" content="Repair Materialized View Consistency Drift Checker | 杜志旺的博客"><meta property="og:description" content="Repair Materialized View Consistency Drift Checker 范围 research/tools/check-repair-materialized-view-consistency-drift.py 是 source-only drift check，用来保护 research"><meta property="og:type" content="website"><meta property="og:url" content="https://zhiwangdu.github.io/research/cassandra/module-repair-materialized-view-consistency-drift-checker/"><title>Repair Materialized View Consistency Drift Checker | 杜志旺的博客</title><link rel="stylesheet" href="/_astro/BaseLayout.C_maKfi4.css"></head><body><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="首页"><span class="brand-mark">Z</span><span>杜志旺的博客</span></a><nav class="nav" aria-label="主导航"><a href="/">文章</a><a href="/research/">研究</a><a href="/archives/">归档</a><a href="/tags/">标签</a><a href="/rss.xml">RSS</a></nav></div></header><main class="shell">
+  <article class="article-page"><header class="article-hero"><div class="post-meta"><a href="/research/">Cassandra</a><time datetime="2026-06-22T13:27:17.000Z">2026/06/22</time></div><h1>Repair Materialized View Consistency Drift Checker</h1><p>Repair Materialized View Consistency Drift Checker 范围 research/tools/check-repair-materialized-view-consistency-drift.py 是 source-only drift check，用来保护 research</p><p class="source-note">Source: <code>research/module-repair-materialized-view-consistency-drift-checker.md</code> · <code>3dc91ea3e432</code></p></header><div class="prose"><h1 id="repair-materialized-view-consistency-drift-checker">Repair Materialized View Consistency Drift Checker</h1>
+<h2 id="范围">范围</h2>
+<p><code>research/tools/check-repair-materialized-view-consistency-drift.py</code> 是 source-only drift check，用来保护 <code>research/module-repair-materialized-view-consistency-matrix.md</code> 中的 repair + Materialized View consistency contract。</p>
+<p>它不启动 Cassandra、不跑 JUnit，也不证明 repair+MV 数据正确性已经被真实 distributed test 覆盖。它只做四件事：</p>
+<ul>
+<li>校验 repair receiver write-path gate、MV repair config、mutation replay、cleanup flush/abort、<code>Keyspace.apply()</code> view update、<code>TableViews</code> existing-row read、<code>ViewUpdateGenerator</code> action matrix、<code>StorageProxy.mutateMV()</code> paired endpoint/batchlog/metrics 等源码合同仍存在。</li>
+<li>校验现有测试 baseline 仍存在：receiver gate unit test、普通 MV CQL update/delete tests、auto-repair MV config/describe tests 和 repair distributed baseline。</li>
+<li>校验研究文档和索引仍引用所有 repair+MV consistency 场景 ID。</li>
+<li>扫描 <code>test/distributed</code> 是否新增了同时包含 MV schema marker 和显式 repair invocation 的 Java 测试；如果发现，说明 <code>repair_mv_distributed_correctness_gap</code> 已变化，必须更新矩阵和 checker。</li>
+</ul>
+<h2 id="覆盖场景">覆盖场景</h2>
+<table>
+<thead>
+<tr>
+<th>场景 ID</th>
+<th>保护内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>repair_mv_receiver_write_path_gate</code></td>
+<td><code>CassandraStreamReceiver.requiresWritePath()</code> 的 MV gate</td>
+</tr>
+<tr>
+<td><code>repair_mv_stream_operation_gate</code></td>
+<td><code>StreamOperation.REPAIR</code>/<code>BULK_LOAD</code> 的 <code>requiresViewBuild</code> 标记</td>
+</tr>
+<tr>
+<td><code>repair_mv_config_toggle_contract</code></td>
+<td><code>materialized_views_on_repair_enabled</code> 默认值与 <code>DatabaseDescriptor</code> getter/setter</td>
+</tr>
+<tr>
+<td><code>repair_mv_replay_mutation_contract</code></td>
+<td>repair received SSTable 通过 scanner/throttle/<code>PartitionUpdate</code>/<code>Keyspace.apply()</code> replay</td>
+</tr>
+<tr>
+<td><code>repair_mv_cleanup_flush_abort_contract</code></td>
+<td>replay 后 force flush 并 abort streamed SSTable transaction</td>
+</tr>
+<tr>
+<td><code>repair_mv_keyspace_apply_view_contract</code></td>
+<td><code>Keyspace.apply()</code> 中 MV lock、<code>pushViewReplicaUpdates()</code> 与 base write ordering</td>
+</tr>
+<tr>
+<td><code>repair_mv_existing_row_read_contract</code></td>
+<td><code>TableViews</code> 为 view correctness 读取 existing base rows</td>
+</tr>
+<tr>
+<td><code>repair_mv_update_action_contract</code></td>
+<td><code>ViewUpdateGenerator</code> 的 create/delete/update/switch action matrix</td>
+</tr>
+<tr>
+<td><code>repair_mv_view_replica_write_contract</code></td>
+<td><code>StorageProxy.mutateMV()</code> paired endpoint 与 <code>Stage.VIEW_MUTATION</code></td>
+</tr>
+<tr>
+<td><code>repair_mv_batchlog_pending_boundary</code></td>
+<td>starting/joining/moving、pending endpoint 和 local batchlog fallback</td>
+</tr>
+<tr>
+<td><code>repair_mv_metrics_observability_contract</code></td>
+<td><code>ViewReadTime</code>、<code>ViewWrite</code>、<code>ViewWriteLatency</code> 和 MV lock metrics</td>
+</tr>
+<tr>
+<td><code>repair_mv_auto_repair_gate_contract</code></td>
+<td>auto-repair MV config 测试与 correctness test 的边界</td>
+</tr>
+<tr>
+<td><code>repair_mv_existing_tests_baseline</code></td>
+<td>当前分层测试 baseline</td>
+</tr>
+<tr>
+<td><code>repair_mv_distributed_correctness_gap</code></td>
+<td>当前缺少 repair+MV distributed correctness dtest</td>
+</tr>
+</tbody>
+</table>
+<h2 id="运行方式">运行方式</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">python3</span><span style="color:#9ECBFF"> research/tools/check-repair-materialized-view-consistency-drift.py</span></span>
+<span class="line"><span style="color:#B392F0">python3</span><span style="color:#9ECBFF"> research/tools/check-repair-materialized-view-consistency-drift.py</span><span style="color:#79B8FF"> --json</span></span></code></pre>
+<p>成功时输出源码检查、测试检查、gap scan、文档检查和场景数量。失败时列出具体缺失 token、缺失文档场景或新增的 distributed repair+MV 候选测试文件。</p>
+<h2 id="更新规则">更新规则</h2>
+<ul>
+<li>如果 <code>CassandraStreamReceiver</code>、<code>StreamOperation</code>、<code>Keyspace</code>、<code>TableViews</code>、<code>ViewUpdateGenerator</code>、<code>StorageProxy.mutateMV()</code> 的源码合同改变，先更新 matrix 的调用图和场景说明，再调整 checker token。</li>
+<li>如果新增真正的 repair+MV distributed correctness test，不要只放过 gap scan；应把 <code>repair_mv_distributed_correctness_gap</code> 改为具体覆盖项，写明测试文件、repair 触发方式、base/view 断言和剩余缺口。</li>
+<li>如果 distributed MV tests 或 repair tests 迁移到新文件，更新 test token checks，并确认它们是否真的同时覆盖 MV schema、repair execution 和数据一致性断言。</li>
+</ul>
+</div></article>
+</main><footer class="site-footer"><div class="shell"><span>杜志旺</span><span>内容迁移自旧版静态博客。</span></div></footer></body></html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="CQL Grammar Dispatch Drift Checker 范围 research/tools/check-cql-grammar-dispatch-drift.py 是 source-only drift check，用来保护 research/module-cql-grammar-dispatch-exh"><meta property="og:title" content="CQL Grammar Dispatch Drift Checker | 杜志旺的博客"><meta property="og:description" content="CQL Grammar Dispatch Drift Checker 范围 research/tools/check-cql-grammar-dispatch-drift.py 是 source-only drift check，用来保护 research/module-cql-grammar-dispatch-exh"><meta property="og:type" content="website"><meta property="og:url" content="https://zhiwangdu.github.io/research/cassandra/module-cql-grammar-dispatch-drift-checker/"><title>CQL Grammar Dispatch Drift Checker | 杜志旺的博客</title><link rel="stylesheet" href="/_astro/BaseLayout.C_maKfi4.css"></head><body><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="首页"><span class="brand-mark">Z</span><span>杜志旺的博客</span></a><nav class="nav" aria-label="主导航"><a href="/">文章</a><a href="/research/">研究</a><a href="/archives/">归档</a><a href="/tags/">标签</a><a href="/rss.xml">RSS</a></nav></div></header><main class="shell">
+  <article class="article-page"><header class="article-hero"><div class="post-meta"><a href="/research/">Cassandra</a><time datetime="2026-06-22T13:27:17.000Z">2026/06/22</time></div><h1>CQL Grammar Dispatch Drift Checker</h1><p>CQL Grammar Dispatch Drift Checker 范围 research/tools/check-cql-grammar-dispatch-drift.py 是 source-only drift check，用来保护 research/module-cql-grammar-dispatch-exh</p><p class="source-note">Source: <code>research/module-cql-grammar-dispatch-drift-checker.md</code> · <code>3dc91ea3e432</code></p></header><div class="prose"><h1 id="cql-grammar-dispatch-drift-checker">CQL Grammar Dispatch Drift Checker</h1>
+<h2 id="范围">范围</h2>
+<p><code>research/tools/check-cql-grammar-dispatch-drift.py</code> 是 source-only drift check，用来保护 <code>research/module-cql-grammar-dispatch-exhaustiveness-matrix.md</code>。</p>
+<p>它不运行 ANTLR、不生成 <code>CqlParser.java</code>，也不证明 Java exhaustiveness test 已存在。它只做五件事：</p>
+<ul>
+<li>校验 <code>build.xml</code> 的 <code>check-gen-cql3-grammar</code> / <code>gen-cql3-grammar</code> target 仍以 <code>src/antlr/*.g</code> 和 <code>src/antlr/Cql.g</code> 为生成入口。</li>
+<li>解析 <code>Parser.g</code> 的 <code>cqlStatement</code> dispatch block，确认 43 个 dispatch entries 的名称、顺序和唯一性。</li>
+<li>确认每个 dispatch entry 在 <code>Parser.g</code> 中有对应 rule definition，并记录 return type 边界。</li>
+<li>校验现有测试 baseline：<code>CqlParserTest</code>、<code>KeywordTestBase</code>、<code>ReservedKeywordsTest</code> 和 auth identity CQL tests 仍存在。</li>
+<li>扫描 tests 中是否出现真正的 dispatch exhaustiveness marker；如果出现，说明 <code>cql_dispatch_exhaustiveness_test_gap</code> 已变化，必须更新矩阵。</li>
+</ul>
+<h2 id="覆盖场景">覆盖场景</h2>
+<table>
+<thead>
+<tr>
+<th>场景 ID</th>
+<th>保护内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cql_grammar_generation_target_contract</code></td>
+<td><code>build.xml</code> grammar generation target</td>
+</tr>
+<tr>
+<td><code>cql_grammar_source_include_contract</code></td>
+<td><code>src/antlr/*.g</code> up-to-date source set and <code>Cql.g</code> imports</td>
+</tr>
+<tr>
+<td><code>cql_grammar_generated_artifact_boundary</code></td>
+<td>generated parser artifacts are not tracked source</td>
+</tr>
+<tr>
+<td><code>cql_dispatch_parser_rule_contract</code></td>
+<td><code>cqlStatement</code> 43-entry dispatch baseline</td>
+</tr>
+<tr>
+<td><code>cql_dispatch_rule_definition_contract</code></td>
+<td>every dispatch entry has a rule definition</td>
+</tr>
+<tr>
+<td><code>cql_dispatch_raw_return_contract</code></td>
+<td>dispatch return types remain raw/concrete statement boundary</td>
+</tr>
+<tr>
+<td><code>cql_dispatch_bind_marker_after_contract</code></td>
+<td>common <code>stmt.setBindVariables(bindVariables)</code> hook</td>
+</tr>
+<tr>
+<td><code>cql_dispatch_keyword_token_contract</code></td>
+<td>keyword token tests are not dispatch exhaustiveness tests</td>
+</tr>
+<tr>
+<td><code>cql_dispatch_statement_family_test_baseline</code></td>
+<td>scattered statement-family tests remain present</td>
+</tr>
+<tr>
+<td><code>cql_dispatch_raw_prepare_checker_boundary</code></td>
+<td>boundary with existing raw prepare checker</td>
+</tr>
+<tr>
+<td><code>cql_dispatch_exhaustiveness_test_gap</code></td>
+<td>current lack of Java exhaustiveness matrix test</td>
+</tr>
+</tbody>
+</table>
+<h2 id="运行方式">运行方式</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">python3</span><span style="color:#9ECBFF"> research/tools/check-cql-grammar-dispatch-drift.py</span></span>
+<span class="line"><span style="color:#B392F0">python3</span><span style="color:#9ECBFF"> research/tools/check-cql-grammar-dispatch-drift.py</span><span style="color:#79B8FF"> --json</span></span></code></pre>
+<p>成功时输出 dispatch entries、rule definitions、source/test/doc/gap 检查数量。失败时列出缺失 token、dispatch mismatch、缺失 rule definition 或新增 exhaustiveness test candidate。</p>
+<h2 id="更新规则">更新规则</h2>
+<ul>
+<li>如果 <code>Parser.g</code> 的 <code>cqlStatement</code> dispatch 改变，先更新 matrix 的 baseline，再调整 checker 的 expected list。</li>
+<li>如果新增真正的 Java exhaustiveness test，不要只放过 gap scan；应把 <code>cql_dispatch_exhaustiveness_test_gap</code> 改为测试覆盖项，并写明测试文件和 sample 生成/维护方式。</li>
+<li>如果 generated <code>CqlParser.java</code> / <code>CqlLexer.java</code> 被提交到仓库，新增 generated artifact consistency 检查，不能继续只依赖 grammar source。</li>
+</ul>
+</div></article>
+</main><footer class="site-footer"><div class="shell"><span>杜志旺</span><span>内容迁移自旧版静态博客。</span></div></footer></body></html>

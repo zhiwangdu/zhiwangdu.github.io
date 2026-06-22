@@ -1,0 +1,178 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="RocksDB Kernel Insights This document summarizes RocksDB from a database-kernel development viewpoint. 1. Why RocksDB Is Designed This Way RocksDB optimizes for"><meta property="og:title" content="RocksDB Kernel Insights | 杜志旺的博客"><meta property="og:description" content="RocksDB Kernel Insights This document summarizes RocksDB from a database-kernel development viewpoint. 1. Why RocksDB Is Designed This Way RocksDB optimizes for"><meta property="og:type" content="website"><meta property="og:url" content="https://zhiwangdu.github.io/research/rocksdb/rocksdb-kernel-insights/"><title>RocksDB Kernel Insights | 杜志旺的博客</title><link rel="stylesheet" href="/_astro/BaseLayout.C_maKfi4.css"></head><body><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="首页"><span class="brand-mark">Z</span><span>杜志旺的博客</span></a><nav class="nav" aria-label="主导航"><a href="/">文章</a><a href="/research/">研究</a><a href="/archives/">归档</a><a href="/tags/">标签</a><a href="/rss.xml">RSS</a></nav></div></header><main class="shell">
+  <article class="article-page"><header class="article-hero"><div class="post-meta"><a href="/research/">RocksDB</a><time datetime="2026-06-22T12:03:14.000Z">2026/06/22</time></div><h1>RocksDB Kernel Insights</h1><p>RocksDB Kernel Insights This document summarizes RocksDB from a database-kernel development viewpoint. 1. Why RocksDB Is Designed This Way RocksDB optimizes for</p><p class="source-note">Source: <code>docs/rocksdb-kernel-insights.md</code> · <code>cad43fd2c209</code></p></header><div class="prose"><h1 id="rocksdb-kernel-insights">RocksDB Kernel Insights</h1>
+<p>This document summarizes RocksDB from a database-kernel development viewpoint.</p>
+<h2 id="1-why-rocksdb-is-designed-this-way">1. Why RocksDB Is Designed This Way</h2>
+<p>RocksDB optimizes for write-heavy storage with acceptable read cost by using an
+LSM. Writes append to WAL and memtable first, then background flush/compaction
+turn memory into immutable sorted files and maintain the LSM shape. This trades
+random in-place updates for sequential writes and background rewrite work.</p>
+<p>Source anchors:</p>
+<ul>
+<li>Write/WAL/memtable: <code>db/db_impl/db_impl_write.cc</code>, <code>db/write_batch.cc</code>,
+<code>db/memtable.cc</code>, <code>db/log_writer.cc</code></li>
+<li>LSM metadata: <code>db/version_set.cc</code>, <code>db/version_edit.cc</code></li>
+<li>Table format: <code>table/block_based/*</code></li>
+<li>Compaction: <code>db/compaction/*</code></li>
+</ul>
+<h2 id="2-designs-worth-borrowing">2. Designs Worth Borrowing</h2>
+<table>
+<thead>
+<tr>
+<th>Design</th>
+<th>Why it works</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SuperVersion</td>
+<td>Readers avoid DB mutex while preserving object lifetime.</td>
+<td><code>db/column_family.h</code>, <code>db/column_family.cc</code></td>
+</tr>
+<tr>
+<td>WAL-before-memtable</td>
+<td>Simple crash recovery invariant.</td>
+<td><code>db/db_impl/db_impl_write.cc</code>, <code>db/db_impl/db_impl_open.cc</code></td>
+</tr>
+<tr>
+<td>MANIFEST as metadata log</td>
+<td>File membership changes are atomic and replayable.</td>
+<td><code>db/version_set.cc</code>, <code>db/version_edit.cc</code></td>
+</tr>
+<tr>
+<td>Internal keys</td>
+<td>User key plus sequence/type gives MVCC-like snapshot visibility.</td>
+<td><code>db/dbformat.h</code></td>
+</tr>
+<tr>
+<td>Block cache below table reader</td>
+<td>One cache interface serves data/index/filter blocks.</td>
+<td><code>include/rocksdb/cache.h</code>, <code>table/block_based/block_cache.cc</code></td>
+</tr>
+<tr>
+<td>Compaction iterator</td>
+<td>Centralizes obsolete-version, tombstone, merge, filter, and blob-GC logic.</td>
+<td><code>db/compaction/compaction_iterator.cc</code></td>
+</tr>
+<tr>
+<td>EventListener and metrics</td>
+<td>Operational hooks are first-class without coupling core logic to one monitoring system.</td>
+<td><code>include/rocksdb/listener.h</code>, <code>include/rocksdb/statistics.h</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-highest-complexity-areas">3. Highest-Complexity Areas</h2>
+<ul>
+<li><code>DBImpl::WriteImpl</code>: write modes, callbacks, WAL sync, sequence publication,
+blob direct write, memtable insertion, and error paths meet in one hot path.</li>
+<li><code>VersionSet::LogAndApply</code>: metadata correctness, manifest IO, version
+builder, and writer queueing.</li>
+<li><code>CompactionIterator</code>: snapshot correctness, tombstones, merges, blob GC, and
+user compaction filters.</li>
+<li><code>DBIter</code> and <code>MergingIterator</code>: range scans must hide internal complexity
+while remaining fast.</li>
+<li>Recovery: must reconcile MANIFEST, WAL, column families, missing files,
+corruption policy, and transaction state.</li>
+</ul>
+<h2 id="4-modules-most-likely-to-introduce-bugs">4. Modules Most Likely to Introduce Bugs</h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Common bug class</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Write path</td>
+<td>Sequence publication before visibility, invalid option combinations, partial memtable insert after WAL success.</td>
+</tr>
+<tr>
+<td>VersionSet/MANIFEST</td>
+<td>File-number reuse, missing file deletion/addition, corrupt recovery compatibility.</td>
+</tr>
+<tr>
+<td>CompactionIterator</td>
+<td>Dropping data visible to snapshots, mishandling range tombstones or merge operands.</td>
+</tr>
+<tr>
+<td>Iterator</td>
+<td>Direction-switch bugs, bounds/prefix bugs, stale pinned resources.</td>
+</tr>
+<tr>
+<td>Cache/filter</td>
+<td>Incorrect cache keys, stale table options, filter false-negative bugs.</td>
+</tr>
+<tr>
+<td>Recovery</td>
+<td>WAL replay ordering, corrupt-tail policy mistakes, missing-file handling.</td>
+</tr>
+<tr>
+<td>Utilities</td>
+<td>Checkpoint/backup live-file races, ingestion overlap/sequence mistakes.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-mini-lsm-minimum-closed-loop">5. Mini-LSM Minimum Closed Loop</h2>
+<p>For a small educational LSM, implement:</p>
+<ol>
+<li>Internal key format: user key, sequence, type.</li>
+<li>WriteBatch plus WAL append and replay.</li>
+<li>Mutable skiplist memtable and immutable memtable list.</li>
+<li>Flush to sorted SST with data block, index, filter, footer.</li>
+<li>Manifest with add/delete file edits and CURRENT pointer.</li>
+<li>Version object with L0 overlap and L1+ non-overlap search.</li>
+<li>Point Get with snapshot sequence filtering.</li>
+<li>Iterator over memtables and SSTs with merge heap.</li>
+<li>Basic leveled compaction and tombstone cleanup.</li>
+<li>Tests for crash recovery after every file/manifest/WAL boundary.</li>
+</ol>
+<h2 id="6-time-series-database-considerations">6. Time-Series Database Considerations</h2>
+<p>If using or adapting RocksDB for time-series workloads, focus on:</p>
+<ul>
+<li>key schema and comparator so time ranges are contiguous;</li>
+<li>prefix extractor for series ID to make filters useful;</li>
+<li>block size and compression for scan-heavy workloads;</li>
+<li>FIFO or leveled compaction depending on retention semantics;</li>
+<li>tombstone/range deletion volume for TTL deletes;</li>
+<li>cache partitioning to avoid scans evicting hot point-read blocks;</li>
+<li>ingest/external SST for bulk backfill;</li>
+<li>snapshot/backup retention so old data is not kept unexpectedly.</li>
+</ul>
+<h2 id="7-cassandra--opengemini-comparison-dimensions">7. Cassandra / openGemini Comparison Dimensions</h2>
+<p>Compare along these axes:</p>
+<ul>
+<li>write path durability: WAL/commitlog, memtable model, batching;</li>
+<li>LSM metadata: MANIFEST/VersionSet versus system tables/metadata;</li>
+<li>compaction strategies: leveled/universal/FIFO versus size-tiered/time-window;</li>
+<li>query model: embedded KV engine versus distributed storage/query engine;</li>
+<li>replication and consensus: outside RocksDB, native in distributed systems;</li>
+<li>range scan/index model: key-ordered SST versus time-series partition/index;</li>
+<li>observability: RocksDB tickers/PerfContext/LOG versus cluster metrics;</li>
+<li>operational failure domains: local DB recovery versus cluster repair/rebalance.</li>
+</ul>
+<h2 id="8-engineering-compromises">8. Engineering Compromises</h2>
+<p>RocksDB often chooses practical engineering over theoretical simplicity:</p>
+<ul>
+<li>multiple write modes complicate <code>WriteImpl</code> but support different latency and
+transaction tradeoffs;</li>
+<li>universal/FIFO/leveled compaction coexist because no one strategy wins every
+workload;</li>
+<li>filters and cache policies have many options because workloads differ;</li>
+<li>MANIFEST append is simple and robust but can become large and slow to replay;</li>
+<li>snapshots are cheap but can retain old versions and space;</li>
+<li>EventListener callbacks are flexible but must be kept cheap by users;</li>
+<li>Env/FileSystem abstraction is more complex than direct POSIX calls but is
+necessary for portability and custom storage.</li>
+</ul>
+<h2 id="9-operations-summary">9. Operations Summary</h2>
+<p>For write issues, start with WAL sync time, write stall counters, immutable
+memtable count, L0 file count, pending compaction bytes, and background jobs.</p>
+<p>For read issues, start with block cache hit rate, Bloom usefulness, L0 hit
+counts, PerfContext block read time, and iterator skipped-key counters.</p>
+<p>For recovery issues, start with MANIFEST size/replay logs, WAL count, last
+sequence, missing file messages, and corruption status.</p>
+<p>For space issues, start with snapshots, obsolete files, compaction backlog,
+range tombstones, backups/checkpoints, and blob garbage.</p>
+</div></article>
+</main><footer class="site-footer"><div class="shell"><span>杜志旺</span><span>内容迁移自旧版静态博客。</span></div></footer></body></html>

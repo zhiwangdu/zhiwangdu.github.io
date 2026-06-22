@@ -1,0 +1,230 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="RocksDB Recovery and Troubleshooting This document covers DB open/recovery and operational failure analysis. 1. Recovery Call Chain DB::Open -> DBImpl::Recover "><meta property="og:title" content="RocksDB Recovery and Troubleshooting | 杜志旺的博客"><meta property="og:description" content="RocksDB Recovery and Troubleshooting This document covers DB open/recovery and operational failure analysis. 1. Recovery Call Chain DB::Open -> DBImpl::Recover "><meta property="og:type" content="website"><meta property="og:url" content="https://zhiwangdu.github.io/research/rocksdb/rocksdb-recovery/"><title>RocksDB Recovery and Troubleshooting | 杜志旺的博客</title><link rel="stylesheet" href="/_astro/BaseLayout.C_maKfi4.css"></head><body><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="首页"><span class="brand-mark">Z</span><span>杜志旺的博客</span></a><nav class="nav" aria-label="主导航"><a href="/">文章</a><a href="/research/">研究</a><a href="/archives/">归档</a><a href="/tags/">标签</a><a href="/rss.xml">RSS</a></nav></div></header><main class="shell">
+  <article class="article-page"><header class="article-hero"><div class="post-meta"><a href="/research/">RocksDB</a><time datetime="2026-06-22T12:03:14.000Z">2026/06/22</time></div><h1>RocksDB Recovery and Troubleshooting</h1><p>RocksDB Recovery and Troubleshooting This document covers DB open/recovery and operational failure analysis. 1. Recovery Call Chain DB::Open -&gt; DBImpl::Recover </p><p class="source-note">Source: <code>docs/rocksdb-recovery.md</code> · <code>cad43fd2c209</code></p></header><div class="prose"><h1 id="rocksdb-recovery-and-troubleshooting">RocksDB Recovery and Troubleshooting</h1>
+<p>This document covers DB open/recovery and operational failure analysis.</p>
+<h2 id="1-recovery-call-chain">1. Recovery Call Chain</h2>
+<p><code>DB::Open</code>
+-&gt; <code>DBImpl::Recover</code> (<code>db/db_impl/db_impl_open.cc</code>)
+-&gt; DB lock and directory setup
+-&gt; CURRENT/MANIFEST discovery
+-&gt; <code>VersionSet::Recover</code> (<code>db/version_set.cc</code>)
+-&gt; <code>VersionEdit::DecodeFrom</code> (<code>db/version_edit.cc</code>)
+-&gt; current Versions rebuilt
+-&gt; WAL files selected
+-&gt; <code>DBImpl::RecoverLogFiles</code>
+-&gt; <code>DBImpl::ProcessLogFile</code>
+-&gt; <code>log::Reader::ReadRecord</code>
+-&gt; <code>WriteBatchInternal::InsertInto</code>
+-&gt; recovered memtables
+-&gt; final flush or active WAL restore
+-&gt; publish recovered sequence.</p>
+<h2 id="2-crash-consistency">2. Crash Consistency</h2>
+<p>WAL protects writes not yet flushed. MANIFEST protects SST membership. A flush
+or compaction output file is not live until a durable <code>VersionEdit</code> says it is.
+On restart, RocksDB trusts durable MANIFEST records and then replays WALs newer
+than the minimum log number needed by unflushed data.</p>
+<h2 id="3-corruption-and-missing-files">3. Corruption and Missing Files</h2>
+<p>Key source paths:</p>
+<ul>
+<li><code>VersionSet::Recover</code> reads CURRENT and MANIFEST.</li>
+<li><code>DBImpl::ProcessLogFile</code> reads WAL records and applies recovery mode.</li>
+<li><code>VersionEdit::DecodeFrom</code> parses durable metadata edits.</li>
+<li><code>db/corruption_test.cc</code>, <code>db/fault_injection_test.cc</code>, and <code>db/repair_test.cc</code>
+cover failure cases.</li>
+</ul>
+<p>Options that change behavior:</p>
+<ul>
+<li><code>wal_recovery_mode</code></li>
+<li><code>paranoid_checks</code></li>
+<li><code>best_efforts_recovery</code></li>
+<li><code>create_if_missing</code></li>
+<li><code>error_if_exists</code></li>
+</ul>
+<h2 id="4-troubleshooting-matrix">4. Troubleshooting Matrix</h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Symptoms</th>
+<th>Likely causes</th>
+<th>Config / metrics</th>
+<th>Source evidence</th>
+<th>Steps / optimization</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Writes slow</td>
+<td>High write latency</td>
+<td>WAL sync, write group wait, memtable insert CPU, stalls</td>
+<td><code>DB_WRITE</code>, <code>PerfContext::write_wal_time</code>, <code>write_memtable_time</code>, <code>write_thread_wait_nanos</code></td>
+<td><code>DBImpl::WriteImpl</code>, <code>WriteThread</code></td>
+<td>Separate WAL vs memtable time; inspect sync writes and stall counters.</td>
+</tr>
+<tr>
+<td>Write stall</td>
+<td>Writes delayed/stopped</td>
+<td>L0 count, immutable memtables, pending compaction bytes</td>
+<td><code>STALL_MICROS</code>, <code>WRITE_STALL</code>, <code>level0_*</code>, pending bytes</td>
+<td>write controller, <code>MaybeScheduleFlushOrCompaction</code></td>
+<td>Increase compaction/flush capacity or reduce write burst/LSM debt.</td>
+</tr>
+<tr>
+<td>WAL sync slow</td>
+<td>Sync writes slow</td>
+<td>Filesystem fsync latency, WAL device contention, rate limiter</td>
+<td><code>WAL_FILE_SYNC_MICROS</code>, <code>IOStatsContext::fsync_nanos</code></td>
+<td><code>log::Writer::AddRecord</code>, <code>DBImpl::SyncWAL</code></td>
+<td>Check storage latency, sync frequency, WAL dir placement.</td>
+</tr>
+<tr>
+<td>MemTable buildup</td>
+<td>Memory grows, WAL retained</td>
+<td>Flush cannot keep up, high write buffers, blocked flush</td>
+<td><code>max_write_buffer_number</code>, immutable count, LOG flush queue</td>
+<td><code>MemTableList</code>, <code>BackgroundFlush</code></td>
+<td>Add flush workers, tune write buffers, inspect background errors.</td>
+</tr>
+<tr>
+<td>Flush behind</td>
+<td>L0 creation slow</td>
+<td>Slow SST writes, compression, file sync, background error</td>
+<td><code>FLUSH_TIME</code>, <code>FILE_WRITE_FLUSH_MICROS</code>, <code>FLUSH_WRITE_BYTES</code></td>
+<td><code>FlushJob::WriteLevel0Table</code></td>
+<td>Check IOStats, compression, direct IO, background errors.</td>
+</tr>
+<tr>
+<td>Compaction behind</td>
+<td>L0 grows, space/read amp high</td>
+<td>Too few compaction threads, slow disk, bad picker pressure</td>
+<td><code>COMPACTION_TIME</code>, <code>COMPACT_*</code>, pending compaction bytes</td>
+<td><code>CompactionJob</code>, compaction pickers</td>
+<td>Increase <code>max_background_jobs</code>, tune level sizes, inspect logs.</td>
+</tr>
+<tr>
+<td>Too many L0 files</td>
+<td>Reads slow, stalls</td>
+<td>Flush faster than compaction</td>
+<td><code>level0_file_num_compaction_trigger</code>, <code>level0_slowdown_writes_trigger</code>, <code>level0_stop_writes_trigger</code></td>
+<td><code>VersionStorageInfo::ComputeCompactionScore</code></td>
+<td>Tune compaction capacity and L0 thresholds.</td>
+</tr>
+<tr>
+<td>Read amp high</td>
+<td>Many files touched per Get</td>
+<td>L0 overlap, weak filters, compaction backlog</td>
+<td><code>GET_HIT_L0</code>, <code>BLOOM_FILTER_*</code>, <code>BLOCK_CACHE_*</code></td>
+<td><code>Version::Get</code>, <code>BlockBasedTable::Get</code></td>
+<td>Fix compaction debt, add filters, improve cache/index options.</td>
+</tr>
+<tr>
+<td>Space amp high</td>
+<td>Disk grows faster than live data</td>
+<td>Snapshots, tombstones, universal overlap, backups</td>
+<td>live/obsolete files, compaction drop counters</td>
+<td><code>CompactionIterator</code>, obsolete cleanup</td>
+<td>Release snapshots, compact bottommost, inspect backups/checkpoints.</td>
+</tr>
+<tr>
+<td>MANIFEST large</td>
+<td>Slow open/recovery</td>
+<td>Frequent metadata edits, no rollover/reuse, CF churn</td>
+<td>open LOG, manifest size, <code>MANIFEST_FILE_SYNC_MICROS</code></td>
+<td><code>VersionSet::LogAndApply</code>, <code>VersionSet::Recover</code></td>
+<td>Inspect edit rate, manifest options, CF lifecycle.</td>
+</tr>
+<tr>
+<td>WAL files pile up</td>
+<td>Disk usage/recovery grows</td>
+<td>Unflushed CF, disabled flush, checkpoints/backup, 2PC prep</td>
+<td>WAL file list, <code>max_total_wal_size</code></td>
+<td><code>DBImpl::RecoverLogFiles</code>, <code>MinLogNumberToKeep</code></td>
+<td>Flush lagging CFs, check prepared txns and backups.</td>
+</tr>
+<tr>
+<td>Block cache hit low</td>
+<td>High disk reads</td>
+<td>Small cache, scan pollution, disabled fill_cache, bad pinning</td>
+<td><code>BLOCK_CACHE_*</code>, <code>PerfContext::block_read_count</code></td>
+<td><code>BlockBasedTable::UpdateCache*Metrics</code></td>
+<td>Size cache, cache index/filter, isolate scans.</td>
+</tr>
+<tr>
+<td>Bloom poor</td>
+<td>Many false positives</td>
+<td>No filter, wrong prefix, high bits/key mismatch</td>
+<td><code>BLOOM_FILTER_USEFUL</code>, <code>BLOOM_FILTER_FULL_POSITIVE</code></td>
+<td><code>FullFilterKeyMayMatch</code></td>
+<td>Use full-key or correct prefix filters; validate prefix domain.</td>
+</tr>
+<tr>
+<td>Iterator slow</td>
+<td>Seek/Next high latency</td>
+<td>Tombstones, old versions, range deletions, many files</td>
+<td><code>DB_SEEK</code>, skipped PerfContext counters</td>
+<td><code>DBIter</code>, <code>MergingIterator</code></td>
+<td>Release snapshots, compact, tune prefix/bounds.</td>
+</tr>
+<tr>
+<td>Range scan slow</td>
+<td>High read IO/cache churn</td>
+<td>Many files, small blocks, no readahead, tombstones</td>
+<td><code>iter_read_bytes</code>, block read metrics</td>
+<td><code>BlockBasedTableIterator</code>, <code>MergingIterator</code></td>
+<td>Use bounds/prefix, readahead, compact hot ranges.</td>
+</tr>
+<tr>
+<td>Recovery slow</td>
+<td>Slow <code>DB::Open</code></td>
+<td>Large MANIFEST, many WALs, many files, corruption retry</td>
+<td><code>FILE_READ_DB_OPEN_MICROS</code>, LOG recovery lines</td>
+<td><code>DBImpl::Recover</code>, <code>VersionSet::Recover</code></td>
+<td>Reduce WAL retention, compact/flush, inspect manifest.</td>
+</tr>
+<tr>
+<td>Corruption</td>
+<td>Open/read failure</td>
+<td>Torn/lost writes, bad FS, missing files, checksum mismatch</td>
+<td>status/log messages, checksum errors</td>
+<td><code>log::Reader</code>, <code>VersionEdit::DecodeFrom</code></td>
+<td>Preserve files, inspect with <code>ldb</code>/<code>sst_dump</code>, choose recovery mode carefully.</td>
+</tr>
+<tr>
+<td>Too many open files</td>
+<td>Open/read errors</td>
+<td><code>max_open_files=-1</code> with many files or OS limit too low</td>
+<td>OS limits, LOG file open errors</td>
+<td><code>TableCache</code>, table reader open</td>
+<td>Increase ulimit or use bounded table cache.</td>
+</tr>
+<tr>
+<td>Background threads low</td>
+<td>Flush/compaction lag</td>
+<td><code>max_background_jobs</code> too small</td>
+<td>job queue symptoms, compaction/flush lag</td>
+<td>Env scheduling, <code>MaybeScheduleFlushOrCompaction</code></td>
+<td>Increase jobs and storage bandwidth; separate priorities.</td>
+</tr>
+<tr>
+<td>Rate limiter impact</td>
+<td>IO throughput capped</td>
+<td>Low limiter rate or wrong mode/priority</td>
+<td>limiter config, IO latency</td>
+<td><code>RateLimiter</code>, file readers/writers</td>
+<td>Check <code>rate_limiter</code> mode and foreground priorities.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-recovery-validation-tests">5. Recovery Validation Tests</h2>
+<p>Run targeted tests before broad test suites:</p>
+<ul>
+<li><code>db/corruption_test</code></li>
+<li><code>db/fault_injection_test</code></li>
+<li><code>db/repair_test</code></li>
+<li><code>db/db_wal_test</code></li>
+<li><code>db/version_set_test</code></li>
+<li><code>utilities/transactions/write_prepared_transaction_seqno_test</code></li>
+</ul>
+<p>Use <code>db_stress</code> for mixed recovery, snapshot, transaction, and compaction
+coverage after metadata or recovery changes.</p>
+</div></article>
+</main><footer class="site-footer"><div class="shell"><span>杜志旺</span><span>内容迁移自旧版静态博客。</span></div></footer></body></html>

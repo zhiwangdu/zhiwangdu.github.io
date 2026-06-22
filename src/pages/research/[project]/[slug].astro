@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { formatDate } from '../../../lib/posts';
+import { getAllResearchDocs } from '../../../lib/research';
+
+export function getStaticPaths() {
+  return getAllResearchDocs().map((doc) => ({
+    params: { project: doc.projectSlug, slug: doc.slug },
+    props: { doc }
+  }));
+}
+
+const { doc } = Astro.props;
+const { Content } = doc;
+---
+
+<BaseLayout title={doc.title} description={doc.description}>
+  <article class="article-page">
+    <header class="article-hero">
+      <div class="post-meta">
+        <a href="/research/">{doc.project}</a>
+        <time datetime={doc.date.toISOString()}>{formatDate(doc.date)}</time>
+      </div>
+      <h1>{doc.title}</h1>
+      {doc.description && <p>{doc.description}</p>}
+      <p class="source-note">
+        Source: <code>{doc.sourcePath}</code> · <code>{doc.sourceCommit.slice(0, 12)}</code>
+      </p>
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>

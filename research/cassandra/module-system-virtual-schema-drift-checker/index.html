@@ -1,0 +1,45 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="System Virtual Schema Drift Checker research/tools/check-system-virtual-schema-drift.py 保护 systemvirtualschema.columns 研究矩阵和源码/测试事实一致。它关注 virtual schema provide"><meta property="og:title" content="System Virtual Schema Drift Checker | 杜志旺的博客"><meta property="og:description" content="System Virtual Schema Drift Checker research/tools/check-system-virtual-schema-drift.py 保护 systemvirtualschema.columns 研究矩阵和源码/测试事实一致。它关注 virtual schema provide"><meta property="og:type" content="website"><meta property="og:url" content="https://zhiwangdu.github.io/research/cassandra/module-system-virtual-schema-drift-checker/"><title>System Virtual Schema Drift Checker | 杜志旺的博客</title><link rel="stylesheet" href="/_astro/BaseLayout.C_maKfi4.css"></head><body><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="首页"><span class="brand-mark">Z</span><span>杜志旺的博客</span></a><nav class="nav" aria-label="主导航"><a href="/">文章</a><a href="/research/">研究</a><a href="/archives/">归档</a><a href="/tags/">标签</a><a href="/rss.xml">RSS</a></nav></div></header><main class="shell">
+  <article class="article-page"><header class="article-hero"><div class="post-meta"><a href="/research/">Cassandra</a><time datetime="2026-06-22T13:54:26.000Z">2026/06/22</time></div><h1>System Virtual Schema Drift Checker</h1><p>System Virtual Schema Drift Checker research/tools/check-system-virtual-schema-drift.py 保护 systemvirtualschema.columns 研究矩阵和源码/测试事实一致。它关注 virtual schema provide</p><p class="source-note">Source: <code>research/module-system-virtual-schema-drift-checker.md</code> · <code>e20367f6bb44</code></p></header><div class="prose"><h1 id="system-virtual-schema-drift-checker">System Virtual Schema Drift Checker</h1>
+<p><code>research/tools/check-system-virtual-schema-drift.py</code> 保护 <code>system_virtual_schema.columns</code> 研究矩阵和源码/测试事实一致。它关注 virtual schema provider、CQL read command dispatch、filtering/permission/DML guard、DESCRIBE baseline 与直接 SELECT 行内容测试缺口。</p>
+<h2 id="覆盖范围">覆盖范围</h2>
+<ul>
+<li>Source：<code>VirtualSchemaKeyspace</code>、<code>VirtualKeyspaceRegistry</code>、<code>VirtualKeyspace</code>、<code>VirtualTable</code>、<code>AbstractVirtualTable</code>、<code>SinglePartitionReadCommand</code>、<code>PartitionRangeReadCommand</code>、<code>StatementRestrictions</code>、<code>CassandraDaemon</code>、<code>ClientState</code>、<code>ReadCommandVerbHandler</code>、<code>VirtualMutation</code>。</li>
+<li>Tests：<code>VirtualTableTest</code>、<code>DescribeStatementTest</code>、<code>VirtualTableFromInternodeTest</code>、<code>CQLTester</code>、<code>GrantAndRevokeTest</code>。</li>
+<li>Docs：<code>module-system-virtual-schema-columns-matrix.md</code>、本说明、<code>README.md</code>、<code>notes/source-map.md</code>。</li>
+</ul>
+<h2 id="场景-id">场景 ID</h2>
+<ul>
+<li><code>system_virtual_schema_registration_contract</code></li>
+<li><code>system_virtual_schema_keyspaces_contract</code></li>
+<li><code>system_virtual_schema_tables_contract</code></li>
+<li><code>system_virtual_schema_columns_schema_contract</code></li>
+<li><code>system_virtual_schema_columns_projection_contract</code></li>
+<li><code>system_virtual_schema_read_single_partition_contract</code></li>
+<li><code>system_virtual_schema_read_range_contract</code></li>
+<li><code>system_virtual_schema_filtering_contract</code></li>
+<li><code>system_virtual_schema_default_read_permission_contract</code></li>
+<li><code>system_virtual_schema_dml_ddl_guard_contract</code></li>
+<li><code>system_virtual_schema_internode_read_contract</code></li>
+<li><code>system_virtual_schema_select_data_test_gap</code></li>
+<li><code>system_virtual_schema_existing_tests_baseline</code></li>
+</ul>
+<h2 id="检查逻辑">检查逻辑</h2>
+<ol>
+<li>Source token checks：确认 virtual schema 三表、<code>columns</code> 列定义、<code>ColumnMetadata</code> 投影、registry registration/replacement、single/range read command dispatch、filtering gate、默认可读权限和 virtual mutation guard 仍存在。</li>
+<li>Test token checks：确认当前测试仍覆盖 virtual table read/paging/DML/DDL/implicit filtering、<code>system_virtual_schema.columns</code> DESCRIBE、internode virtual read 和 virtual keyspace grant/revoke。</li>
+<li>Gap check：扫描 <code>test/unit</code> 与 <code>test/distributed</code>，如果出现 <code>SELECT ... system_virtual_schema.columns</code> 行内容测试，会让 checker 失败，提醒更新矩阵并关闭 <code>system_virtual_schema_select_data_test_gap</code>。</li>
+<li>Doc checks：确认矩阵和 drift checker 文档包含全部场景 ID、核心文件名与 checker 名。</li>
+</ol>
+<h2 id="运行方式">运行方式</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">python3</span><span style="color:#9ECBFF"> research/tools/check-system-virtual-schema-drift.py</span></span>
+<span class="line"><span style="color:#B392F0">python3</span><span style="color:#9ECBFF"> research/tools/check-system-virtual-schema-drift.py</span><span style="color:#79B8FF"> --json</span></span></code></pre>
+<p>通过时输出：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>OK system virtual schema drift checks passed (... source files, ... test files, ... docs, ... scenarios)</span></span></code></pre>
+<h2 id="维护规则">维护规则</h2>
+<ul>
+<li>修改 <code>VirtualSchemaKeyspace.VirtualColumns</code> 的列名、primary key、regular columns 或 <code>ColumnMetadata</code> 投影时，同步更新矩阵和 checker token。</li>
+<li>新增直接 SELECT <code>system_virtual_schema.columns</code> 的测试后，把负向 gap 改为已覆盖场景，并更新文档中的测试证据。</li>
+<li>新增高成本 virtual table provider 时，优先评估是否覆盖 <code>data(DecoratedKey)</code> 或 <code>allowFilteringImplicitly()</code>；本 checker 保护入口合同，不替代每张 provider 的性能分析。</li>
+</ul>
+</div></article>
+</main><footer class="site-footer"><div class="shell"><span>杜志旺</span><span>内容迁移自旧版静态博客。</span></div></footer></body></html>

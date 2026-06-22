@@ -1,0 +1,171 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="CQL Grammar Dispatch Exhaustiveness Matrix 研究目标 research/module-cql-parser-raw-prepare-matrix.md 已经覆盖 CQL 文本从 Cql.g root rule 到 raw prepare 的主链路。本矩阵进一步收紧 gramma"><meta property="og:title" content="CQL Grammar Dispatch Exhaustiveness Matrix | 杜志旺的博客"><meta property="og:description" content="CQL Grammar Dispatch Exhaustiveness Matrix 研究目标 research/module-cql-parser-raw-prepare-matrix.md 已经覆盖 CQL 文本从 Cql.g root rule 到 raw prepare 的主链路。本矩阵进一步收紧 gramma"><meta property="og:type" content="website"><meta property="og:url" content="https://zhiwangdu.github.io/research/cassandra/module-cql-grammar-dispatch-exhaustiveness-matrix/"><title>CQL Grammar Dispatch Exhaustiveness Matrix | 杜志旺的博客</title><link rel="stylesheet" href="/_astro/BaseLayout.C_maKfi4.css"></head><body><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="首页"><span class="brand-mark">Z</span><span>杜志旺的博客</span></a><nav class="nav" aria-label="主导航"><a href="/">文章</a><a href="/research/">研究</a><a href="/archives/">归档</a><a href="/tags/">标签</a><a href="/rss.xml">RSS</a></nav></div></header><main class="shell">
+  <article class="article-page"><header class="article-hero"><div class="post-meta"><a href="/research/">Cassandra</a><time datetime="2026-06-22T13:27:17.000Z">2026/06/22</time></div><h1>CQL Grammar Dispatch Exhaustiveness Matrix</h1><p>CQL Grammar Dispatch Exhaustiveness Matrix 研究目标 research/module-cql-parser-raw-prepare-matrix.md 已经覆盖 CQL 文本从 Cql.g root rule 到 raw prepare 的主链路。本矩阵进一步收紧 gramma</p><p class="source-note">Source: <code>research/module-cql-grammar-dispatch-exhaustiveness-matrix.md</code> · <code>3dc91ea3e432</code></p></header><div class="prose"><h1 id="cql-grammar-dispatch-exhaustiveness-matrix">CQL Grammar Dispatch Exhaustiveness Matrix</h1>
+<h2 id="研究目标">研究目标</h2>
+<p><code>research/module-cql-parser-raw-prepare-matrix.md</code> 已经覆盖 CQL 文本从 <code>Cql.g</code> root rule 到 raw prepare 的主链路。本矩阵进一步收紧 grammar generation 与 <code>Parser.g</code> <code>cqlStatement</code> dispatch 的 exhaustiveness 边界：当前仓库不提交 generated <code>CqlParser.java</code> / <code>CqlLexer.java</code>，<code>build.xml</code> 在构建时从 <code>src/antlr/*.g</code> 生成 parser，因此 source-only 研究必须直接解析 grammar，并把“缺少生成后 dispatch exhaustiveness Java test”显式保留为缺口。</p>
+<h2 id="场景矩阵">场景矩阵</h2>
+<table>
+<thead>
+<tr>
+<th>场景 ID</th>
+<th>保护内容</th>
+<th>源码/测试锚点</th>
+<th>风险</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cql_grammar_generation_target_contract</code></td>
+<td><code>build.xml</code> 的 <code>gen-cql3-grammar</code> 用 ANTLR 3.5.2 从 <code>src/antlr/Cql.g</code> 生成到 <code>build.src.gen-java</code></td>
+<td><code>build.xml:434-459</code>、<code>.build/build-resolver.xml:130-132</code></td>
+<td>构建生成入口改变后，grammar drift checker 可能只看源码而漏掉生成方式</td>
+</tr>
+<tr>
+<td><code>cql_grammar_source_include_contract</code></td>
+<td><code>check-gen-cql3-grammar</code> 用 <code>src/antlr/*.g</code> 判断 <code>Cql.tokens</code> 是否 up-to-date，<code>Cql.g</code> 明确 <code>import Parser,Lexer</code></td>
+<td><code>build.xml:437-443</code>、<code>src/antlr/Cql.g:20-27</code></td>
+<td>修改 <code>Lexer.g</code> / <code>Parser.g</code> 应触发重新生成；遗漏会导致旧 parser 进入测试</td>
+</tr>
+<tr>
+<td><code>cql_grammar_generated_artifact_boundary</code></td>
+<td>当前 checkout 没有 tracked generated <code>CqlParser.java</code> / <code>CqlLexer.java</code>，研究与 CI 应以 grammar source 和 build target 为准</td>
+<td><code>rg --files</code> 当前只返回 <code>src/antlr/*.g</code></td>
+<td>如果 generated source 被提交，需要新增 generated-vs-grammar diff gate</td>
+</tr>
+<tr>
+<td><code>cql_dispatch_parser_rule_contract</code></td>
+<td><code>Parser.g</code> <code>cqlStatement</code> 当前有 43 个 dispatch entries，顺序和名称是 CQL statement surface 的 source of truth</td>
+<td><code>src/antlr/Parser.g:207-252</code></td>
+<td>新增 CQL statement 若只加 grammar 不更新矩阵，会绕过研究索引</td>
+</tr>
+<tr>
+<td><code>cql_dispatch_rule_definition_contract</code></td>
+<td>每个 dispatch entry 必须在 <code>Parser.g</code> 有对应 <code>rule returns [...]</code> 定义</td>
+<td><code>src/antlr/Parser.g:257</code>、<code>src/antlr/Parser.g:267</code>、<code>src/antlr/Parser.g:485</code>、<code>src/antlr/Parser.g:1251</code></td>
+<td>dispatch 名称重命名或残留会造成生成失败或未覆盖语义漂移</td>
+</tr>
+<tr>
+<td><code>cql_dispatch_raw_return_contract</code></td>
+<td>dispatch entries 返回 <code>CQLStatement.Raw</code> 子类或 concrete statement；schema-aware validation 仍在 prepare/statement class 中</td>
+<td><code>src/antlr/Parser.g:267</code>、<code>src/antlr/Parser.g:485</code>、<code>src/antlr/Parser.g:640</code>、<code>src/antlr/Parser.g:1072</code></td>
+<td>返回 executable statement 与 raw statement 边界混淆会影响 prepare/cache/permission 语义</td>
+</tr>
+<tr>
+<td><code>cql_dispatch_bind_marker_after_contract</code></td>
+<td><code>@after</code> 对非 null <code>stmt</code> 调用 <code>stmt.setBindVariables(bindVariables)</code>，保证每个 dispatch branch 统一绑定 marker list</td>
+<td><code>src/antlr/Parser.g:207-209</code>、<code>src/java/org/apache/cassandra/cql3/CQLStatement.java:99-114</code></td>
+<td>新 branch 若绕过 <code>@after</code> 或返回 null，会破坏 prepared metadata</td>
+</tr>
+<tr>
+<td><code>cql_dispatch_keyword_token_contract</code></td>
+<td><code>Lexer.g</code> keyword surface 和 <code>KeywordTestBase</code> 的 generated tokenNames 扫描只覆盖 token/keyword，不覆盖 statement dispatch exhaustiveness</td>
+<td><code>src/antlr/Lexer.g:60-125</code>、<code>test/unit/org/apache/cassandra/cql3/KeywordTestBase.java:40-85</code></td>
+<td>keyword test 绿不能证明新 statement rule 有 parser-level regression coverage</td>
+</tr>
+<tr>
+<td><code>cql_dispatch_statement_family_test_baseline</code></td>
+<td>现有 tests 覆盖 listener、reserved keywords、selected operations/schema/auth/MV/identity flows，但不是 43-entry dispatch matrix</td>
+<td><code>test/unit/org/apache/cassandra/cql3/CqlParserTest.java:34-86</code>、<code>test/unit/org/apache/cassandra/cql3/ReservedKeywordsTest.java:28-42</code>、<code>test/unit/org/apache/cassandra/auth/GrantAndRevokeTest.java:499-560</code></td>
+<td>分散测试可以漏掉新 grammar branch 的最小 parse sample</td>
+</tr>
+<tr>
+<td><code>cql_dispatch_raw_prepare_checker_boundary</code></td>
+<td><code>check-cql-parser-raw-prepare-drift.py</code> 已保护 raw prepare 与 43-entry list；本 checker 专注 generation target、rule definitions 和 exhaustiveness gap</td>
+<td><code>research/tools/check-cql-parser-raw-prepare-drift.py:28-72</code></td>
+<td>两个 checker 职责混淆会让 raw prepare 变化和 generated-test 缺口互相遮蔽</td>
+</tr>
+<tr>
+<td><code>cql_dispatch_exhaustiveness_test_gap</code></td>
+<td>当前没有 Java test 从 <code>Parser.g</code> 派生/枚举 43 个 <code>cqlStatement</code> dispatch entries 并对每个 entry 绑定 parse sample</td>
+<td><code>research/tools/check-cql-grammar-dispatch-drift.py</code> gap scan</td>
+<td>新增 statement family 时，只有 source checker 会提醒更新矩阵，JUnit 不会自动要求样例</td>
+</tr>
+</tbody>
+</table>
+<h2 id="dispatch-baseline">Dispatch Baseline</h2>
+<p><code>cql_dispatch_parser_rule_contract</code> 当前保护 43 个 dispatch entries：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>selectStatement</span></span>
+<span class="line"><span>insertStatement</span></span>
+<span class="line"><span>updateStatement</span></span>
+<span class="line"><span>batchStatement</span></span>
+<span class="line"><span>deleteStatement</span></span>
+<span class="line"><span>useStatement</span></span>
+<span class="line"><span>truncateStatement</span></span>
+<span class="line"><span>createKeyspaceStatement</span></span>
+<span class="line"><span>createTableStatement</span></span>
+<span class="line"><span>createIndexStatement</span></span>
+<span class="line"><span>dropKeyspaceStatement</span></span>
+<span class="line"><span>dropTableStatement</span></span>
+<span class="line"><span>dropIndexStatement</span></span>
+<span class="line"><span>alterTableStatement</span></span>
+<span class="line"><span>alterKeyspaceStatement</span></span>
+<span class="line"><span>grantPermissionsStatement</span></span>
+<span class="line"><span>revokePermissionsStatement</span></span>
+<span class="line"><span>listPermissionsStatement</span></span>
+<span class="line"><span>createUserStatement</span></span>
+<span class="line"><span>alterUserStatement</span></span>
+<span class="line"><span>dropUserStatement</span></span>
+<span class="line"><span>listUsersStatement</span></span>
+<span class="line"><span>createTriggerStatement</span></span>
+<span class="line"><span>dropTriggerStatement</span></span>
+<span class="line"><span>createTypeStatement</span></span>
+<span class="line"><span>alterTypeStatement</span></span>
+<span class="line"><span>dropTypeStatement</span></span>
+<span class="line"><span>createFunctionStatement</span></span>
+<span class="line"><span>dropFunctionStatement</span></span>
+<span class="line"><span>createAggregateStatement</span></span>
+<span class="line"><span>dropAggregateStatement</span></span>
+<span class="line"><span>createRoleStatement</span></span>
+<span class="line"><span>alterRoleStatement</span></span>
+<span class="line"><span>dropRoleStatement</span></span>
+<span class="line"><span>listRolesStatement</span></span>
+<span class="line"><span>grantRoleStatement</span></span>
+<span class="line"><span>revokeRoleStatement</span></span>
+<span class="line"><span>createMaterializedViewStatement</span></span>
+<span class="line"><span>dropMaterializedViewStatement</span></span>
+<span class="line"><span>alterMaterializedViewStatement</span></span>
+<span class="line"><span>describeStatement</span></span>
+<span class="line"><span>addIdentityStatement</span></span>
+<span class="line"><span>dropIdentityStatement</span></span></code></pre>
+<h2 id="调用图">调用图</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>build/test target</span></span>
+<span class="line"><span>  -> check-gen-cql3-grammar</span></span>
+<span class="line"><span>     -> targetfile build.src.gen-java/.../Cql.tokens</span></span>
+<span class="line"><span>     -> srcfiles src/antlr/*.g</span></span>
+<span class="line"><span>  -> gen-cql3-grammar</span></span>
+<span class="line"><span>     -> org.antlr.Tool</span></span>
+<span class="line"><span>        -> src/antlr/Cql.g</span></span>
+<span class="line"><span>           -> import Parser,Lexer</span></span>
+<span class="line"><span>           -> query -> cqlStatement (';')* EOF</span></span>
+<span class="line"><span>        -> generated CqlParser / CqlLexer under build.src.gen-java</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>runtime parse</span></span>
+<span class="line"><span>  -> CQLFragmentParser.parseAnyUnhandled(CqlParser::query, query)</span></span>
+<span class="line"><span>     -> generated CqlParser.query()</span></span>
+<span class="line"><span>        -> Parser.g cqlStatement</span></span>
+<span class="line"><span>           -> exactly one of 43 dispatch entries</span></span>
+<span class="line"><span>           -> @after stmt.setBindVariables(bindVariables)</span></span>
+<span class="line"><span>     -> raw.prepare(clientState)</span></span></code></pre>
+<h2 id="设计取舍">设计取舍</h2>
+<ul>
+<li>Generated parser is build output, not source-of-record in this checkout; source research must inspect <code>src/antlr/*.g</code> and <code>build.xml</code>.</li>
+<li><code>Parser.g</code> keeps statement dispatch explicit instead of dynamic registration, which makes drift checking possible.</li>
+<li><code>KeywordTestBase</code> is generated-token aware, but statement coverage is still scattered across operation/schema/auth tests.</li>
+<li>A future exhaustiveness JUnit should map every dispatch entry to a minimal valid/invalid parse sample, plus expected raw statement class or parse failure boundary.</li>
+</ul>
+<h2 id="运维与开发关注点">运维与开发关注点</h2>
+<ul>
+<li>Adding a CQL keyword in <code>Lexer.g</code> may require cqlsh keyword sync and keyword tests, but it does not automatically update <code>cqlStatement</code>.</li>
+<li>Adding a new statement requires at least four edits: lexer/parser grammar, raw/statement implementation, parser/prepare tests, and research/checker baseline.</li>
+<li>Generated parser failures usually surface during <code>gen-cql3-grammar</code> or Java compilation, not at runtime.</li>
+<li>If generated parser artifacts become tracked, add a generated-vs-grammar checksum or method-presence check before treating source-only evidence as complete.</li>
+</ul>
+<h2 id="测试覆盖与缺口">测试覆盖与缺口</h2>
+<ul>
+<li><code>CqlParserTest</code> covers parser error listener behavior and duplicate property parsing helpers, but does not enumerate statement branches.</li>
+<li><code>KeywordTestBase</code> derives keyword rows from <code>CqlParser.tokenNames</code>, which proves generated token visibility but not dispatch samples.</li>
+<li><code>ReservedKeywordsTest</code> checks reserved keywords in an <code>ALTER TABLE ... ADD</code> context.</li>
+<li>Auth identity CQL (<code>ADD IDENTITY</code> / <code>DROP IDENTITY</code>) is covered through auth tests such as <code>GrantAndRevokeTest</code>, but those are semantic permission flows rather than grammar exhaustiveness tests.</li>
+<li>当前缺口：没有 generated grammar dispatch exhaustiveness Java test。新增该 test 后，应把 <code>cql_dispatch_exhaustiveness_test_gap</code> 改为具体覆盖项，并记录 sample source、expected raw class 和失败模式。</li>
+</ul>
+</div></article>
+</main><footer class="site-footer"><div class="shell"><span>杜志旺</span><span>内容迁移自旧版静态博客。</span></div></footer></body></html>

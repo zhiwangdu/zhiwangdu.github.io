@@ -1,0 +1,157 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="RocksDB Critical Flows This document is a compact call-chain guide for the critical RocksDB flows. Detailed research notes are in research/flow-.md. 1. Write Pa"><meta property="og:title" content="RocksDB Critical Flows | 杜志旺的博客"><meta property="og:description" content="RocksDB Critical Flows This document is a compact call-chain guide for the critical RocksDB flows. Detailed research notes are in research/flow-.md. 1. Write Pa"><meta property="og:type" content="website"><meta property="og:url" content="https://zhiwangdu.github.io/research/rocksdb/rocksdb-critical-flows/"><title>RocksDB Critical Flows | 杜志旺的博客</title><link rel="stylesheet" href="/_astro/BaseLayout.C_maKfi4.css"></head><body><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="首页"><span class="brand-mark">Z</span><span>杜志旺的博客</span></a><nav class="nav" aria-label="主导航"><a href="/">文章</a><a href="/research/">研究</a><a href="/archives/">归档</a><a href="/tags/">标签</a><a href="/rss.xml">RSS</a></nav></div></header><main class="shell">
+  <article class="article-page"><header class="article-hero"><div class="post-meta"><a href="/research/">RocksDB</a><time datetime="2026-06-22T12:03:14.000Z">2026/06/22</time></div><h1>RocksDB Critical Flows</h1><p>RocksDB Critical Flows This document is a compact call-chain guide for the critical RocksDB flows. Detailed research notes are in research/flow-.md. 1. Write Pa</p><p class="source-note">Source: <code>docs/rocksdb-critical-flows.md</code> · <code>cad43fd2c209</code></p></header><div class="prose"><h1 id="rocksdb-critical-flows">RocksDB Critical Flows</h1>
+<p>This document is a compact call-chain guide for the critical RocksDB flows.
+Detailed research notes are in <code>research/flow-*.md</code>.</p>
+<h2 id="1-write-path">1. Write Path</h2>
+<p><code>DB::Put / DB::Write</code>
+-&gt; <code>DBImpl::Write</code>
+-&gt; <code>DBImpl::WriteImpl</code> (<code>db/db_impl/db_impl_write.cc</code>)
+-&gt; <code>WriteThread::JoinBatchGroup</code> (<code>db/write_thread.cc</code>)
+-&gt; <code>DBImpl::PreprocessWrite</code>
+-&gt; <code>WriteThread::EnterAsBatchGroupLeader</code>
+-&gt; <code>DBImpl::WriteGroupToWAL</code> / <code>ConcurrentWriteGroupToWAL</code>
+-&gt; <code>log::Writer::AddRecord</code> (<code>db/log_writer.cc</code>)
+-&gt; sequence assignment through <code>VersionSet</code>
+-&gt; optional WAL sync
+-&gt; <code>WriteBatchInternal::InsertInto</code> (<code>db/write_batch.cc</code>)
+-&gt; <code>MemTable::Add</code> (<code>db/memtable.cc</code>)
+-&gt; <code>versions_-&gt;SetLastSequence</code>
+-&gt; <code>WriteThread::ExitAsBatchGroupLeader</code>.</p>
+<p>Critical invariants: WAL-before-memtable, no sequence publication before
+successful memtable insert, and sequence ranges consistent with WAL replay.</p>
+<h2 id="2-get-path">2. Get Path</h2>
+<p><code>DB::Get</code>
+-&gt; <code>DBImpl::Get</code>
+-&gt; <code>DBImpl::GetImpl</code> (<code>db/db_impl/db_impl.cc</code>)
+-&gt; reference <code>SuperVersion</code>
+-&gt; mutable memtable lookup
+-&gt; immutable memtable lookup
+-&gt; <code>Version::Get</code> (<code>db/version_set.cc</code>)
+-&gt; <code>FilePicker</code>
+-&gt; <code>TableCache::Get</code>
+-&gt; <code>BlockBasedTable::Get</code> (<code>table/block_based/block_based_table_reader.cc</code>)
+-&gt; <code>FullFilterKeyMayMatch</code>
+-&gt; index iterator
+-&gt; data block iterator
+-&gt; <code>GetContext</code>
+-&gt; merge/tombstone/blob post-processing.</p>
+<p>Critical invariants: snapshot sequence filtering, L0 newest-first search,
+L1+ non-overlap, and tombstone/range tombstone visibility.</p>
+<h2 id="3-iterator--range-scan-path">3. Iterator / Range Scan Path</h2>
+<p><code>DB::NewIterator</code>
+-&gt; <code>DBImpl::NewIterator</code>
+-&gt; <code>ColumnFamilyData::GetReferencedSuperVersion</code>
+-&gt; <code>DBImpl::NewIteratorImpl</code>
+-&gt; memtable iterators
+-&gt; <code>Version::AddIterators</code>
+-&gt; <code>NewMergingIterator</code>
+-&gt; <code>DBIter::NewIter</code>
+-&gt; user <code>Seek</code> / <code>Next</code> / <code>Prev</code>
+-&gt; <code>MergingIterator</code> heap navigation
+-&gt; <code>BlockBasedTableIterator::SeekImpl</code> for SST children
+-&gt; <code>DBIter</code> snapshot/tombstone/merge filtering.</p>
+<p>Operational focus: high <code>internal_key_skipped_count</code> or
+<code>internal_range_del_reseek_count</code> means the iterator is paying for obsolete
+versions, tombstones, or range deletions.</p>
+<h2 id="4-flush-path">4. Flush Path</h2>
+<p>memtable fills
+-&gt; <code>DBImpl::SwitchMemtable</code>
+-&gt; immutable memtable list
+-&gt; <code>DBImpl::MaybeScheduleFlushOrCompaction</code>
+-&gt; <code>DBImpl::BackgroundFlush</code>
+-&gt; <code>FlushJob::PickMemTable</code>
+-&gt; <code>FlushJob::Run</code>
+-&gt; <code>FlushJob::WriteLevel0Table</code>
+-&gt; <code>BuildTable</code>
+-&gt; <code>BlockBasedTableBuilder::Finish</code>
+-&gt; <code>MemTableList::TryInstallMemtableFlushResults</code>
+-&gt; <code>VersionSet::LogAndApply</code>
+-&gt; install SuperVersion.</p>
+<p>Failure before manifest install leaves the output file non-live and eligible for
+cleanup. Failed memtables are rolled back with
+<code>MemTableList::RollbackMemtableFlush</code>.</p>
+<h2 id="5-compaction-path">5. Compaction Path</h2>
+<p>compaction score or manual request
+-&gt; <code>DBImpl::MaybeScheduleFlushOrCompaction</code>
+-&gt; <code>DBImpl::BackgroundCompaction</code>
+-&gt; compaction picker
+-&gt; <code>CompactionJob::Prepare</code>
+-&gt; <code>CompactionJob::Run</code>
+-&gt; <code>RunSubcompactions</code>
+-&gt; <code>CompactionJob::ProcessKeyValueCompaction</code>
+-&gt; <code>CompactionIterator</code>
+-&gt; output table builders
+-&gt; <code>CompactionJob::Install</code>
+-&gt; <code>CompactionJob::InstallCompactionResults</code>
+-&gt; <code>VersionSet::LogAndApply</code>
+-&gt; install SuperVersion.</p>
+<p>Critical invariants: input files marked in-compaction, output files not visible
+before manifest commit, obsolete keys dropped only when snapshots/lower levels
+allow.</p>
+<h2 id="6-recovery-path">6. Recovery Path</h2>
+<p><code>DB::Open</code>
+-&gt; <code>DBImpl::Recover</code>
+-&gt; lock DB
+-&gt; CURRENT / MANIFEST discovery
+-&gt; <code>VersionSet::Recover</code>
+-&gt; <code>VersionEdit::DecodeFrom</code>
+-&gt; reconstruct current Versions
+-&gt; collect WALs
+-&gt; <code>DBImpl::RecoverLogFiles</code>
+-&gt; <code>DBImpl::ProcessLogFile</code>
+-&gt; <code>log::Reader::ReadRecord</code>
+-&gt; <code>WriteBatchInternal::InsertInto</code>
+-&gt; rebuild memtables
+-&gt; final flush or active WAL restore
+-&gt; set recovered sequence.</p>
+<p>Critical diagnostics: open LOG, manifest path, WAL list, last sequence,
+corruption/missing-file status, file read histograms.</p>
+<h2 id="7-manifest--versionset-path">7. Manifest / VersionSet Path</h2>
+<p>flush/compaction/ingest creates <code>VersionEdit</code>
+-&gt; <code>VersionSet::LogAndApply</code>
+-&gt; manifest writer queue
+-&gt; <code>VersionBuilder::Apply</code>
+-&gt; <code>VersionEdit::EncodeTo</code>
+-&gt; <code>log::Writer::AddRecord</code>
+-&gt; manifest sync
+-&gt; append new <code>Version</code>
+-&gt; install SuperVersion.</p>
+<p>This is the metadata commit point for SST membership.</p>
+<h2 id="8-cache--bloomfilter-path">8. Cache / BloomFilter Path</h2>
+<p><code>BlockBasedTable::Get</code>
+-&gt; table timestamp check
+-&gt; <code>FullFilterKeyMayMatch</code>
+-&gt; index block lookup
+-&gt; data block lookup in block cache
+-&gt; optional secondary/compressed cache
+-&gt; file read on miss
+-&gt; cache insert and <code>GetContext</code> counter report.</p>
+<p>Metrics: <code>BLOCK_CACHE_*</code>, <code>BLOOM_FILTER_*</code>, <code>PerfContext::block_read_time</code>,
+<code>read_filter_block_nanos</code>, <code>read_index_block_nanos</code>.</p>
+<h2 id="9-ingestexternalfile-path">9. IngestExternalFile Path</h2>
+<p><code>DB::IngestExternalFile</code>
+-&gt; <code>DBImpl::IngestExternalFile</code>
+-&gt; <code>ExternalSstFileIngestionJob::Prepare</code>
+-&gt; property/key-range validation
+-&gt; overlap flush if needed
+-&gt; <code>ExternalSstFileIngestionJob::Run</code>
+-&gt; assign level and global sequence
+-&gt; copy/move/link file
+-&gt; <code>VersionEdit::AddFile</code>
+-&gt; <code>VersionSet::LogAndApply</code>
+-&gt; listener <code>OnExternalFileIngested</code>.</p>
+<h2 id="10-checkpoint--backup-path">10. Checkpoint / Backup Path</h2>
+<p><code>Checkpoint::Create</code>
+-&gt; <code>CheckpointImpl::CreateCheckpoint</code>
+-&gt; disable file deletions
+-&gt; link/copy live SSTs and WALs
+-&gt; create CURRENT/MANIFEST/options files
+-&gt; rename temp directory.</p>
+<p><code>BackupEngineImpl::CreateNewBackupWithMetadata</code>
+-&gt; disable file deletions
+-&gt; use checkpoint custom callbacks
+-&gt; copy/share files
+-&gt; write backup metadata
+-&gt; garbage collect.</p>
+</div></article>
+</main><footer class="site-footer"><div class="shell"><span>杜志旺</span><span>内容迁移自旧版静态博客。</span></div></footer></body></html>

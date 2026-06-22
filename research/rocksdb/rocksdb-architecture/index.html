@@ -1,0 +1,216 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="RocksDB Architecture This document summarizes RocksDB as an LSM storage engine implementation, with source evidence for the development and operations boundarie"><meta property="og:title" content="RocksDB Architecture | 杜志旺的博客"><meta property="og:description" content="RocksDB Architecture This document summarizes RocksDB as an LSM storage engine implementation, with source evidence for the development and operations boundarie"><meta property="og:type" content="website"><meta property="og:url" content="https://zhiwangdu.github.io/research/rocksdb/rocksdb-architecture/"><title>RocksDB Architecture | 杜志旺的博客</title><link rel="stylesheet" href="/_astro/BaseLayout.C_maKfi4.css"></head><body><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="首页"><span class="brand-mark">Z</span><span>杜志旺的博客</span></a><nav class="nav" aria-label="主导航"><a href="/">文章</a><a href="/research/">研究</a><a href="/archives/">归档</a><a href="/tags/">标签</a><a href="/rss.xml">RSS</a></nav></div></header><main class="shell">
+  <article class="article-page"><header class="article-hero"><div class="post-meta"><a href="/research/">RocksDB</a><time datetime="2026-06-22T12:03:14.000Z">2026/06/22</time></div><h1>RocksDB Architecture</h1><p>RocksDB Architecture This document summarizes RocksDB as an LSM storage engine implementation, with source evidence for the development and operations boundarie</p><p class="source-note">Source: <code>docs/rocksdb-architecture.md</code> · <code>cad43fd2c209</code></p></header><div class="prose"><h1 id="rocksdb-architecture">RocksDB Architecture</h1>
+<p>This document summarizes RocksDB as an LSM storage engine implementation, with
+source evidence for the development and operations boundaries. Research notes
+used for this synthesis live under <code>research/</code>.</p>
+<h2 id="1-architecture-at-a-glance">1. Architecture at a Glance</h2>
+<p>RocksDB is organized around one <code>DBImpl</code> object per opened database, one
+<code>ColumnFamilyData</code> object per column family, and one <code>Version</code> per current
+reader-visible LSM view. Foreground writes enter through <code>DBImpl::WriteImpl</code>,
+foreground reads enter through <code>DBImpl::GetImpl</code> or <code>DBImpl::NewIterator</code>, and
+background work is scheduled from <code>DBImpl::MaybeScheduleFlushOrCompaction</code>.</p>
+<p>Source evidence:</p>
+<ul>
+<li>API surface: <code>include/rocksdb/db.h</code></li>
+<li>Main implementation: <code>db/db_impl/db_impl.h</code>, <code>db/db_impl/db_impl.cc</code>,
+<code>db/db_impl/db_impl_write.cc</code></li>
+<li>Background scheduling: <code>db/db_impl/db_impl_compaction_flush.cc</code></li>
+<li>Column families and SuperVersion: <code>db/column_family.h</code>,
+<code>db/column_family.cc</code></li>
+<li>Version metadata: <code>db/version_set.h</code>, <code>db/version_set.cc</code></li>
+</ul>
+<h2 id="2-main-layers">2. Main Layers</h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Main files</th>
+<th>Core classes</th>
+<th>Responsibilities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Public API</td>
+<td><code>include/rocksdb/db.h</code>, <code>include/rocksdb/options.h</code></td>
+<td><code>DB</code>, <code>Options</code>, <code>ReadOptions</code>, <code>WriteOptions</code></td>
+<td>API contract and configuration.</td>
+</tr>
+<tr>
+<td>DB core</td>
+<td><code>db/db_impl/*</code></td>
+<td><code>DBImpl</code></td>
+<td>Open, read/write dispatch, WAL ownership, background scheduling, errors.</td>
+</tr>
+<tr>
+<td>Column family state</td>
+<td><code>db/column_family.*</code></td>
+<td><code>ColumnFamilyData</code>, <code>SuperVersion</code></td>
+<td>Mutable/immutable memtables, current Version, CF options, reader-visible state.</td>
+</tr>
+<tr>
+<td>Write buffer</td>
+<td><code>db/memtable.*</code>, <code>memtable/*</code></td>
+<td><code>MemTable</code>, <code>MemTableList</code>, <code>SkipList</code>, <code>InlineSkipList</code>, <code>Arena</code></td>
+<td>In-memory sorted writes and flush queue.</td>
+</tr>
+<tr>
+<td>WAL</td>
+<td><code>db/log_writer.*</code>, <code>db/log_reader.*</code>, <code>db/wal_manager.*</code></td>
+<td><code>log::Writer</code>, <code>log::Reader</code>, <code>WalManager</code></td>
+<td>Durability before memtable visibility and recovery replay.</td>
+</tr>
+<tr>
+<td>Metadata</td>
+<td><code>db/version_set.*</code>, <code>db/version_edit.*</code></td>
+<td><code>VersionSet</code>, <code>Version</code>, <code>VersionEdit</code>, <code>FileMetaData</code></td>
+<td>MANIFEST/CURRENT, live file metadata, compaction scores.</td>
+</tr>
+<tr>
+<td>SST/table</td>
+<td><code>table/*</code>, <code>table/block_based/*</code></td>
+<td><code>TableBuilder</code>, <code>TableReader</code>, <code>BlockBasedTable</code>, <code>Block</code>, <code>FilterBlockReader</code></td>
+<td>Immutable sorted-run format, filters, indexes, block IO.</td>
+</tr>
+<tr>
+<td>Cache</td>
+<td><code>include/rocksdb/cache.h</code>, <code>cache/*</code>, <code>table/block_based/block_cache.cc</code></td>
+<td><code>Cache</code>, <code>LRUCache</code>, <code>ClockCache</code></td>
+<td>Block and secondary cache.</td>
+</tr>
+<tr>
+<td>Compaction</td>
+<td><code>db/compaction/*</code></td>
+<td><code>CompactionPicker</code>, <code>CompactionJob</code>, <code>CompactionIterator</code></td>
+<td>Rewrite SSTs to control amplification and reclaim obsolete data.</td>
+</tr>
+<tr>
+<td>Utilities</td>
+<td><code>utilities/*</code></td>
+<td><code>BackupEngine</code>, <code>Checkpoint</code>, <code>TransactionDB</code></td>
+<td>Optional features layered around core DB.</td>
+</tr>
+<tr>
+<td>Platform</td>
+<td><code>include/rocksdb/env.h</code>, <code>include/rocksdb/file_system.h</code>, <code>env/*</code>, <code>file/*</code></td>
+<td><code>Env</code>, <code>FileSystem</code>, file readers/writers</td>
+<td>Thread pools, time, filesystem, rate-limited IO.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-ownership-boundaries">3. Ownership Boundaries</h2>
+<p><code>DBImpl</code> owns policy and scheduling. It decides when to switch memtables, write
+WALs, flush, compact, and enter error states. <code>MemTable</code> owns in-memory record
+layout and lookup. <code>VersionSet</code> owns durable metadata and sequence/file-number
+state. <code>BlockBasedTable</code> owns SST block lookup, filters, and cache metrics.
+<code>Env</code>/<code>FileSystem</code> owns portability and IO implementation.</p>
+<p>The most important boundary is SuperVersion. Readers get a referenced
+<code>SuperVersion</code> from <code>ColumnFamilyData::GetReferencedSuperVersion</code>, then read
+without holding the DB mutex. Flush/compaction install a replacement through
+<code>ColumnFamilyData::InstallSuperVersion</code> only after metadata is safe.</p>
+<h2 id="4-concurrency-model">4. Concurrency Model</h2>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Model</th>
+<th>Source evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Foreground write</td>
+<td><code>WriteThread</code> groups writers, elects a leader, writes WAL, inserts memtables, and publishes sequence.</td>
+<td><code>db/write_thread.*</code>, <code>db/db_impl/db_impl_write.cc</code></td>
+</tr>
+<tr>
+<td>Foreground point read</td>
+<td>References SuperVersion and searches memtables/SSTs without DB mutex in common path.</td>
+<td><code>db/db_impl/db_impl.cc</code>, <code>db/version_set.cc</code></td>
+</tr>
+<tr>
+<td>Iterator</td>
+<td>Holds SuperVersion/table references through cleanup chains; not thread-safe per iterator.</td>
+<td><code>db/db_iter.*</code>, <code>db/arena_wrapped_db_iter.cc</code>, <code>table/merging_iterator.cc</code></td>
+</tr>
+<tr>
+<td>Flush</td>
+<td>Background thread writes L0 file without DB mutex, then reacquires mutex for manifest install.</td>
+<td><code>db/flush_job.cc</code>, <code>db/db_impl/db_impl_compaction_flush.cc</code></td>
+</tr>
+<tr>
+<td>Compaction</td>
+<td>Background worker can split into subcompactions, writes outputs, then serializes manifest commit.</td>
+<td><code>db/compaction/compaction_job.cc</code></td>
+</tr>
+<tr>
+<td>Manifest</td>
+<td><code>VersionSet::LogAndApply</code> queues manifest writers and serializes metadata mutation.</td>
+<td><code>db/version_set.cc</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-crash-consistency-model">5. Crash Consistency Model</h2>
+<p>RocksDB relies on two durable logs:</p>
+<ul>
+<li>WAL stores user writes before they become memtable-visible.</li>
+<li>MANIFEST stores file metadata edits before SST membership changes become
+reader-visible after restart.</li>
+</ul>
+<p>Normal write ordering is WAL append/sync first, memtable insert second, sequence
+publication last. Flush/compaction writes output files first, commits a
+<code>VersionEdit</code> to MANIFEST second, and only then publishes a new SuperVersion.
+Recovery uses <code>VersionSet::Recover</code> for MANIFEST and <code>DBImpl::RecoverLogFiles</code>
+for WAL replay.</p>
+<h2 id="6-observability-surface">6. Observability Surface</h2>
+<table>
+<thead>
+<tr>
+<th>Surface</th>
+<th>Source</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tickers/histograms</td>
+<td><code>include/rocksdb/statistics.h</code></td>
+<td>Cache, WAL, write, read, flush, compaction, stall counters.</td>
+</tr>
+<tr>
+<td>PerfContext</td>
+<td><code>include/rocksdb/perf_context.h</code></td>
+<td>Per-thread latency breakdown for reads, writes, iterators, block IO.</td>
+</tr>
+<tr>
+<td>IOStatsContext</td>
+<td><code>include/rocksdb/iostats_context.h</code></td>
+<td>Filesystem read/write/open/fsync timing and bytes.</td>
+</tr>
+<tr>
+<td>EventListener</td>
+<td><code>include/rocksdb/listener.h</code></td>
+<td>Flush, compaction, external ingest, background error, stall callbacks.</td>
+</tr>
+<tr>
+<td>LOG/event logger</td>
+<td><code>db/*</code>, <code>db/compaction/*</code>, <code>db/flush_job.cc</code></td>
+<td>Open/recovery, flush, compaction, file lifecycle, errors.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7-development-guidance">7. Development Guidance</h2>
+<ul>
+<li>Start core behavior changes at <code>DBImpl</code>, but push format-specific behavior
+down to table/memtable modules and metadata behavior into VersionSet.</li>
+<li>Treat <code>VersionSet::LogAndApply</code>, <code>MemTable::Add</code>, <code>BlockBasedTable::Get</code>, and
+<code>CompactionIterator</code> as high-risk hot paths.</li>
+<li>Any change that touches sequence assignment must be checked against
+snapshots, recovery, and transactions.</li>
+<li>Any change that touches file membership must be checked against MANIFEST
+recovery, obsolete file cleanup, backup/checkpoint, and ingestion.</li>
+<li>Run focused tests first, then broader <code>db_stress</code> or <code>make check</code> when the
+blast radius reaches DBImpl, VersionSet, compaction, or recovery.</li>
+</ul>
+</div></article>
+</main><footer class="site-footer"><div class="shell"><span>杜志旺</span><span>内容迁移自旧版静态博客。</span></div></footer></body></html>

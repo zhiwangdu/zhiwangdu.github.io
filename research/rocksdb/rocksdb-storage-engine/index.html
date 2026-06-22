@@ -1,0 +1,154 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="RocksDB Storage Engine This document explains the LSM implementation: memtables, WAL, SSTs, VersionSet, Manifest, compaction strategies, tombstones, amplificati"><meta property="og:title" content="RocksDB Storage Engine | 杜志旺的博客"><meta property="og:description" content="RocksDB Storage Engine This document explains the LSM implementation: memtables, WAL, SSTs, VersionSet, Manifest, compaction strategies, tombstones, amplificati"><meta property="og:type" content="website"><meta property="og:url" content="https://zhiwangdu.github.io/research/rocksdb/rocksdb-storage-engine/"><title>RocksDB Storage Engine | 杜志旺的博客</title><link rel="stylesheet" href="/_astro/BaseLayout.C_maKfi4.css"></head><body><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="首页"><span class="brand-mark">Z</span><span>杜志旺的博客</span></a><nav class="nav" aria-label="主导航"><a href="/">文章</a><a href="/research/">研究</a><a href="/archives/">归档</a><a href="/tags/">标签</a><a href="/rss.xml">RSS</a></nav></div></header><main class="shell">
+  <article class="article-page"><header class="article-hero"><div class="post-meta"><a href="/research/">RocksDB</a><time datetime="2026-06-22T12:03:14.000Z">2026/06/22</time></div><h1>RocksDB Storage Engine</h1><p>RocksDB Storage Engine This document explains the LSM implementation: memtables, WAL, SSTs, VersionSet, Manifest, compaction strategies, tombstones, amplificati</p><p class="source-note">Source: <code>docs/rocksdb-storage-engine.md</code> · <code>cad43fd2c209</code></p></header><div class="prose"><h1 id="rocksdb-storage-engine">RocksDB Storage Engine</h1>
+<p>This document explains the LSM implementation: memtables, WAL, SSTs, VersionSet,
+Manifest, compaction strategies, tombstones, amplification, filters, cache,
+prefix extractors, merge operators, and column families.</p>
+<h2 id="1-lsm-shape">1. LSM Shape</h2>
+<p>Per column family, RocksDB data flows through:</p>
+<p><code>mutable MemTable -&gt; immutable MemTable list -&gt; L0 SSTs -&gt; L1+ SSTs -&gt; optional blob files</code>.</p>
+<p>Source evidence:</p>
+<ul>
+<li><code>db/memtable.h</code>, <code>db/memtable.cc</code></li>
+<li><code>db/memtable_list.h</code>, <code>db/memtable_list.cc</code></li>
+<li><code>db/flush_job.cc</code></li>
+<li><code>db/version_set.h</code>, <code>db/version_set.cc</code></li>
+<li><code>table/block_based/block_based_table_builder.cc</code></li>
+<li><code>table/block_based/block_based_table_reader.cc</code></li>
+</ul>
+<p>L0 files can overlap. L1+ files are expected to be non-overlapping within each
+level for leveled compaction, which lets <code>Version::Get</code> reduce lookup work with
+file indexes and binary search.</p>
+<h2 id="2-memtable-wal-and-sequence-numbers">2. MemTable, WAL, and Sequence Numbers</h2>
+<p><code>DBImpl::WriteImpl</code> writes the WAL before inserting the memtable in the normal
+path. <code>WriteBatchInternal::InsertInto</code> replays batch records into
+<code>MemTable::Add</code>. <code>MemTable::Add</code> encodes internal key bytes as user key plus an
+8-byte packed sequence/type suffix, followed by value bytes and optional
+protection bytes.</p>
+<p>The sequence number namespace is DB-wide, not per column family. Snapshots use
+sequence comparisons to decide whether internal keys are visible.</p>
+<h2 id="3-sst-format">3. SST Format</h2>
+<p>The default block-based SST contains:</p>
+<ul>
+<li>data blocks with internal key/value records;</li>
+<li>index blocks mapping separator keys to data block handles;</li>
+<li>optional full or partitioned filter blocks;</li>
+<li>properties and metaindex blocks;</li>
+<li>optional range deletion block;</li>
+<li>footer and checksums.</li>
+</ul>
+<p>Builder evidence is in <code>BlockBasedTableBuilder::Add</code>, <code>WriteBlock</code>,
+<code>WriteFilterBlock</code>, <code>WriteIndexBlock</code>, and <code>Finish</code> in
+<code>table/block_based/block_based_table_builder.cc</code>. Reader evidence is in
+<code>BlockBasedTable::Open</code>, <code>BlockBasedTable::Get</code>, and
+<code>BlockBasedTableIterator::SeekImpl</code>.</p>
+<h2 id="4-version-and-manifest-management">4. Version and Manifest Management</h2>
+<p><code>VersionSet</code> is the metadata owner. Every flush, compaction, ingestion, column
+family add/drop, and WAL metadata change is represented as a <code>VersionEdit</code>.
+<code>VersionSet::LogAndApply</code> serializes edit application, writes the encoded edit
+to MANIFEST with <code>log::Writer::AddRecord</code>, and publishes a new <code>Version</code>.</p>
+<p>Recovery reads CURRENT to find MANIFEST, replays <code>VersionEdit::DecodeFrom</code>, and
+then replays WALs to rebuild unflushed memtables.</p>
+<h2 id="5-compaction-strategies">5. Compaction Strategies</h2>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Source</th>
+<th>Core behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Level</td>
+<td><code>db/compaction/compaction_picker_level.cc</code></td>
+<td>Uses compaction scores per level and maintains non-overlap in L1+. Best default for bounded read and space amp.</td>
+</tr>
+<tr>
+<td>Universal</td>
+<td><code>db/compaction/compaction_picker_universal.cc</code></td>
+<td>Treats files/levels as sorted runs and compacts by size/age/ratio. Useful for write-heavy workloads that tolerate higher temporary space amp.</td>
+</tr>
+<tr>
+<td>FIFO</td>
+<td><code>db/compaction/compaction_picker_fifo.cc</code></td>
+<td>Deletes old/excess files by size/TTL, with optional intra-L0 compaction. Useful for cache/time-window workloads.</td>
+</tr>
+</tbody>
+</table>
+<p><code>CompactionJob::ProcessKeyValueCompaction</code> builds an input iterator, runs
+<code>CompactionIterator</code>, writes output SSTs, then installs results by deleting
+inputs and adding outputs in one <code>VersionEdit</code>.</p>
+<h2 id="6-tombstones-and-range-deletions">6. Tombstones and Range Deletions</h2>
+<p>Point deletes and single deletes are internal key types inserted through the
+normal write path. Range deletions use <code>kTypeRangeDeletion</code>, are stored in a
+range deletion memtable/table block, and are fragmented for lookup/iteration.</p>
+<p>Source evidence:</p>
+<ul>
+<li><code>MemTable::Add</code> in <code>db/memtable.cc</code></li>
+<li><code>db/range_del_aggregator.cc</code></li>
+<li><code>db/range_tombstone_fragmenter.cc</code></li>
+<li><code>CompactionIterator</code> in <code>db/compaction/compaction_iterator.cc</code></li>
+</ul>
+<p>Tombstones are not free. They improve delete latency but can increase read and
+space amplification until compaction proves older data is obsolete.</p>
+<h2 id="7-amplification-control">7. Amplification Control</h2>
+<table>
+<thead>
+<tr>
+<th>Amplification</th>
+<th>Main causes</th>
+<th>Controls</th>
+<th>Evidence / metrics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Read amp</td>
+<td>L0 overlap, many levels/runs, bad filters, cache misses, tombstones</td>
+<td>L0 triggers, compaction style, Bloom/Ribbon filters, block cache, prefix extractor</td>
+<td><code>Version::Get</code>, <code>BlockBasedTable::Get</code>, <code>BLOOM_FILTER_*</code>, <code>BLOCK_CACHE_*</code></td>
+</tr>
+<tr>
+<td>Write amp</td>
+<td>Repeated rewriting through levels, small targets, universal run merges, blob GC</td>
+<td><code>target_file_size_base</code>, <code>max_bytes_for_level_base</code>, dynamic level bytes, compaction style</td>
+<td><code>CompactionJob</code>, <code>COMPACT_READ_BYTES</code>, <code>COMPACT_WRITE_BYTES</code></td>
+</tr>
+<tr>
+<td>Space amp</td>
+<td>Snapshots, tombstones, compaction backlog, universal temporary overlap, backup/checkpoint retention</td>
+<td>Snapshot discipline, compaction capacity, bottommost compaction, obsolete cleanup</td>
+<td><code>VersionStorageInfo</code>, <code>CompactionIterator</code>, live file/obsolete file logs</td>
+</tr>
+</tbody>
+</table>
+<h2 id="8-cache-and-filters">8. Cache and Filters</h2>
+<p>Block cache sits below table readers and can cache data, index, filter, and
+compression dictionary blocks. <code>BlockBasedTable::UpdateCacheHitMetrics</code> and
+<code>UpdateCacheMissMetrics</code> record per-block-type counters. Bloom filters are
+queried in <code>BlockBasedTable::FullFilterKeyMayMatch</code> before index/data block
+lookup.</p>
+<p>Operational signals:</p>
+<ul>
+<li><code>BLOCK_CACHE_HIT</code>, <code>BLOCK_CACHE_MISS</code>, <code>BLOCK_CACHE_DATA_*</code>,
+<code>BLOCK_CACHE_INDEX_*</code>, <code>BLOCK_CACHE_FILTER_*</code></li>
+<li><code>BLOOM_FILTER_USEFUL</code>, <code>BLOOM_FILTER_FULL_POSITIVE</code>,
+<code>BLOOM_FILTER_PREFIX_USEFUL</code></li>
+<li>PerfContext <code>block_read_time</code>, <code>read_filter_block_nanos</code>,
+<code>read_index_block_nanos</code></li>
+</ul>
+<h2 id="9-prefix-and-merge-effects">9. Prefix and Merge Effects</h2>
+<p><code>prefix_extractor</code> affects memtable bloom, SST filters, prefix seeks, and hash
+index behavior. The extractor must be compatible with comparator ordering and
+the workload’s query shape.</p>
+<p>Merge operands are accumulated through <code>MergeContext</code> and resolved by
+<code>MergeHelper</code>. Deep merge stacks increase point-read and iterator cost until
+compaction resolves them.</p>
+<h2 id="10-column-family-effects">10. Column Family Effects</h2>
+<p>Column families isolate LSM state and options, but share the WAL, sequence
+number namespace, DB thread pools, rate limiter, and filesystem. A single slow
+column family can retain WAL files and increase DB open recovery time. Atomic
+flush changes flush publication across column families but does not change the
+global write sequence model.</p>
+</div></article>
+</main><footer class="site-footer"><div class="shell"><span>杜志旺</span><span>内容迁移自旧版静态博客。</span></div></footer></body></html>

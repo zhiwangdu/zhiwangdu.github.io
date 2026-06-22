@@ -1,0 +1,91 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Guardrails Framework Drift Checker research/tools/check-guardrails-framework-drift.py 是 Guardrails 框架矩阵的 source/test/doc 漂移检查器。它不运行 Cassandra 测试，而是把当前源码中的 Guard"><meta property="og:title" content="Guardrails Framework Drift Checker | 杜志旺的博客"><meta property="og:description" content="Guardrails Framework Drift Checker research/tools/check-guardrails-framework-drift.py 是 Guardrails 框架矩阵的 source/test/doc 漂移检查器。它不运行 Cassandra 测试，而是把当前源码中的 Guard"><meta property="og:type" content="website"><meta property="og:url" content="https://zhiwangdu.github.io/research/cassandra/module-guardrails-framework-drift-checker/"><title>Guardrails Framework Drift Checker | 杜志旺的博客</title><link rel="stylesheet" href="/_astro/BaseLayout.C_maKfi4.css"></head><body><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="首页"><span class="brand-mark">Z</span><span>杜志旺的博客</span></a><nav class="nav" aria-label="主导航"><a href="/">文章</a><a href="/research/">研究</a><a href="/archives/">归档</a><a href="/tags/">标签</a><a href="/rss.xml">RSS</a></nav></div></header><main class="shell">
+  <article class="article-page"><header class="article-hero"><div class="post-meta"><a href="/research/">Cassandra</a><time datetime="2026-06-22T14:15:16.000Z">2026/06/22</time></div><h1>Guardrails Framework Drift Checker</h1><p>Guardrails Framework Drift Checker research/tools/check-guardrails-framework-drift.py 是 Guardrails 框架矩阵的 source/test/doc 漂移检查器。它不运行 Cassandra 测试，而是把当前源码中的 Guard</p><p class="source-note">Source: <code>research/module-guardrails-framework-drift-checker.md</code> · <code>09f819b87563</code></p></header><div class="prose"><h1 id="guardrails-framework-drift-checker">Guardrails Framework Drift Checker</h1>
+<p><code>research/tools/check-guardrails-framework-drift.py</code> 是 Guardrails 框架矩阵的 source/test/doc 漂移检查器。它不运行 Cassandra 测试，而是把当前源码中的 Guardrails 架构合同、调用入口、运行时配置面和测试基线与 <code>research/module-guardrails-framework-matrix.md</code> 对齐。</p>
+<h2 id="protected-contracts">Protected Contracts</h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Checks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>guardrails_framework_entrypoint_contract</code></td>
+<td><code>Guardrails</code> entrypoint、MBean name、<code>CONFIG_PROVIDER</code>、<code>DEFAULT_CONFIG</code>、MBean registration 和 43 个 guardrail field 清单。</td>
+</tr>
+<tr>
+<td><code>guardrails_config_provider_contract</code></td>
+<td>custom provider system property、<code>FBUtilities.construct</code>、默认 provider 到 <code>DatabaseDescriptor.getGuardrailsConfig()</code>。</td>
+</tr>
+<tr>
+<td><code>guardrails_options_validation_contract</code></td>
+<td><code>Config</code> defaults、<code>DatabaseDescriptor</code> 构造、<code>GuardrailsOptions</code> 构造校验、runtime setter 更新、YAML 模板字段。</td>
+</tr>
+<tr>
+<td><code>guardrails_threshold_contract</code></td>
+<td><code>Threshold</code> fail-before-warn、redaction、<code>MaxThreshold</code>/<code>MinThreshold</code> disabled sentinel、<code>PercentageThreshold</code> percent formatting。</td>
+</tr>
+<tr>
+<td><code>guardrails_enable_flag_contract</code></td>
+<td><code>EnableFlag.isEnabled()</code> 和 <code>ensureEnabled()</code> 行为。</td>
+</tr>
+<tr>
+<td><code>guardrails_values_predicates_contract</code></td>
+<td><code>Values</code> disallow/ignore/warn 顺序、<code>Predicates</code> failure-before-warning。</td>
+</tr>
+<tr>
+<td><code>guardrails_diagnostics_event_contract</code></td>
+<td>client warnings、tracing、<code>DiagnosticEventService</code> diagnostic WARNED/FAILED event 和 <code>name</code>/<code>message</code> payload。</td>
+</tr>
+<tr>
+<td><code>guardrails_mbean_runtime_config_contract</code></td>
+<td><code>GuardrailsMBean</code> getter/setter、<code>Guardrails</code> runtime forwarding、<code>NodeProbe</code> JMX proxy、StorageService compatibility wrappers。</td>
+</tr>
+<tr>
+<td><code>guardrails_nodetool_runtime_config_contract</code></td>
+<td><code>getguardrailsconfig</code>/<code>setguardrailsconfig</code> command names、category enum、snake_case 特例、threshold 参数反转、<code>null</code>/<code>[]</code> reset 和 nodetool test baseline。</td>
+</tr>
+<tr>
+<td><code>guardrails_client_bypass_contract</code></td>
+<td>ordinary-user-only guardrail enablement、super/internal bypass、background/null-state fail 不抛异常。</td>
+</tr>
+<tr>
+<td><code>guardrails_cql_schema_entrypoints_contract</code></td>
+<td>schema DDL entrypoints for keyspace/table/view/index/type/RF/drop/truncate/table properties.</td>
+</tr>
+<tr>
+<td><code>guardrails_read_write_entrypoints_contract</code></td>
+<td>SELECT, modification, batch, collection/list, timestamp, replica disk usage entrypoints.</td>
+</tr>
+<tr>
+<td><code>guardrails_storage_index_background_entrypoints_contract</code></td>
+<td>SSTable writer、disk monitor、SAI query/term-size background entrypoints.</td>
+</tr>
+<tr>
+<td><code>guardrails_existing_unit_tests_baseline</code></td>
+<td>framework/unit/nodetool representative tests.</td>
+</tr>
+<tr>
+<td><code>guardrails_existing_distributed_tests_baseline</code></td>
+<td>distributed guardrail tests for SSTable write, disk usage, index query, intersect filtering.</td>
+</tr>
+<tr>
+<td><code>guardrails_framework_ci_drift_checker_gap</code></td>
+<td>negative scan: checker is not yet wired into CI/build; if it appears in <code>.circleci</code> or <code>build.xml</code>, update the gap row.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="command">Command</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">python3</span><span style="color:#9ECBFF"> research/tools/check-guardrails-framework-drift.py</span></span></code></pre>
+<p>Useful options:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">python3</span><span style="color:#9ECBFF"> research/tools/check-guardrails-framework-drift.py</span><span style="color:#79B8FF"> --json</span></span></code></pre>
+<h2 id="update-rules">Update Rules</h2>
+<ul>
+<li>If <code>Guardrails.java</code> adds/removes a <code>public static final</code> guardrail, update the inventory, source map, tests and checker expected list together.</li>
+<li>If a new guardrail type appears, add a source contract row before trusting existing <code>Threshold</code>/<code>EnableFlag</code>/<code>Values</code>/<code>Predicates</code> checks.</li>
+<li>If nodetool naming rules change, update both <code>GuardrailsConfigCommand</code> expectations and <code>GuardrailsConfigCommandsTest</code> anchors.</li>
+<li>If CI starts invoking this checker, remove <code>guardrails_framework_ci_drift_checker_gap</code> or change it from a gap into a CI contract.</li>
+</ul>
+</div></article>
+</main><footer class="site-footer"><div class="shell"><span>杜志旺</span><span>内容迁移自旧版静态博客。</span></div></footer></body></html>

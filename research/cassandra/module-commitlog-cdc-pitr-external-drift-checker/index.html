@@ -1,0 +1,47 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Module: CommitLog CDC/PITR External Drift Checker 目的 research/tools/check-commitlog-cdc-pitr-external-drift.py 是 CommitLog CDC/PITR external integration matrix "><meta property="og:title" content="Module: CommitLog CDC/PITR External Drift Checker | 杜志旺的博客"><meta property="og:description" content="Module: CommitLog CDC/PITR External Drift Checker 目的 research/tools/check-commitlog-cdc-pitr-external-drift.py 是 CommitLog CDC/PITR external integration matrix "><meta property="og:type" content="website"><meta property="og:url" content="https://zhiwangdu.github.io/research/cassandra/module-commitlog-cdc-pitr-external-drift-checker/"><title>Module: CommitLog CDC/PITR External Drift Checker | 杜志旺的博客</title><link rel="stylesheet" href="/_astro/BaseLayout.C_maKfi4.css"></head><body><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="首页"><span class="brand-mark">Z</span><span>杜志旺的博客</span></a><nav class="nav" aria-label="主导航"><a href="/">文章</a><a href="/research/">研究</a><a href="/archives/">归档</a><a href="/tags/">标签</a><a href="/rss.xml">RSS</a></nav></div></header><main class="shell">
+  <article class="article-page"><header class="article-hero"><div class="post-meta"><a href="/research/">Cassandra</a><time datetime="2026-06-22T13:43:13.000Z">2026/06/22</time></div><h1>Module: CommitLog CDC/PITR External Drift Checker</h1><p>Module: CommitLog CDC/PITR External Drift Checker 目的 research/tools/check-commitlog-cdc-pitr-external-drift.py 是 CommitLog CDC/PITR external integration matrix </p><p class="source-note">Source: <code>research/module-commitlog-cdc-pitr-external-drift-checker.md</code> · <code>e9bcb50d111b</code></p></header><div class="prose"><h1 id="module-commitlog-cdcpitr-external-drift-checker">Module: CommitLog CDC/PITR External Drift Checker</h1>
+<h2 id="目的">目的</h2>
+<p><code>research/tools/check-commitlog-cdc-pitr-external-drift.py</code> 是 CommitLog CDC/PITR external integration matrix 的 source/test/doc/gap checker。它不启动 Cassandra，不解析真实 commitlog 文件，只保护当前源码暴露给外部 CDC/PITR 系统的合同和当前没有真实外部 connector/rehearsal 的文件级事实。</p>
+<h2 id="覆盖范围">覆盖范围</h2>
+<ul>
+<li>CDC table option 到 <code>Mutation.trackedByCDC()</code> 的标记链。</li>
+<li><code>CommitLogSegmentManagerCDC</code> 的 segment state、hard link、blocking/nonblocking backpressure、consumer 删除后 size recalculation。</li>
+<li><code>_cdc.idx</code> offset 和 <code>COMPLETED</code> watermark。</li>
+<li>replay 后 CDC raw/index rebuild。</li>
+<li><code>cdc_on_repair_enabled</code> 的 streaming/repair write path。</li>
+<li><code>commitlog_archiving.properties</code>、<code>CommitLogArchiver</code> archive/restore command 和 PITR precision/cutoff。</li>
+<li><code>CommitLog.recoverSegmentsOnDisk()</code>、<code>CommitLogReplayer.construct()</code>、<code>ReplayFilter</code> 和 <code>pointInTimeExceeded()</code>。</li>
+<li><code>CommitLogMBean</code> / <code>CommitLogMetrics</code> 的外部观测入口。</li>
+<li>缺口 negative scan：外部 CDC connector/consumer checkpoint、PITR rehearsal/backup script/dry-run 配置仍不存在。</li>
+</ul>
+<h2 id="场景-id">场景 ID</h2>
+<ul>
+<li><code>commitlog_external_cdc_table_marking_contract</code></li>
+<li><code>commitlog_external_cdc_segment_state_contract</code></li>
+<li><code>commitlog_external_cdc_index_watermark_contract</code></li>
+<li><code>commitlog_external_cdc_space_backpressure_contract</code></li>
+<li><code>commitlog_external_cdc_consumer_delete_contract</code></li>
+<li><code>commitlog_external_cdc_replay_rebuild_contract</code></li>
+<li><code>commitlog_external_cdc_repair_streaming_contract</code></li>
+<li><code>commitlog_external_archiver_command_contract</code></li>
+<li><code>commitlog_external_restore_command_contract</code></li>
+<li><code>commitlog_external_pitr_cutoff_contract</code></li>
+<li><code>commitlog_external_replay_filter_snapshot_contract</code></li>
+<li><code>commitlog_external_observability_contract</code></li>
+<li><code>commitlog_external_cdc_consumer_gap</code></li>
+<li><code>commitlog_external_pitr_rehearsal_gap</code></li>
+<li><code>commitlog_external_existing_tests_baseline</code></li>
+</ul>
+<h2 id="运行方式">运行方式</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">python3</span><span style="color:#9ECBFF"> research/tools/check-commitlog-cdc-pitr-external-drift.py</span></span></code></pre>
+<p>JSON 输出：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">python3</span><span style="color:#9ECBFF"> research/tools/check-commitlog-cdc-pitr-external-drift.py</span><span style="color:#79B8FF"> --json</span></span></code></pre>
+<h2 id="失败处理">失败处理</h2>
+<ul>
+<li>source token 失败：重新审查 CDC raw、PITR replay、archive/restore 或 MBean/metrics contract，并同步矩阵。</li>
+<li>test token 失败：确认测试迁移还是覆盖删除；如果覆盖删除，在矩阵中保留 explicit gap。</li>
+<li>doc/scenario 失败：补齐矩阵、checker 说明、README 和 source-map 的场景 ID。</li>
+<li>gap scan 失败：仓库新增了外部 connector/rehearsal 配置或测试，需要补文件级字段、checkpoint、restore dry-run、timestamp audit 和运维 runbook 对照。</li>
+</ul>
+</div></article>
+</main><footer class="site-footer"><div class="shell"><span>杜志旺</span><span>内容迁移自旧版静态博客。</span></div></footer></body></html>

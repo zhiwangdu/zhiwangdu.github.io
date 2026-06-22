@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Module: External Observability Drift Checker 目的 research/tools/check-external-observability-drift.py 是外部观测集成矩阵的 source/test/doc/gap checker。它把 Cassandra 内置 metr"><meta property="og:title" content="Module: External Observability Drift Checker | 杜志旺的博客"><meta property="og:description" content="Module: External Observability Drift Checker 目的 research/tools/check-external-observability-drift.py 是外部观测集成矩阵的 source/test/doc/gap checker。它把 Cassandra 内置 metr"><meta property="og:type" content="website"><meta property="og:url" content="https://zhiwangdu.github.io/research/cassandra/module-external-observability-drift-checker/"><title>Module: External Observability Drift Checker | 杜志旺的博客</title><link rel="stylesheet" href="/_astro/BaseLayout.C_maKfi4.css"></head><body><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="首页"><span class="brand-mark">Z</span><span>杜志旺的博客</span></a><nav class="nav" aria-label="主导航"><a href="/">文章</a><a href="/research/">研究</a><a href="/archives/">归档</a><a href="/tags/">标签</a><a href="/rss.xml">RSS</a></nav></div></header><main class="shell">
+  <article class="article-page"><header class="article-hero"><div class="post-meta"><a href="/research/">Cassandra</a><time datetime="2026-06-22T13:43:13.000Z">2026/06/22</time></div><h1>Module: External Observability Drift Checker</h1><p>Module: External Observability Drift Checker 目的 research/tools/check-external-observability-drift.py 是外部观测集成矩阵的 source/test/doc/gap checker。它把 Cassandra 内置 metr</p><p class="source-note">Source: <code>research/module-external-observability-drift-checker.md</code> · <code>e9bcb50d111b</code></p></header><div class="prose"><h1 id="module-external-observability-drift-checker">Module: External Observability Drift Checker</h1>
+<h2 id="目的">目的</h2>
+<p><code>research/tools/check-external-observability-drift.py</code> 是外部观测集成矩阵的 source/test/doc/gap checker。它把 Cassandra 内置 metrics/JMX/virtual table/logback/audit/FQL/BinLog surface 与当前没有 source-owned exporter/dashboard/alert/log collector 配置的事实固化下来。</p>
+<h2 id="覆盖范围">覆盖范围</h2>
+<ul>
+<li><code>CassandraMetricsRegistry</code> 的 Dropwizard -&gt; JMX wrapper、Timer/Histogram/Meter/Counter attribute contract。</li>
+<li><code>NodeProbe.get*Metric()</code> 依赖的 JMX ObjectName 读取面。</li>
+<li><code>TableMetricTables</code>、<code>CQLMetricsTable</code>、<code>BatchMetricsTable</code>、<code>ThreadPoolsTable</code>、<code>CachesTable</code> 的 virtual metrics 投影。</li>
+<li><code>conf/logback.xml</code> / <code>conf/logback-tools.xml</code> 的 daemon/tools appender 和可选 <code>CQLLOG</code>/<code>AUDIT</code>/<code>LogbackMetrics</code>。</li>
+<li><code>VirtualTableAppender</code> / <code>LogMessagesTable</code> 的 <code>system_views.system_logs</code> memory window。</li>
+<li><code>AuditLogManager</code>、<code>FullQueryLogger</code>、<code>BinLog</code> 的 listener、queue、archive、path-conflict 和 retention contract。</li>
+<li>当前缺口：Prometheus/JMX exporter、OpenTelemetry collector、Grafana dashboard、Alertmanager/alert rules、Filebeat/Fluent Bit/Fluentd/Vector/Logstash/Promtail 配置仍不存在。</li>
+</ul>
+<h2 id="场景-id">场景 ID</h2>
+<ul>
+<li><code>external_observability_jmx_metric_contract</code></li>
+<li><code>external_observability_nodeprobe_metric_contract</code></li>
+<li><code>external_observability_virtual_metrics_contract</code></li>
+<li><code>external_observability_logback_file_contract</code></li>
+<li><code>external_observability_system_logs_contract</code></li>
+<li><code>external_observability_audit_fql_contract</code></li>
+<li><code>external_observability_binlog_retention_contract</code></li>
+<li><code>external_observability_prometheus_exporter_gap</code></li>
+<li><code>external_observability_grafana_dashboard_gap</code></li>
+<li><code>external_observability_alert_rules_gap</code></li>
+<li><code>external_observability_log_collector_gap</code></li>
+<li><code>external_observability_existing_tests_baseline</code></li>
+</ul>
+<h2 id="运行方式">运行方式</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">python3</span><span style="color:#9ECBFF"> research/tools/check-external-observability-drift.py</span></span></code></pre>
+<p>可选输出 JSON：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">python3</span><span style="color:#9ECBFF"> research/tools/check-external-observability-drift.py</span><span style="color:#79B8FF"> --json</span></span></code></pre>
+<h2 id="失败含义">失败含义</h2>
+<ul>
+<li>source token 失败：metrics/JMX/logging/audit/FQL/BinLog 暴露面发生变化，需要重新审查字段、调用链和运维语义。</li>
+<li>test token 失败：现有测试锚点移动或覆盖范围改变，需要更新 baseline。</li>
+<li>doc token 或 scenario coverage 失败：矩阵、checker 说明、README 或 source-map 没有同步。</li>
+<li>gap scan 失败：仓库出现了 source-owned exporter/dashboard/alert/collector 配置，必须补文件级字段映射、阈值、retention/runbook 对照，而不是放宽 negative scan。</li>
+</ul>
+<h2 id="维护规则">维护规则</h2>
+<ul>
+<li>新增外部 metrics 配置时，更新 <code>external_observability_prometheus_exporter_gap</code>、JMX ObjectName allowlist、label/cardinality 和 scrape interval 说明。</li>
+<li>新增 Grafana/alert 配置时，补 panel/query/alert expression 到 Cassandra metric 或 virtual table 字段的映射。</li>
+<li>新增日志 collector 配置时，补 system/debug/audit/FQL 文件路径、roll/retention、权限、敏感字段处理和 backpressure 说明。</li>
+<li>只出现文档 prose 不等于配置已存在；checker 主要扫描文件名和可部署 config 内容标记。</li>
+</ul>
+</div></article>
+</main><footer class="site-footer"><div class="shell"><span>杜志旺</span><span>内容迁移自旧版静态博客。</span></div></footer></body></html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Streaming Transfer Compatibility Matrix 本文补齐 Repair/Streaming 第五轮源码侧缺口：mixed-version/TLS/internodecompression 组合下的 streaming transfer compatibility。它不重复 module-"><meta property="og:title" content="Streaming Transfer Compatibility Matrix | 杜志旺的博客"><meta property="og:description" content="Streaming Transfer Compatibility Matrix 本文补齐 Repair/Streaming 第五轮源码侧缺口：mixed-version/TLS/internodecompression 组合下的 streaming transfer compatibility。它不重复 module-"><meta property="og:type" content="website"><meta property="og:url" content="https://zhiwangdu.github.io/research/cassandra/module-streaming-transfer-compatibility-matrix/"><title>Streaming Transfer Compatibility Matrix | 杜志旺的博客</title><link rel="stylesheet" href="/_astro/BaseLayout.C_maKfi4.css"></head><body><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="首页"><span class="brand-mark">Z</span><span>杜志旺的博客</span></a><nav class="nav" aria-label="主导航"><a href="/">文章</a><a href="/research/">研究</a><a href="/archives/">归档</a><a href="/tags/">标签</a><a href="/rss.xml">RSS</a></nav></div></header><main class="shell">
+  <article class="article-page"><header class="article-hero"><div class="post-meta"><a href="/research/">Cassandra</a><time datetime="2026-06-22T13:06:27.000Z">2026/06/22</time></div><h1>Streaming Transfer Compatibility Matrix</h1><p>Streaming Transfer Compatibility Matrix 本文补齐 Repair/Streaming 第五轮源码侧缺口：mixed-version/TLS/internodecompression 组合下的 streaming transfer compatibility。它不重复 module-</p><p class="source-note">Source: <code>research/module-streaming-transfer-compatibility-matrix.md</code> · <code>0ae638514777</code></p></header><div class="prose"><h1 id="streaming-transfer-compatibility-matrix">Streaming Transfer Compatibility Matrix</h1>
+<p>本文补齐 Repair/Streaming 第五轮源码侧缺口：mixed-version/TLS/<code>internode_compression</code> 组合下的 streaming transfer compatibility。它不重复 <code>module-repair-streaming-autorepair-netty.md</code> 的 auto-repair 与 generic failure matrix，而是把 streaming connection handshake、TLS optional fallback、messaging frame compression、SSTable payload compression、zero-copy/TLS fallback、reader/writer/observability 和当前测试缺口放在一个矩阵里。</p>
+<h2 id="结论">结论</h2>
+<ul>
+<li>Streaming 连接复用 internode handshake，但不是普通 messaging pipeline。<code>HandshakeProtocol.Initiate</code> 用 MOD bit 标记 streaming，inbound streaming pipeline 要求 <code>Framing.UNPROTECTED</code>，随后替换成 <code>NettyStreamingChannel</code> 和 <code>StreamDeserializingTask</code>，见 <code>src/java/org/apache/cassandra/net/HandshakeProtocol.java:55-85</code>、<code>src/java/org/apache/cassandra/net/HandshakeProtocol.java:107-120</code>、<code>src/java/org/apache/cassandra/net/InboundConnectionInitiator.java:431-465</code>。</li>
+<li><code>internode_compression</code> 只决定 messaging pipeline 的 LZ4/CRC frame codec。streaming pipeline 不安装 <code>FrameDecoderLZ4</code>/<code>FrameDecoderCrc</code>；文件 payload 压缩由 <code>StreamCompressionSerializer</code> 或 SSTable table-compression 元数据决定，见 <code>src/java/org/apache/cassandra/net/InboundConnectionInitiator.java:467-526</code>、<code>src/java/org/apache/cassandra/streaming/async/StreamCompressionSerializer.java:34-127</code>。</li>
+<li>TLS 影响 streaming I/O path。<code>AsyncStreamingOutputPlus.writeFileToChannel()</code> 在 pipeline 有 <code>SslHandler</code> 时读入 64 KiB user-space buffer，否则 compressed entire SSTable 可走 zero-copy <code>FileRegion</code>，见 <code>src/java/org/apache/cassandra/net/AsyncStreamingOutputPlus.java:147-166</code> 与 <code>src/java/org/apache/cassandra/db/streaming/package-info.java:20-50</code>。</li>
+<li>当前测试覆盖了 stream compression serializer、file semaphore/control failure、entire vs partial、table compression on/off、netstats、<code>system_views.streaming</code>、generic stream failure logs 和普通 internode TLS；但没有一个 distributed/upgrade 场景同时覆盖 mixed-version、TLS、<code>internode_compression</code> 和 streaming file transfer。</li>
+</ul>
+<h2 id="compatibility-matrix">Compatibility Matrix</h2>
+<table>
+<thead>
+<tr>
+<th>场景 ID</th>
+<th>源码合同</th>
+<th>现有测试证据</th>
+<th>缺口判断</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>streaming_handshake_framing_contract</code></td>
+<td><code>HandshakeProtocol.Initiate.encodeFlags()</code> 对 streaming 连接设置 MOD bit，framing bits 与 version bounds 同包发送；inbound streaming path <code>assert initiate.framing == Framing.UNPROTECTED</code>，见 <code>src/java/org/apache/cassandra/net/HandshakeProtocol.java:55-85</code>、<code>src/java/org/apache/cassandra/net/HandshakeProtocol.java:107-120</code>、<code>src/java/org/apache/cassandra/net/InboundConnectionInitiator.java:431-465</code></td>
+<td><code>test/unit/org/apache/cassandra/net/HandshakeTest.java:230-335</code> 覆盖 optional TLS fallback 的普通 messaging connection</td>
+<td>没有独立 streaming handshake negotiation exhaustive test</td>
+</tr>
+<tr>
+<td><code>streaming_ssl_optional_fallback_contract</code></td>
+<td><code>NettyStreamingConnectionFactory.connect()</code> 在 encryption optional 时尝试 <code>SslFallbackConnectionType.values()</code>，只有 SSL 相关错误才 fallback，见 <code>src/java/org/apache/cassandra/streaming/async/NettyStreamingConnectionFactory.java:51-85</code>；outbound pipeline 按 <code>SERVER_CONFIG</code>/<code>SSL</code>/<code>MTLS</code> 装 <code>SslHandler</code>，见 <code>src/java/org/apache/cassandra/net/OutboundConnectionInitiator.java:208-239</code></td>
+<td><code>HandshakeTest.testOutboundConnectionDoesntFallbackWhenErrorIsNotSSLRelated()</code> 与 fallback helper 证明普通 outbound 连接逻辑，见 <code>test/unit/org/apache/cassandra/net/HandshakeTest.java:239-335</code></td>
+<td>streaming path 复用代码但缺少 direct streaming optional-TLS dtest</td>
+</tr>
+<tr>
+<td><code>streaming_inbound_tls_policy_contract</code></td>
+<td>inbound initializer 在 <code>UNENCRYPTED</code> 下装 <code>RejectSslHandler</code>，<code>OPTIONAL</code> 下装 <code>OptionalSslHandler</code>，<code>ENCRYPTED</code> 下装 <code>SslHandler</code>，见 <code>src/java/org/apache/cassandra/net/InboundConnectionInitiator.java:117-132</code></td>
+<td><code>InternodeEncryptionOptionsTest.allInternodeEncryptionEstablishedTest()</code> 只证明 encrypted internode outbound view 成立，见 <code>test/distributed/org/apache/cassandra/distributed/test/InternodeEncryptionOptionsTest.java:197-218</code></td>
+<td>不是 streaming transfer 场景</td>
+</tr>
+<tr>
+<td><code>streaming_control_file_channel_contract</code></td>
+<td><code>StreamingMultiplexedChannel</code> 用 control channel 发送普通 stream messages，用 file transfer executor 给 <code>OutgoingStreamMessage</code> 建 file channel；<code>NettyStreamingChannel.acquireOut()</code> 防止一个 channel 同时传多文件，见 <code>src/java/org/apache/cassandra/streaming/async/StreamingMultiplexedChannel.java:74-89</code>、<code>src/java/org/apache/cassandra/streaming/async/StreamingMultiplexedChannel.java:210-224</code>、<code>src/java/org/apache/cassandra/streaming/async/NettyStreamingChannel.java:54-88</code></td>
+<td><code>StreamingMultiplexedChannelTest.FileStreamTask_BadChannelAttr()</code>、<code>FileStreamTask_HappyPath()</code>、<code>onControlMessageComplete_Exception()</code> 覆盖 attr、permit 释放和控制消息失败，见 <code>test/unit/org/apache/cassandra/streaming/async/StreamingMultiplexedChannelTest.java:83-152</code></td>
+<td>unit 覆盖足够，缺 distributed TLS/mixed-version 组合</td>
+</tr>
+<tr>
+<td><code>streaming_file_semaphore_keepalive_contract</code></td>
+<td><code>StreamingMultiplexedChannel.FileStreamTask.run()</code> 获取 file transfer semaphore，异常时 <code>session.onError()</code>，等待 permit 时周期性记录日志，见 <code>src/java/org/apache/cassandra/streaming/async/StreamingMultiplexedChannel.java:307-375</code></td>
+<td><code>StreamingMultiplexedChannelTest.FileStreamTask_acquirePermit_closed()</code>、<code>FileStreamTask_acquirePermit_HapppyPath()</code> 覆盖 permit 基线，见 <code>test/unit/org/apache/cassandra/streaming/async/StreamingMultiplexedChannelTest.java:83-99</code></td>
+<td>没有高并发 file permit + TLS + mixed-version dtest</td>
+</tr>
+<tr>
+<td><code>streaming_tls_zero_copy_fallback_contract</code></td>
+<td>entire SSTable writer 逐 component 调 <code>out.writeFileToChannel()</code>；有 <code>SslHandler</code> 时 user-space 64 KiB buffer，无 TLS 时 zero-copy，见 <code>src/java/org/apache/cassandra/db/streaming/CassandraEntireSSTableStreamWriter.java:66-109</code>、<code>src/java/org/apache/cassandra/net/AsyncStreamingOutputPlus.java:147-166</code></td>
+<td><code>AsyncStreamingOutputPlusTest.testSuccess()</code> 覆盖 buffer flush 基线，见 <code>test/unit/org/apache/cassandra/net/AsyncStreamingOutputPlusTest.java:48-115</code>；<code>EntireSSTableStreamingCorrectFilesCountTest</code> 覆盖 entire file count，见 <code>test/unit/org/apache/cassandra/streaming/EntireSSTableStreamingCorrectFilesCountTest.java:117-142</code></td>
+<td>没有 TLS 下 entire SSTable fallback 的 distributed assertion</td>
+</tr>
+<tr>
+<td><code>streaming_internode_compression_boundary</code></td>
+<td>messaging pipeline 依据 <code>Framing.LZ4</code>/<code>CRC</code> 安装 frame decoder；streaming pipeline 不走 frame decoder 且 inbound streaming assert unprotected，见 <code>src/java/org/apache/cassandra/net/InboundConnectionInitiator.java:431-526</code>；<code>internode_compression</code> 默认见 <code>conf/cassandra.yaml:1730-1742</code>，getter 见 <code>src/java/org/apache/cassandra/config/DatabaseDescriptor.java:4039-4046</code></td>
+<td><code>test/distributed/org/apache/cassandra/distributed/test/JVMDTestTest.java:119</code> 只触碰 <code>internode_compression</code> 配置</td>
+<td>没有 streaming + <code>internode_compression</code> dtest</td>
+</tr>
+<tr>
+<td><code>streaming_stream_compression_format_contract</code></td>
+<td>uncompressed SSTable streaming 用 <code>StreamCompressionSerializer</code> 的 <code>int compressed length</code> + <code>int uncompressed length</code> + payload 格式，见 <code>src/java/org/apache/cassandra/streaming/async/StreamCompressionSerializer.java:34-127</code></td>
+<td><code>StreamCompressionSerializerTest.roundTrip_HappyPath_NotReadabaleByteBuffer()</code> 和 <code>roundTrip_HappyPath_ReadabaleByteBuffer()</code> 覆盖 array/direct path，见 <code>test/unit/org/apache/cassandra/streaming/async/StreamCompressionSerializerTest.java:74-112</code></td>
+<td>覆盖充分，但不是 internode frame compression</td>
+</tr>
+<tr>
+<td><code>streaming_outgoing_file_header_contract</code></td>
+<td><code>CassandraOutgoingFile.makeHeader()</code> 写入 SSTable version/format、sections、compression info、serialization header、entire flag、component manifest、first key/table id；<code>CassandraStreamHeader.serializer</code> 负责 wire header，见 <code>src/java/org/apache/cassandra/db/streaming/CassandraOutgoingFile.java:72-95</code>、<code>src/java/org/apache/cassandra/db/streaming/CassandraStreamHeader.java:156-205</code></td>
+<td><code>test/unit/org/apache/cassandra/db/streaming/CassandraStreamHeaderTest.java</code> 与 writer/receiver tests 在 existing Streaming index 中覆盖</td>
+<td>mixed-version header compatibility 仍需要 upgrade streaming scenario</td>
+</tr>
+<tr>
+<td><code>streaming_partial_uncompressed_contract</code></td>
+<td>partial uncompressed writer 读取 DATA section、checksum validate、LZ4 stream-compress；reader 用 <code>StreamCompressionInputStream</code> 解 payload 并写 <code>RangeAwareSSTableWriter</code>，见 <code>src/java/org/apache/cassandra/db/streaming/CassandraStreamWriter.java:76-155</code>、<code>src/java/org/apache/cassandra/db/streaming/CassandraStreamReader.java:116-188</code></td>
+<td><code>LongStreamingTest</code> 覆盖长流式数据路径；netstats no-table-compression bootstrap/repair 间接覆盖，见 <code>test/distributed/org/apache/cassandra/distributed/test/NetstatsBootstrapWithoutEntireSSTablesCompressionStreamingTest.java:23-36</code>、<code>test/distributed/org/apache/cassandra/distributed/test/NetstatsRepairStreamingTest.java:38-86</code></td>
+<td>缺 TLS/mixed-version 组合</td>
+</tr>
+<tr>
+<td><code>streaming_partial_compressed_contract</code></td>
+<td>compressed SSTable partial writer fuse adjacent chunks，发送 compressed chunk+CRC 原始 bytes；reader 用 <code>CompressedInputStream</code> 按 section 读，见 <code>src/java/org/apache/cassandra/db/streaming/CassandraCompressedStreamWriter.java:58-141</code>、<code>src/java/org/apache/cassandra/db/streaming/CassandraCompressedStreamReader.java:55-123</code></td>
+<td><code>NetstatsBootstrapWithEntireSSTablesCompressionStreamingTest</code> 和 repair compression test 覆盖 compression on/off 的观测输出，见 <code>test/distributed/org/apache/cassandra/distributed/test/NetstatsBootstrapWithEntireSSTablesCompressionStreamingTest.java:23-42</code>、<code>test/distributed/org/apache/cassandra/distributed/test/NetstatsRepairStreamingTest.java:38-86</code></td>
+<td>缺 TLS/mixed-version 组合</td>
+</tr>
+<tr>
+<td><code>streaming_entire_sstable_contract</code></td>
+<td><code>CassandraOutgoingFile.computeShouldStreamEntireSSTables()</code> 要求 <code>stream_entire_sstables</code>、非 legacy counter shard、非 old BF format 且 sections 覆盖整表；entire reader 按 component manifest 写 zero-copy writer，见 <code>src/java/org/apache/cassandra/db/streaming/CassandraOutgoingFile.java:180-201</code>、<code>src/java/org/apache/cassandra/db/streaming/CassandraEntireSSTableStreamReader.java:85-200</code></td>
+<td><code>EntireSSTableStreamingCorrectFilesCountTest</code> 和 netstats entire tests 覆盖 component count、entire/partial 观测，见 <code>test/unit/org/apache/cassandra/streaming/EntireSSTableStreamingCorrectFilesCountTest.java:117-142</code>、<code>test/distributed/org/apache/cassandra/distributed/test/NetstatsBootstrapWithEntireSSTablesCompressionStreamingTest.java:25-41</code></td>
+<td>缺 TLS fallback distributed assertion</td>
+</tr>
+<tr>
+<td><code>streaming_state_netstats_observability_contract</code></td>
+<td><code>StreamingState</code> 暴露 status/progress/failure/success，<code>StreamingVirtualTable</code> 输出 <code>failure_cause</code>、<code>success_message</code>、session fields，<code>NetStats</code> 打印 JMX stream status，见 <code>src/java/org/apache/cassandra/streaming/StreamingState.java:198-245</code>、<code>src/java/org/apache/cassandra/db/virtual/StreamingVirtualTable.java:67-103</code>、<code>src/java/org/apache/cassandra/tools/nodetool/NetStats.java:45-173</code></td>
+<td><code>IndexStreamingTest</code> 校验 <code>system_views.streaming</code> success/progress/files/bytes，<code>StreamingStatsDisabledTest</code> 校验开关，netstats tests 校验 Receiving/Sending 解析，见 <code>test/distributed/org/apache/cassandra/distributed/test/sai/IndexStreamingTest.java:130-166</code>、<code>test/distributed/org/apache/cassandra/distributed/test/streaming/StreamingStatsDisabledTest.java:34-63</code>、<code>test/distributed/org/apache/cassandra/distributed/test/AbstractNetstatsStreaming.java:120-135</code></td>
+<td>覆盖可观测性，未覆盖 TLS/compression/mixed-version 组合</td>
+</tr>
+<tr>
+<td><code>streaming_receive_failure_contract</code></td>
+<td><code>IncomingStreamMessage.deserialize()</code> 找不到 session/table 或 reader 失败时包装 <code>StreamReceiveException</code>；<code>StreamDeserializingTask</code> 捕获后调用 <code>session.onError()</code>，见 <code>src/java/org/apache/cassandra/streaming/messages/IncomingStreamMessage.java:37-60</code>、<code>src/java/org/apache/cassandra/streaming/StreamDeserializingTask.java:51-99</code></td>
+<td>streaming failure logs、receive abort、prepare fail tests 已在 <code>research/notes/source-map.md</code> Streaming row 索引</td>
+<td>generic failure 覆盖存在，兼容性组合缺失</td>
+</tr>
+<tr>
+<td><code>streaming_existing_tests_baseline</code></td>
+<td>现有覆盖分散在 async unit、db streaming unit、long streaming、netstats distributed、SAI index streaming、failure logs、ordinary internode encryption tests</td>
+<td><code>test/unit/org/apache/cassandra/streaming/async/StreamCompressionSerializerTest.java</code>、<code>test/unit/org/apache/cassandra/streaming/async/StreamingMultiplexedChannelTest.java</code>、<code>test/unit/org/apache/cassandra/streaming/EntireSSTableStreamingCorrectFilesCountTest.java</code>、<code>test/distributed/org/apache/cassandra/distributed/test/NetstatsRepairStreamingTest.java</code>、<code>test/distributed/org/apache/cassandra/distributed/test/sai/IndexStreamingTest.java</code>、<code>test/distributed/org/apache/cassandra/distributed/test/InternodeEncryptionOptionsTest.java</code></td>
+<td>现有测试是分层 coverage，不是端到端 compatibility matrix</td>
+</tr>
+<tr>
+<td><code>streaming_mixed_tls_compression_gap</code></td>
+<td>需要同时验证 upgrade/mixed-mode handshake version、server TLS optional/strict、<code>internode_compression</code> 设置、streaming file transfer 和 receiver ingest/state</td>
+<td>当前扫描未发现 <code>test/distributed</code> 中同时包含 streaming marker、TLS marker、<code>internode_compression</code> marker 和 mixed-version/upgrade marker 的 Java 测试</td>
+<td>显式缺口，应新增 distributed/upgrade dtest 后更新本文和 checker</td>
+</tr>
+</tbody>
+</table>
+<h2 id="调用图">调用图</h2>
+<p>Streaming connection negotiation：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>StreamingMultiplexedChannel.sendMessage(OutgoingStreamMessage)</span></span>
+<span class="line"><span>  -> FileStreamTask.run()</span></span>
+<span class="line"><span>     -> NettyStreamingConnectionFactory.connect(kind=FILE)</span></span>
+<span class="line"><span>        -> OutboundConnectionInitiator.initiateStreaming(...)</span></span>
+<span class="line"><span>           -> HandshakeProtocol.Initiate.encodeFlags(type=STREAMING, framing=UNPROTECTED)</span></span>
+<span class="line"><span>        -> inbound InboundConnectionInitiator.setupStreamingPipeline(...)</span></span>
+<span class="line"><span>           -> new NettyStreamingChannel(channel, CONTROL)</span></span>
+<span class="line"><span>           -> StreamDeserializingTask.run()</span></span></code></pre>
+<p>File payload path：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>CassandraOutgoingFile.write(...)</span></span>
+<span class="line"><span>  -> serialize CassandraStreamHeader</span></span>
+<span class="line"><span>  -> if entire:</span></span>
+<span class="line"><span>       CassandraEntireSSTableStreamWriter.write()</span></span>
+<span class="line"><span>       -> AsyncStreamingOutputPlus.writeFileToChannel()</span></span>
+<span class="line"><span>          -> SslHandler present ? user-space 64 KiB : zero-copy FileRegion</span></span>
+<span class="line"><span>     else if header.isCompressed():</span></span>
+<span class="line"><span>       CassandraCompressedStreamWriter.write()</span></span>
+<span class="line"><span>       -> send compressed chunks + CRC bytes</span></span>
+<span class="line"><span>       -> CassandraCompressedStreamReader.read()</span></span>
+<span class="line"><span>     else:</span></span>
+<span class="line"><span>       CassandraStreamWriter.write()</span></span>
+<span class="line"><span>       -> StreamCompressionSerializer.serialize(LZ4 chunk)</span></span>
+<span class="line"><span>       -> CassandraStreamReader.read()</span></span>
+<span class="line"><span>          -> StreamCompressionInputStream</span></span></code></pre>
+<p>Failure and observability path：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>StreamDeserializingTask.run()</span></span>
+<span class="line"><span>  -> StreamMessage.deserialize(...)</span></span>
+<span class="line"><span>  -> IncomingStreamMessage.deserialize(...)</span></span>
+<span class="line"><span>     -> CassandraIncomingFile.read()</span></span>
+<span class="line"><span>        -> reader.read(...)</span></span>
+<span class="line"><span>  -> catch Throwable</span></span>
+<span class="line"><span>     -> session.onError(...)</span></span>
+<span class="line"><span>     -> StreamResultFuture failure</span></span>
+<span class="line"><span>     -> StreamingState.failureCause()</span></span>
+<span class="line"><span>     -> system_views.streaming / nodetool netstats / StreamingMetrics</span></span></code></pre>
+<h2 id="配置和运维边界">配置和运维边界</h2>
+<table>
+<thead>
+<tr>
+<th>配置</th>
+<th>作用</th>
+<th>证据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>server_encryption_options.internode_encryption</code></td>
+<td>决定 internode TLS policy；streaming connection 复用 inbound/outbound TLS handler</td>
+<td><code>conf/cassandra.yaml:1641-1652</code>、<code>src/java/org/apache/cassandra/net/InboundConnectionInitiator.java:117-132</code></td>
+</tr>
+<tr>
+<td><code>internode_compression</code></td>
+<td>messaging frame compression policy，不是 streaming payload compression</td>
+<td><code>conf/cassandra.yaml:1730-1742</code>、<code>src/java/org/apache/cassandra/net/InboundConnectionInitiator.java:467-526</code></td>
+</tr>
+<tr>
+<td><code>stream_entire_sstables</code></td>
+<td>是否允许 entire SSTable streaming；还受 legacy counter shard、old BF format、range section 完整性限制</td>
+<td><code>src/java/org/apache/cassandra/config/Config.java:699</code>、<code>src/java/org/apache/cassandra/config/DatabaseDescriptor.java:3999-4005</code>、<code>src/java/org/apache/cassandra/db/streaming/CassandraOutgoingFile.java:180-201</code></td>
+</tr>
+<tr>
+<td><code>stream_throughput_outbound</code> / <code>inter_dc_stream_throughput_outbound</code></td>
+<td>partial stream limiter</td>
+<td><code>src/java/org/apache/cassandra/config/Config.java:361-364</code>、<code>src/java/org/apache/cassandra/config/DatabaseDescriptor.java:2600-2705</code></td>
+</tr>
+<tr>
+<td><code>entire_sstable_stream_throughput_outbound</code> / <code>entire_sstable_inter_dc_stream_throughput_outbound</code></td>
+<td>entire SSTable stream limiter</td>
+<td><code>src/java/org/apache/cassandra/config/Config.java:366-367</code>、<code>src/java/org/apache/cassandra/config/DatabaseDescriptor.java:2645-2725</code></td>
+</tr>
+<tr>
+<td><code>streaming_stats_enabled</code> / <code>streaming_slow_events_log_timeout</code></td>
+<td>retained streaming state 和 slow event log</td>
+<td><code>src/java/org/apache/cassandra/config/Config.java:951-952</code>、<code>src/java/org/apache/cassandra/config/DatabaseDescriptor.java:5018-5039</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="metrics-logs-tests">Metrics, Logs, Tests</h2>
+<ul>
+<li>Metrics：<code>StreamingMetrics.totalIncomingBytes</code>、<code>totalOutgoingBytes</code>、<code>totalOutgoingRepairBytes</code>、per-peer entire/partial counters 在 <code>src/java/org/apache/cassandra/metrics/StreamingMetrics.java:34-93</code> 与 <code>src/java/org/apache/cassandra/streaming/StreamSession.java:1039-1082</code>。</li>
+<li>Logs：inbound streaming connection established log 记录 version/framing/encryption，见 <code>src/java/org/apache/cassandra/net/InboundConnectionInitiator.java:455-464</code>；<code>StreamResultFuture</code> 失败摘要包含 <code>Stream failed:</code>，见 <code>src/java/org/apache/cassandra/streaming/StreamResultFuture.java:235-252</code>。</li>
+<li>Tests：现有测试验证单层合同，但不验证四维组合。新增测试应至少覆盖：old/current 或 rolling upgrade cluster、<code>server_encryption_options</code> optional/strict、<code>internode_compression=dc/all</code>、bootstrap/rebuild/repair streaming、entire/partial/table compression 组合、<code>system_views.streaming</code>/netstats/metrics 成功和失败可见性。</li>
+</ul>
+<h2 id="drift-checker">Drift Checker</h2>
+<p><code>research/tools/check-streaming-transfer-compatibility-drift.py</code> 会保护上表的源码 token、现有测试 token、文档场景 ID，并扫描 <code>test/distributed</code> 中是否出现真正的 mixed-version + TLS + <code>internode_compression</code> + streaming 组合测试。若该组合测试被新增，checker 会失败，提示把 <code>streaming_mixed_tls_compression_gap</code> 改成具体覆盖项。</p>
+</div></article>
+</main><footer class="site-footer"><div class="shell"><span>杜志旺</span><span>内容迁移自旧版静态博客。</span></div></footer></body></html>

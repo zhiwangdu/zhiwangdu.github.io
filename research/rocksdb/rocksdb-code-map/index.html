@@ -1,0 +1,335 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="RocksDB Code Map 1. Directory Structure Directory Purpose --- --- include/rocksdb/ Public C++ API, options, statistics, listeners, utilities APIs. db/ Core DB i"><meta property="og:title" content="RocksDB Code Map | 杜志旺的博客"><meta property="og:description" content="RocksDB Code Map 1. Directory Structure Directory Purpose --- --- include/rocksdb/ Public C++ API, options, statistics, listeners, utilities APIs. db/ Core DB i"><meta property="og:type" content="website"><meta property="og:url" content="https://zhiwangdu.github.io/research/rocksdb/rocksdb-code-map/"><title>RocksDB Code Map | 杜志旺的博客</title><link rel="stylesheet" href="/_astro/BaseLayout.C_maKfi4.css"></head><body><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="首页"><span class="brand-mark">Z</span><span>杜志旺的博客</span></a><nav class="nav" aria-label="主导航"><a href="/">文章</a><a href="/research/">研究</a><a href="/archives/">归档</a><a href="/tags/">标签</a><a href="/rss.xml">RSS</a></nav></div></header><main class="shell">
+  <article class="article-page"><header class="article-hero"><div class="post-meta"><a href="/research/">RocksDB</a><time datetime="2026-06-22T12:03:14.000Z">2026/06/22</time></div><h1>RocksDB Code Map</h1><p>RocksDB Code Map 1. Directory Structure Directory Purpose --- --- include/rocksdb/ Public C++ API, options, statistics, listeners, utilities APIs. db/ Core DB i</p><p class="source-note">Source: <code>docs/rocksdb-code-map.md</code> · <code>cad43fd2c209</code></p></header><div class="prose"><h1 id="rocksdb-code-map">RocksDB Code Map</h1>
+<h2 id="1-directory-structure">1. Directory Structure</h2>
+<table>
+<thead>
+<tr>
+<th>Directory</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>include/rocksdb/</code></td>
+<td>Public C++ API, options, statistics, listeners, utilities APIs.</td>
+</tr>
+<tr>
+<td><code>db/</code></td>
+<td>Core DB implementation, WAL, memtable glue, VersionSet, recovery, tests.</td>
+</tr>
+<tr>
+<td><code>db/db_impl/</code></td>
+<td>Split <code>DBImpl</code> implementation: open, write, flush/compaction, secondary/follower/read-only modes.</td>
+</tr>
+<tr>
+<td><code>db/compaction/</code></td>
+<td>Compaction plan, picker, job, iterator, subcompaction, tests.</td>
+</tr>
+<tr>
+<td><code>memtable/</code></td>
+<td>Memtable representation implementations and skiplist code.</td>
+</tr>
+<tr>
+<td><code>table/</code></td>
+<td>Table format interfaces and generic iterators.</td>
+</tr>
+<tr>
+<td><code>table/block_based/</code></td>
+<td>Default SST format implementation: blocks, indexes, filters, readers, builders, cache hooks.</td>
+</tr>
+<tr>
+<td><code>cache/</code></td>
+<td>Cache implementations and secondary/compressed cache support.</td>
+</tr>
+<tr>
+<td><code>env/</code>, <code>file/</code></td>
+<td>Env/FileSystem implementations and file readers/writers.</td>
+</tr>
+<tr>
+<td><code>monitoring/</code></td>
+<td>Statistics, PerfContext, IOStatsContext, thread status.</td>
+</tr>
+<tr>
+<td><code>options/</code></td>
+<td>Option parsing, dumping, validation, settable option maps.</td>
+</tr>
+<tr>
+<td><code>utilities/</code></td>
+<td>Optional modules: transactions, backup, checkpoint, TTL, blob DB, persistent cache, etc.</td>
+</tr>
+<tr>
+<td><code>tools/</code></td>
+<td><code>db_bench</code>, <code>ldb</code>, <code>sst_dump</code>, stress/support tools.</td>
+</tr>
+<tr>
+<td><code>docs/components/</code></td>
+<td>Existing focused read/write flow docs.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-core-source-entrances">2. Core Source Entrances</h2>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Start here</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DB API</td>
+<td><code>include/rocksdb/db.h</code></td>
+</tr>
+<tr>
+<td>Write path</td>
+<td><code>db/db_impl/db_impl_write.cc</code></td>
+</tr>
+<tr>
+<td>Point reads / iterators</td>
+<td><code>db/db_impl/db_impl.cc</code>, <code>db/version_set.cc</code>, <code>db/db_iter.cc</code></td>
+</tr>
+<tr>
+<td>Open/recovery</td>
+<td><code>db/db_impl/db_impl_open.cc</code>, <code>db/version_set.cc</code></td>
+</tr>
+<tr>
+<td>Memtable</td>
+<td><code>db/memtable.cc</code>, <code>memtable/skiplist.h</code>, <code>memtable/inlineskiplist.h</code></td>
+</tr>
+<tr>
+<td>WAL</td>
+<td><code>db/log_writer.cc</code>, <code>db/log_reader.cc</code>, <code>db/wal_manager.cc</code></td>
+</tr>
+<tr>
+<td>Manifest / versions</td>
+<td><code>db/version_set.cc</code>, <code>db/version_edit.cc</code>, <code>db/version_builder.cc</code></td>
+</tr>
+<tr>
+<td>Flush</td>
+<td><code>db/flush_job.cc</code>, <code>db/db_impl/db_impl_compaction_flush.cc</code></td>
+</tr>
+<tr>
+<td>Compaction</td>
+<td><code>db/compaction/compaction_job.cc</code>, <code>db/compaction/compaction_iterator.cc</code>, picker files</td>
+</tr>
+<tr>
+<td>SST read/write</td>
+<td><code>table/block_based/block_based_table_reader.cc</code>, <code>table/block_based/block_based_table_builder.cc</code></td>
+</tr>
+<tr>
+<td>Cache/filter</td>
+<td><code>table/block_based/block_cache.cc</code>, <code>cache/lru_cache.cc</code>, <code>table/block_based/full_filter_block.cc</code></td>
+</tr>
+<tr>
+<td>Transactions</td>
+<td><code>utilities/transactions/</code></td>
+</tr>
+<tr>
+<td>Backup/checkpoint</td>
+<td><code>utilities/backup/backup_engine.cc</code>, <code>utilities/checkpoint/checkpoint_impl.cc</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-core-class-index">3. Core Class Index</h2>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Path</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DBImpl</code></td>
+<td><code>db/db_impl/db_impl.h</code></td>
+<td>Main database implementation and scheduler.</td>
+</tr>
+<tr>
+<td><code>WriteThread</code></td>
+<td><code>db/write_thread.h</code></td>
+<td>Group commit and write concurrency.</td>
+</tr>
+<tr>
+<td><code>WriteBatchInternal</code></td>
+<td><code>db/write_batch_internal.h</code></td>
+<td>Batch sequence and replay internals.</td>
+</tr>
+<tr>
+<td><code>MemTable</code></td>
+<td><code>db/memtable.h</code></td>
+<td>Mutable sorted write buffer.</td>
+</tr>
+<tr>
+<td><code>MemTableList</code></td>
+<td><code>db/memtable_list.h</code></td>
+<td>Immutable memtable flush queue.</td>
+</tr>
+<tr>
+<td><code>ColumnFamilyData</code></td>
+<td><code>db/column_family.h</code></td>
+<td>CF-local state and options.</td>
+</tr>
+<tr>
+<td><code>SuperVersion</code></td>
+<td><code>db/column_family.h</code></td>
+<td>Reader-visible state tuple.</td>
+</tr>
+<tr>
+<td><code>VersionSet</code></td>
+<td><code>db/version_set.h</code></td>
+<td>Metadata authority and MANIFEST owner.</td>
+</tr>
+<tr>
+<td><code>Version</code></td>
+<td><code>db/version_set.h</code></td>
+<td>One immutable LSM file view.</td>
+</tr>
+<tr>
+<td><code>VersionEdit</code></td>
+<td><code>db/version_edit.h</code></td>
+<td>Durable metadata delta.</td>
+</tr>
+<tr>
+<td><code>FileMetaData</code></td>
+<td><code>db/version_edit.h</code></td>
+<td>SST metadata.</td>
+</tr>
+<tr>
+<td><code>FlushJob</code></td>
+<td><code>db/flush_job.h</code></td>
+<td>Memtable-to-SST job.</td>
+</tr>
+<tr>
+<td><code>Compaction</code></td>
+<td><code>db/compaction/compaction.h</code></td>
+<td>Compaction plan.</td>
+</tr>
+<tr>
+<td><code>CompactionPicker</code></td>
+<td><code>db/compaction/compaction_picker.h</code></td>
+<td>Selects compaction inputs.</td>
+</tr>
+<tr>
+<td><code>CompactionJob</code></td>
+<td><code>db/compaction/compaction_job.h</code></td>
+<td>Executes compaction.</td>
+</tr>
+<tr>
+<td><code>CompactionIterator</code></td>
+<td><code>db/compaction/compaction_iterator.h</code></td>
+<td>Drops/resolves internal records during compaction.</td>
+</tr>
+<tr>
+<td><code>TableBuilder</code></td>
+<td><code>table/table_builder.h</code></td>
+<td>SST writer interface.</td>
+</tr>
+<tr>
+<td><code>TableReader</code></td>
+<td><code>table/table_reader.h</code></td>
+<td>SST reader interface.</td>
+</tr>
+<tr>
+<td><code>BlockBasedTable</code></td>
+<td><code>table/block_based/block_based_table_reader.h</code></td>
+<td>Default SST reader.</td>
+</tr>
+<tr>
+<td><code>BlockBasedTableBuilder</code></td>
+<td><code>table/block_based/block_based_table_builder.h</code></td>
+<td>Default SST builder.</td>
+</tr>
+<tr>
+<td><code>DBIter</code></td>
+<td><code>db/db_iter.h</code></td>
+<td>User iterator over internal keys.</td>
+</tr>
+<tr>
+<td><code>MergingIterator</code></td>
+<td><code>table/merging_iterator.cc</code></td>
+<td>Merges memtable/file iterators.</td>
+</tr>
+<tr>
+<td><code>Cache</code></td>
+<td><code>include/rocksdb/cache.h</code></td>
+<td>Block cache abstraction.</td>
+</tr>
+<tr>
+<td><code>BackupEngine</code></td>
+<td><code>include/rocksdb/utilities/backup_engine.h</code></td>
+<td>Backup/restore API.</td>
+</tr>
+<tr>
+<td><code>Checkpoint</code></td>
+<td><code>include/rocksdb/utilities/checkpoint.h</code></td>
+<td>Consistent live-file snapshot API.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-core-test-index">4. Core Test Index</h2>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Tests</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DB basics</td>
+<td><code>db/db_basic_test.cc</code>, <code>db/db_test.cc</code></td>
+</tr>
+<tr>
+<td>Write/WAL</td>
+<td><code>db/db_write_test.cc</code>, <code>db/write_batch_test.cc</code>, <code>db/db_wal_test.cc</code>, <code>db/log_test.cc</code></td>
+</tr>
+<tr>
+<td>Memtable</td>
+<td><code>db/db_memtable_test.cc</code>, <code>db/memtable_list_test.cc</code>, <code>memtable/skiplist_test.cc</code></td>
+</tr>
+<tr>
+<td>Read/iterator</td>
+<td><code>db/db_iter_test.cc</code>, <code>db/db_iterator_test.cc</code>, <code>db/db_block_cache_test.cc</code>, <code>db/db_bloom_filter_test.cc</code></td>
+</tr>
+<tr>
+<td>Version/recovery</td>
+<td><code>db/version_set_test.cc</code>, <code>db/version_edit_test.cc</code>, <code>db/corruption_test.cc</code>, <code>db/fault_injection_test.cc</code></td>
+</tr>
+<tr>
+<td>Flush/compaction</td>
+<td><code>db/db_flush_test.cc</code>, <code>db/flush_job_test.cc</code>, <code>db/db_compaction_test.cc</code>, <code>db/compaction/compaction_job_test.cc</code></td>
+</tr>
+<tr>
+<td>Utilities</td>
+<td><code>db/external_sst_file_test.cc</code>, <code>utilities/checkpoint/checkpoint_test.cc</code>, <code>utilities/backup/backup_engine_test.cc</code>, <code>utilities/transactions/*_test.cc</code></td>
+</tr>
+<tr>
+<td>Metrics/platform</td>
+<td><code>db/db_statistics_test.cc</code>, <code>db/perf_context_test.cc</code>, <code>env/env_test.cc</code>, <code>db/db_rate_limiter_test.cc</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-recommended-reading-order">5. Recommended Reading Order</h2>
+<ol>
+<li><code>DBImpl</code>: <code>db/db_impl/db_impl.h</code>, <code>db/db_impl/db_impl.cc</code></li>
+<li>Write path: <code>db/db_impl/db_impl_write.cc</code>, <code>db/write_thread.*</code></li>
+<li>MemTable: <code>db/memtable.*</code>, <code>memtable/skiplist.h</code></li>
+<li>WAL: <code>db/log_writer.*</code>, <code>db/log_reader.*</code></li>
+<li>VersionSet / Manifest: <code>db/version_set.*</code>, <code>db/version_edit.*</code></li>
+<li>SST / BlockBasedTable: <code>table/block_based/block_based_table_reader.cc</code>,
+<code>table/block_based/block_based_table_builder.cc</code></li>
+<li>Iterator: <code>db/db_iter.*</code>, <code>table/merging_iterator.cc</code></li>
+<li>Flush: <code>db/flush_job.cc</code>, flush scheduling in <code>db_impl_compaction_flush.cc</code></li>
+<li>Compaction: <code>db/compaction/compaction_job.cc</code>,
+<code>db/compaction/compaction_iterator.cc</code>, picker files</li>
+<li>Recovery: <code>db/db_impl/db_impl_open.cc</code>, <code>db/version_set.cc</code></li>
+<li>Cache / BloomFilter: <code>table/block_based/block_cache.cc</code>,
+<code>table/block_based/full_filter_block.cc</code>, <code>cache/*</code></li>
+<li>Options / Statistics: <code>include/rocksdb/options.h</code>,
+<code>include/rocksdb/statistics.h</code>, <code>monitoring/*</code></li>
+<li>Backup / Checkpoint: <code>utilities/backup/backup_engine.cc</code>,
+<code>utilities/checkpoint/checkpoint_impl.cc</code></li>
+</ol>
+</div></article>
+</main><footer class="site-footer"><div class="shell"><span>杜志旺</span><span>内容迁移自旧版静态博客。</span></div></footer></body></html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="System Virtual Schema Columns Matrix 本矩阵把 systemvirtualschema.columns 从“运维观测章节中的一个规则”提升为独立源码合同。它服务三个场景：运维人员通过 CQL 自省 virtual table schema，驱动/工具通过 DESCRIBE 或查询发现"><meta property="og:title" content="System Virtual Schema Columns Matrix | 杜志旺的博客"><meta property="og:description" content="System Virtual Schema Columns Matrix 本矩阵把 systemvirtualschema.columns 从“运维观测章节中的一个规则”提升为独立源码合同。它服务三个场景：运维人员通过 CQL 自省 virtual table schema，驱动/工具通过 DESCRIBE 或查询发现"><meta property="og:type" content="website"><meta property="og:url" content="https://zhiwangdu.github.io/research/cassandra/module-system-virtual-schema-columns-matrix/"><title>System Virtual Schema Columns Matrix | 杜志旺的博客</title><link rel="stylesheet" href="/_astro/BaseLayout.C_maKfi4.css"></head><body><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="首页"><span class="brand-mark">Z</span><span>杜志旺的博客</span></a><nav class="nav" aria-label="主导航"><a href="/">文章</a><a href="/research/">研究</a><a href="/archives/">归档</a><a href="/tags/">标签</a><a href="/rss.xml">RSS</a></nav></div></header><main class="shell">
+  <article class="article-page"><header class="article-hero"><div class="post-meta"><a href="/research/">Cassandra</a><time datetime="2026-06-22T13:54:26.000Z">2026/06/22</time></div><h1>System Virtual Schema Columns Matrix</h1><p>System Virtual Schema Columns Matrix 本矩阵把 systemvirtualschema.columns 从“运维观测章节中的一个规则”提升为独立源码合同。它服务三个场景：运维人员通过 CQL 自省 virtual table schema，驱动/工具通过 DESCRIBE 或查询发现</p><p class="source-note">Source: <code>research/module-system-virtual-schema-columns-matrix.md</code> · <code>e20367f6bb44</code></p></header><div class="prose"><h1 id="system-virtual-schema-columns-matrix">System Virtual Schema Columns Matrix</h1>
+<p>本矩阵把 <code>system_virtual_schema.columns</code> 从“运维观测章节中的一个规则”提升为独立源码合同。它服务三个场景：运维人员通过 CQL 自省 virtual table schema，驱动/工具通过 DESCRIBE 或查询发现 virtual 表列，开发者新增 <code>system_views</code> provider 时能确认列元数据是否自动暴露。</p>
+<h2 id="设计目标">设计目标</h2>
+<ul>
+<li><code>system_virtual_schema</code> 是 virtual system keyspace，不落盘、不参与 repair/compaction/flush；keyspace 名定义在 <code>src/java/org/apache/cassandra/schema/SchemaConstants.java:52</code>。</li>
+<li><code>VirtualSchemaKeyspace</code> 注册三张 virtual metadata 表：<code>keyspaces</code>、<code>tables</code>、<code>columns</code>，构造入口是 <code>src/java/org/apache/cassandra/db/virtual/VirtualSchemaKeyspace.java:33-40</code>。</li>
+<li><code>columns</code> 表的目标是从已注册 <code>VirtualKeyspace</code> 的 <code>TableMetadata</code> / <code>ColumnMetadata</code> 动态投影列名、列类型、kind、position 和 clustering order，而不是维护第二份静态 schema 清单，见 <code>VirtualSchemaKeyspace.VirtualColumns.data()</code>。</li>
+</ul>
+<h2 id="核心类与接口">核心类与接口</h2>
+<table>
+<thead>
+<tr>
+<th>类/接口</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>VirtualSchemaKeyspace</code></td>
+<td><code>system_virtual_schema</code> 的 provider，包含 <code>VirtualKeyspaces</code>、<code>VirtualTables</code>、<code>VirtualColumns</code> 三张表。</td>
+</tr>
+<tr>
+<td><code>VirtualColumns</code></td>
+<td>定义 <code>system_virtual_schema.columns</code> schema，并遍历 <code>VirtualKeyspaceRegistry.instance.virtualKeyspacesMetadata()</code> 生成行。</td>
+</tr>
+<tr>
+<td><code>VirtualKeyspaceRegistry</code></td>
+<td>daemon/test 注册 virtual keyspace，维护 keyspace name -&gt; <code>VirtualKeyspace</code> 与 <code>TableId</code> -&gt; <code>VirtualTable</code> 两个 map。</td>
+</tr>
+<tr>
+<td><code>VirtualKeyspace</code></td>
+<td>把 <code>Collection&lt;VirtualTable&gt;</code> 转为 <code>KeyspaceMetadata.virtual(name, Tables.of(...))</code>。</td>
+</tr>
+<tr>
+<td><code>VirtualTable</code> / <code>AbstractVirtualTable</code></td>
+<td>provider API：<code>metadata()</code>、<code>select(partitionKey, ...)</code>、<code>select(dataRange, ...)</code>、<code>apply()</code>、<code>truncate()</code> 和 <code>allowFilteringImplicitly()</code>。</td>
+</tr>
+<tr>
+<td><code>SinglePartitionReadCommand.VirtualTableSinglePartitionReadCommand</code></td>
+<td>单分区 CQL/read command 访问 virtual table 时绕过普通 storage engine。</td>
+</tr>
+<tr>
+<td><code>PartitionRangeReadCommand.VirtualTablePartitionRangeReadCommand</code></td>
+<td>范围 CQL/read command 访问 virtual table 时调用 provider 的 <code>select(DataRange, ...)</code>。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="数据结构">数据结构</h2>
+<ul>
+<li><code>system_virtual_schema.keyspaces</code>：partition key <code>keyspace_name</code>。</li>
+<li><code>system_virtual_schema.tables</code>：partition key <code>keyspace_name</code>，clustering <code>table_name</code>，regular <code>comment</code>。</li>
+<li><code>system_virtual_schema.columns</code>：partition key <code>keyspace_name</code>，clustering <code>table_name</code> / <code>column_name</code>，regular <code>clustering_order</code>、<code>column_name_bytes</code>、<code>kind</code>、<code>position</code>、<code>type</code>。</li>
+<li><code>SimpleDataSet</code> 是常见 provider 输出容器；<code>AbstractVirtualTable</code> 只要求返回 <code>DataSet</code>，具体实现可以全量构造，也可以覆盖 <code>data(partitionKey)</code> 优化单分区。</li>
+</ul>
+<h2 id="生命周期与调用链">生命周期与调用链</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>CassandraDaemon.setupVirtualKeyspaces()</span></span>
+<span class="line"><span>  -> VirtualKeyspaceRegistry.register(VirtualSchemaKeyspace.instance)</span></span>
+<span class="line"><span>  -> VirtualKeyspaceRegistry.register(SystemViewsKeyspace.instance)</span></span>
+<span class="line"><span>  -> ClientState.READABLE_SYSTEM_RESOURCES includes VirtualSchemaKeyspace tables</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>SELECT ... FROM system_virtual_schema.columns</span></span>
+<span class="line"><span>  -> Schema.instance.getKeyspaceMetadataNullable("system_virtual_schema")</span></span>
+<span class="line"><span>  -> VirtualKeyspaceRegistry.getKeyspaceMetadataNullable()</span></span>
+<span class="line"><span>  -> SinglePartitionReadCommand.create() or PartitionRangeReadCommand.create()</span></span>
+<span class="line"><span>  -> metadata.isVirtual() selects VirtualTable*ReadCommand</span></span>
+<span class="line"><span>  -> VirtualKeyspaceRegistry.getTableNullable(metadata.id)</span></span>
+<span class="line"><span>  -> VirtualColumns.select(...)</span></span>
+<span class="line"><span>  -> VirtualColumns.data()</span></span>
+<span class="line"><span>  -> VirtualKeyspaceRegistry.virtualKeyspacesMetadata()</span></span>
+<span class="line"><span>  -> for each TableMetadata / ColumnMetadata emit rows</span></span></code></pre>
+<h2 id="场景矩阵">场景矩阵</h2>
+<table>
+<thead>
+<tr>
+<th>场景 ID</th>
+<th>源码合同</th>
+<th>测试/证据</th>
+<th>运维含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>system_virtual_schema_registration_contract</code></td>
+<td><code>CassandraDaemon.setupVirtualKeyspaces()</code> 先注册 <code>VirtualSchemaKeyspace.instance</code>，再注册 <code>SystemViewsKeyspace.instance</code>，见 <code>src/java/org/apache/cassandra/service/CassandraDaemon.java:534-543</code>。</td>
+<td><code>CQLTester.startServices()</code> 注册 <code>VirtualSchemaKeyspace.instance</code>，见 <code>test/unit/org/apache/cassandra/cql3/CQLTester.java:633-636</code>。</td>
+<td>daemon 启动后 virtual schema 可描述自身和 <code>system_views</code>；单测环境至少注册 virtual schema。</td>
+</tr>
+<tr>
+<td><code>system_virtual_schema_keyspaces_contract</code></td>
+<td><code>VirtualKeyspaces.data()</code> 遍历 <code>VirtualKeyspaceRegistry.instance.virtualKeyspacesMetadata()</code> 并输出 keyspace row，见 <code>VirtualSchemaKeyspace.java:42-62</code>。</td>
+<td><code>DescribeStatementTest.testDescribeVirtualTables()</code> 覆盖 <code>DESCRIBE ONLY KEYSPACE system_virtual_schema</code>，见 <code>test/unit/org/apache/cassandra/cql3/statements/DescribeStatementTest.java:233-244</code>。</td>
+<td><code>DESCRIBE KEYSPACE</code> 输出是参考结构，不可作为可重放 DDL。</td>
+</tr>
+<tr>
+<td><code>system_virtual_schema_tables_contract</code></td>
+<td><code>VirtualTables.data()</code> 输出 <code>table.keyspace</code>、<code>table.name</code>、<code>table.params.comment</code>，见 <code>VirtualSchemaKeyspace.java:65-97</code>。</td>
+<td><code>DescribeStatementTest</code> 覆盖 <code>DESCRIBE TABLE system_virtual_schema.columns</code>。</td>
+<td>新增 virtual table 的 comment 会进入自省结果，运维文档应同步描述读成本。</td>
+</tr>
+<tr>
+<td><code>system_virtual_schema_columns_schema_contract</code></td>
+<td><code>VirtualColumns</code> schema 固定为 <code>keyspace_name</code>、<code>table_name</code>、<code>column_name</code>、<code>clustering_order</code>、<code>column_name_bytes</code>、<code>kind</code>、<code>position</code>、<code>type</code>，见 <code>VirtualSchemaKeyspace.java:100-125</code>。</td>
+<td><code>DescribeStatementTest</code> 逐行断言 <code>VIRTUAL TABLE system_virtual_schema.columns</code> 的列和 primary key，见 <code>DescribeStatementTest.java:246-265</code>。</td>
+<td>列名/类型变更会影响工具自省兼容性，应有显式 release note。</td>
+</tr>
+<tr>
+<td><code>system_virtual_schema_columns_projection_contract</code></td>
+<td><code>VirtualColumns.data()</code> 从 <code>ColumnMetadata</code> 投影 <code>column.name</code>、<code>clusteringOrder()</code>、<code>column.name.bytes</code>、<code>column.kind</code>、<code>column.position()</code> 和 <code>column.type.asCQL3Type()</code>，见 <code>VirtualSchemaKeyspace.java:128-149</code>。</td>
+<td>当前测试覆盖 DESCRIBE schema，但没有直接 <code>SELECT ... FROM system_virtual_schema.columns</code> 行内容断言。</td>
+<td>新增 provider 列会自动出现；如果 <code>ColumnMetadata</code> 表示方式改变，CQL 自省输出也会变。</td>
+</tr>
+<tr>
+<td><code>system_virtual_schema_read_single_partition_contract</code></td>
+<td><code>SinglePartitionReadCommand.create()</code> 在 <code>metadata.isVirtual()</code> 时创建 <code>VirtualTableSinglePartitionReadCommand</code>，执行时通过 registry 调 <code>view.select(partitionKey, ...)</code>，见 <code>SinglePartitionReadCommand.java:133-147</code>、<code>1412-1418</code>。</td>
+<td><code>VirtualTableTest.testReadOperationsOnReadOnlyTable()</code> 覆盖单分区、multi-partition、paging 和 count；<code>VirtualTableFromInternodeTest</code> 覆盖 remote single partition。</td>
+<td>virtual table 单分区读不触发 memtable/SSTable，也没有 repaired tracking。</td>
+</tr>
+<tr>
+<td><code>system_virtual_schema_read_range_contract</code></td>
+<td><code>PartitionRangeReadCommand.create()</code> 在 virtual metadata 上创建 <code>VirtualTablePartitionRangeReadCommand</code>，执行时调用 <code>view.select(dataRange, ...)</code>，见 <code>PartitionRangeReadCommand.java:98-110</code>、<code>552-558</code>。</td>
+<td><code>VirtualTableTest</code> 覆盖 token range + paging + <code>ALLOW FILTERING</code>。</td>
+<td>对没有覆盖 <code>data(partitionKey)</code> 的 provider，range query 会触发 <code>data()</code> 全量构造。</td>
+</tr>
+<tr>
+<td><code>system_virtual_schema_filtering_contract</code></td>
+<td><code>StatementRestrictions.requiresAllowFilteringIfNotSpecified()</code> 对 virtual table 查询 <code>VirtualTable.allowFilteringImplicitly()</code>，见 <code>StatementRestrictions.java:359-367</code>。</td>
+<td><code>VirtualTableTest.testDisallowedFilteringOnRegularColumn()</code> / <code>testAllowedFilteringOnRegularColumn()</code> 覆盖开启/关闭 implicit filtering。</td>
+<td>provider 可选择强制 <code>ALLOW FILTERING</code>，但默认 true；高成本表应考虑覆盖该方法。</td>
+</tr>
+<tr>
+<td><code>system_virtual_schema_default_read_permission_contract</code></td>
+<td><code>ClientState.READABLE_SYSTEM_RESOURCES</code> 默认加入 <code>VirtualSchemaKeyspace.instance.tables()</code>，见 <code>ClientState.java:91-93</code>。</td>
+<td><code>GrantAndRevokeTest.testGrantOnVirtualKeyspaces()</code> 覆盖 virtual keyspace grant/revoke 语法，见 <code>GrantAndRevokeTest.java:479-487</code>。</td>
+<td>普通用户可读 virtual schema 的默认资源，但系统 keyspace 权限仍按 resource chain 校验。</td>
+</tr>
+<tr>
+<td><code>system_virtual_schema_dml_ddl_guard_contract</code></td>
+<td><code>AbstractVirtualTable.apply()</code> / <code>truncate()</code> 默认抛错；<code>VirtualMutation.apply()</code> 只委托 mutable provider；DDL 在 virtual keyspace 上被拒绝。</td>
+<td><code>VirtualTableTest.testInvalidDMLOperationsOnReadOnlyTable()</code> 和 <code>testInvalidDDLOperationsOnVirtualKeyspaceAndReadOnlyTable()</code> 覆盖 INSERT/UPDATE/DELETE/TRUNCATE/DDL。</td>
+<td><code>system_virtual_schema.columns</code> 是只读自省面，不应作为控制面。</td>
+</tr>
+<tr>
+<td><code>system_virtual_schema_internode_read_contract</code></td>
+<td><code>ReadCommandVerbHandler.validateTransientStatus()</code> 对 virtual metadata 直接 return，见 <code>ReadCommandVerbHandler.java:139-141</code>。</td>
+<td><code>VirtualTableFromInternodeTest.readCommandAccessVirtualTable*()</code> 覆盖 internode read command 访问 <code>system_views.settings</code>。</td>
+<td>virtual table remote read 不应被 token ownership/transient status 校验误拦。</td>
+</tr>
+<tr>
+<td><code>system_virtual_schema_select_data_test_gap</code></td>
+<td>当前源码合同覆盖行生成，但测试只覆盖 DESCRIBE schema。</td>
+<td><code>research/tools/check-system-virtual-schema-drift.py</code> 对 <code>SELECT ... system_virtual_schema.columns</code> 做负向扫描；新增测试后需更新矩阵。</td>
+<td>建议补 <code>SELECT keyspace_name, table_name, column_name, kind, type FROM system_virtual_schema.columns WHERE keyspace_name='system_views'</code> 的 focused test。</td>
+</tr>
+<tr>
+<td><code>system_virtual_schema_existing_tests_baseline</code></td>
+<td><code>VirtualTableTest</code>、<code>DescribeStatementTest</code>、<code>VirtualTableFromInternodeTest</code>、<code>GrantAndRevokeTest</code> 共同覆盖 query planner、DESCRIBE、remote read 与权限语法。</td>
+<td>checker 固化这些测试文件 token。</td>
+<td>这些测试不是完整列内容合同，仍需 drift checker 保持文档与源码同步。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="配置metrics日志">配置、Metrics、日志</h2>
+<ul>
+<li>配置项：无用户可调配置；keyspace/table 由 daemon/test 注册，入口是 <code>CassandraDaemon.setupVirtualKeyspaces()</code> 和 <code>CQLTester.startServices()</code>。</li>
+<li>Metrics：无独立 metrics；读成本体现为 provider <code>data()</code> 构造开销，不经过 SSTable read metrics。</li>
+<li>日志：无专属日志；<code>system_views.system_logs</code> 的 virtual appender 属于 logging slice，本矩阵只引用 daemon 注册顺序。</li>
+</ul>
+<h2 id="性能与故障关注">性能与故障关注</h2>
+<ul>
+<li><code>VirtualColumns.data()</code> 当前全量遍历所有 registered virtual keyspaces/tables/columns；如果未来 provider 数量或列数大幅增长，<code>SELECT * FROM system_virtual_schema.columns</code> 是 O(virtual columns) 的内存构造。</li>
+<li>单分区优化依赖 provider 是否覆盖 <code>data(DecoratedKey)</code>；<code>VirtualColumns</code> 未覆盖，因此即使限制 <code>keyspace_name</code> 也先构造全量数据后取分区。</li>
+<li>virtual table 查询绕过普通 storage engine，不能用 flush/compaction/repair 思维排障；应从 provider、registry、CQL restrictions 和权限链排查。</li>
+<li>行内容测试缺口仍存在：DESCRIBE 能保护 schema shape，但不能保护 <code>ColumnMetadata</code> 到 <code>kind/type/position</code> 的动态投影语义。</li>
+</ul>
+</div></article>
+</main><footer class="site-footer"><div class="shell"><span>杜志旺</span><span>内容迁移自旧版静态博客。</span></div></footer></body></html>

@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { formatDate } from '../../lib/posts';
+import { getAllResearchDocs, groupResearchByProject } from '../../lib/research';
+
+const docs = getAllResearchDocs();
+const groups = groupResearchByProject(docs);
+---
+
+<BaseLayout title="研究">
+  <section class="page-title">
+    <h1>研究文档</h1>
+    <p>从本地 RocksDB 与 Cassandra 仓库最近的 duzhiwang 提交中导入的技术研究文档。</p>
+  </section>
+
+  <div class="research-projects">
+    {
+      [...groups.entries()].map(([slug, group]) => (
+        <section class="research-project">
+          <div class="section-heading">
+            <h2>{group.name}</h2>
+            <span>{group.docs.length} 篇</span>
+          </div>
+          <div class="post-list">
+            {group.docs.map((doc) => (
+              <article class="post-card">
+                <div class="post-meta">
+                  <time datetime={doc.date.toISOString()}>{formatDate(doc.date)}</time>
+                  <span>{doc.sourcePath}</span>
+                </div>
+                <h3>
+                  <a href={`/research/${slug}/${doc.slug}/`}>{doc.title}</a>
+                </h3>
+                {doc.description && <p>{doc.description}</p>}
+              </article>
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+</BaseLayout>

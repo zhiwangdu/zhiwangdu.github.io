@@ -6,6 +6,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
 const generatedPaths = [
   'archives',
+  'research',
   'tags',
   'page',
   '_astro',

@@ -1,0 +1,153 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Module: CommitLog CDC/PITR External Integration Matrix 范围 本矩阵补充 module-commitlog-cdc-pitr-runbook.md 与 module-commitlog-durability-replay-matrix.md，聚焦 CommitLog"><meta property="og:title" content="Module: CommitLog CDC/PITR External Integration Matrix | 杜志旺的博客"><meta property="og:description" content="Module: CommitLog CDC/PITR External Integration Matrix 范围 本矩阵补充 module-commitlog-cdc-pitr-runbook.md 与 module-commitlog-durability-replay-matrix.md，聚焦 CommitLog"><meta property="og:type" content="website"><meta property="og:url" content="https://zhiwangdu.github.io/research/cassandra/module-commitlog-cdc-pitr-external-integration-matrix/"><title>Module: CommitLog CDC/PITR External Integration Matrix | 杜志旺的博客</title><link rel="stylesheet" href="/_astro/BaseLayout.C_maKfi4.css"></head><body><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="首页"><span class="brand-mark">Z</span><span>杜志旺的博客</span></a><nav class="nav" aria-label="主导航"><a href="/">文章</a><a href="/research/">研究</a><a href="/archives/">归档</a><a href="/tags/">标签</a><a href="/rss.xml">RSS</a></nav></div></header><main class="shell">
+  <article class="article-page"><header class="article-hero"><div class="post-meta"><a href="/research/">Cassandra</a><time datetime="2026-06-22T13:43:13.000Z">2026/06/22</time></div><h1>Module: CommitLog CDC/PITR External Integration Matrix</h1><p>Module: CommitLog CDC/PITR External Integration Matrix 范围 本矩阵补充 module-commitlog-cdc-pitr-runbook.md 与 module-commitlog-durability-replay-matrix.md，聚焦 CommitLog</p><p class="source-note">Source: <code>research/module-commitlog-cdc-pitr-external-integration-matrix.md</code> · <code>e9bcb50d111b</code></p></header><div class="prose"><h1 id="module-commitlog-cdcpitr-external-integration-matrix">Module: CommitLog CDC/PITR External Integration Matrix</h1>
+<h2 id="范围">范围</h2>
+<p>本矩阵补充 <code>module-commitlog-cdc-pitr-runbook.md</code> 与 <code>module-commitlog-durability-replay-matrix.md</code>，聚焦 CommitLog 与外部系统交界：CDC consumer 读取 <code>cdc_raw</code> / <code>_cdc.idx</code> 的契约、CDC raw 空间和写入反压、repair/streaming CDC 语义、commitlog archive/restore 命令、PITR cutoff、replay filter、运维观测以及当前 checkout 缺少真实外部 CDC connector 与备份系统 PITR rehearsal 的文件级证据。</p>
+<h2 id="调用图">调用图</h2>
+<p>CDC 外部消费主线：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>table WITH cdc = true</span></span>
+<span class="line"><span>  -> Mutation.trackedByCDC()</span></span>
+<span class="line"><span>  -> CommitLog.add(mutation)</span></span>
+<span class="line"><span>  -> CommitLogSegmentManagerCDC.allocate(...)</span></span>
+<span class="line"><span>     -> permitSegmentMaybe(...)</span></span>
+<span class="line"><span>     -> throwIfForbidden(...)</span></span>
+<span class="line"><span>     -> CommitLogSegment.CDCState.CONTAINS</span></span>
+<span class="line"><span>  -> CommitLogSegment.sync(...)</span></span>
+<span class="line"><span>     -> CommitLogSegment.writeCDCIndexFile(desc, offset, complete)</span></span>
+<span class="line"><span>  -> flush / segment recycle</span></span>
+<span class="line"><span>     -> CDC raw hard link and _cdc.idx remain</span></span>
+<span class="line"><span>  -> external consumer reads up to _cdc.idx offset</span></span>
+<span class="line"><span>  -> external consumer deletes raw segment and index after downstream checkpoint</span></span></code></pre>
+<p>PITR 外部恢复主线：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>segment becomes unused</span></span>
+<span class="line"><span>  -> CommitLog.discardCompletedSegments(...)</span></span>
+<span class="line"><span>  -> segmentManager.archiveAndDiscard(segment)</span></span>
+<span class="line"><span>  -> CommitLogArchiver.maybeArchive(segment)</span></span>
+<span class="line"><span>     -> archive_command %path/%name</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>startup / recovery</span></span>
+<span class="line"><span>  -> CommitLog.recoverSegmentsOnDisk()</span></span>
+<span class="line"><span>     -> archive unmanaged live files</span></span>
+<span class="line"><span>     -> CommitLogArchiver.maybeRestoreArchive()</span></span>
+<span class="line"><span>        -> restore_command %from/%to</span></span>
+<span class="line"><span>     -> CommitLogReplayer.construct(...)</span></span>
+<span class="line"><span>     -> CommitLogReplayer.pointInTimeExceeded(...)</span></span>
+<span class="line"><span>     -> ReplayFilter.filter(...)</span></span>
+<span class="line"><span>     -> Keyspace.apply(... durableWrites=false ...)</span></span></code></pre>
+<h2 id="场景矩阵">场景矩阵</h2>
+<table>
+<thead>
+<tr>
+<th>场景 ID</th>
+<th>源码锚点</th>
+<th>现有测试</th>
+<th>外部集成含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>commitlog_external_cdc_table_marking_contract</code></td>
+<td><code>src/java/org/apache/cassandra/cql3/statements/schema/TableAttributes.java:154-155</code> 解析 <code>WITH cdc</code>；<code>src/java/org/apache/cassandra/db/Mutation.java:83-108</code> 聚合 table params，<code>trackedByCDC()</code> 暴露 mutation 级标记。</td>
+<td><code>test/unit/org/apache/cassandra/cql3/CDCStatementTest.java:38-61</code> 覆盖 create/alter/disable CDC table option。</td>
+<td>外部 consumer 只能依赖 commitlog mutation/table schema 过滤事件；raw segment 不是“只含 CDC 表”的队列。</td>
+</tr>
+<tr>
+<td><code>commitlog_external_cdc_segment_state_contract</code></td>
+<td><code>src/java/org/apache/cassandra/db/commitlog/CommitLogSegment.java:70-77</code> 定义 <code>PERMITTED/FORBIDDEN/CONTAINS</code>；<code>CommitLogSegmentManagerCDC.allocate()</code> 在 CDC mutation 分配后切成 <code>CONTAINS</code>，见 <code>src/java/org/apache/cassandra/db/commitlog/CommitLogSegmentManagerCDC.java:168-190</code>。</td>
+<td><code>CommitLogSegmentManagerCDCTest.testSegmentFlaggingOnCreation()</code>、<code>testSwitchingCDCWriteModes()</code> 覆盖 state transition baseline。</td>
+<td>一个 segment 只要含一条 CDC mutation 就会保留给 consumer；consumer 必须按 record/table 过滤。</td>
+</tr>
+<tr>
+<td><code>commitlog_external_cdc_index_watermark_contract</code></td>
+<td><code>src/java/org/apache/cassandra/db/commitlog/CommitLogSegment.java:374-385</code> 说明 <code>_cdc.idx</code> 第一行是 durable offset，<code>COMPLETED</code> 表示 segment 不再追加。</td>
+<td><code>CommitLogSegmentManagerCDCTest.testCDCIndexFileWriteOnSync()</code>、<code>testCompletedFlag()</code> 覆盖 offset 和 completed flag。</td>
+<td>consumer 不能读到文件尾；只能解析 offset 之前的完整 durable records，未完成 segment 应保存 checkpoint 后重试。</td>
+</tr>
+<tr>
+<td><code>commitlog_external_cdc_space_backpressure_contract</code></td>
+<td><code>CommitLogSegmentManagerCDC.throwIfForbidden()</code> 在 blocking 模式抛 <code>CDCWriteException</code>，见 <code>src/java/org/apache/cassandra/db/commitlog/CommitLogSegmentManagerCDC.java:212-227</code>；nonblocking 模式删除最旧 raw segment，见 <code>src/java/org/apache/cassandra/db/commitlog/CommitLogSegmentManagerCDC.java:344-354</code>。</td>
+<td><code>testCDCWriteFailure()</code>、<code>testNonblockingShouldMaintainSteadyDiskUsage()</code> 覆盖 blocking/nonblocking raw 空间行为。</td>
+<td>严格 CDC 应保持 blocking 并监控 raw backlog；nonblocking 是允许 CDC 缺口的可用性取舍。</td>
+</tr>
+<tr>
+<td><code>commitlog_external_cdc_consumer_delete_contract</code></td>
+<td><code>deleteOldLinkedCDCCommitLogSegment()</code> 从最旧 raw segment 删除 segment 和 index，且不删除当前 allocating segment，见 <code>src/java/org/apache/cassandra/db/commitlog/CommitLogSegmentManagerCDC.java:86-131</code>；consumer 删除文件后 size tracker 重新计算，见 <code>src/java/org/apache/cassandra/db/commitlog/CommitLogSegmentManagerCDC.java:385-450</code>。</td>
+<td><code>testCDCWriteFailure()</code> 通过删除 <code>cdc_raw</code> 模拟 consumer 释放空间；<code>testDeleteLinkOnDiscardNoCDC()</code> / <code>testRetainLinkOnDiscardCDC()</code> 覆盖 discard 文件边界。</td>
+<td>downstream checkpoint 必须先持久化，再删除 raw segment 和 <code>_cdc.idx</code>；删除就是 Cassandra 释放 CDC 空间的信号。</td>
+</tr>
+<tr>
+<td><code>commitlog_external_cdc_replay_rebuild_contract</code></td>
+<td><code>CommitLogReplayer.handleMutation()</code> 看到 CDC mutation 后记录 <code>sawCDCMutation</code>；replay completion 重建 raw hard link/index，见 <code>src/java/org/apache/cassandra/db/commitlog/CommitLogReplayer.java:512-515</code> 和 <code>module-commitlog-cdc-pitr-runbook.md</code>。</td>
+<td><code>CommitLogSegmentManagerCDCTest.testReplayLogic()</code> 清空 <code>cdc_raw</code> 后 replay，确认 index 重建且 offset 不小于旧值。</td>
+<td>crash/restart 后 consumer 可能再次看到 replayed segment；下游必须幂等处理 duplicate delivery。</td>
+</tr>
+<tr>
+<td><code>commitlog_external_cdc_repair_streaming_contract</code></td>
+<td><code>CassandraStreamReceiver.cdcRequiresWriteCommitLog()</code> 和 <code>requiresWritePath()</code> 在 CDC 表且 <code>cdc_on_repair_enabled</code> 时让 streaming mutation 走 write path。</td>
+<td><code>test/distributed/org/apache/cassandra/distributed/test/cdc/ToggleCDCOnRepairEnabledTest.java:37-95</code> 覆盖开关两种状态。</td>
+<td>repair/streaming 补数据是否进入 CDC 由 <code>cdc_on_repair_enabled</code> 决定；关闭会产生外部 CDC sink 看不到的历史补写。</td>
+</tr>
+<tr>
+<td><code>commitlog_external_archiver_command_contract</code></td>
+<td><code>conf/commitlog_archiving.properties:20-28</code> 定义 <code>archive_command</code> 与 <code>%path/%name</code>；<code>CommitLogArchiver.maybeArchive()</code> 等待 final sync 后替换 token 执行命令，见 <code>src/java/org/apache/cassandra/db/commitlog/CommitLogArchiver.java:195-210</code>。</td>
+<td><code>CommitLogArchiverTest.testArchiver()</code> 验证 archive command 生效。</td>
+<td>归档脚本必须幂等并处理重复归档；Cassandra 不管理对象存储 retention。</td>
+</tr>
+<tr>
+<td><code>commitlog_external_restore_command_contract</code></td>
+<td><code>CommitLog.recoverSegmentsOnDisk()</code> 在 replay 前执行 <code>maybeRestoreArchive()</code>，见 <code>src/java/org/apache/cassandra/db/commitlog/CommitLog.java:182-215</code>；<code>CommitLogArchiver.maybeRestoreArchive()</code> 校验 descriptor/version/compression 后执行 <code>%from/%to</code>，见 <code>src/java/org/apache/cassandra/db/commitlog/CommitLogArchiver.java:270-331</code>。</td>
+<td><code>CommitLogArchiverTest.testRestoreInDifferentPrecision()</code> 触发 restore + replay；descriptor/reader tests 覆盖格式错误。</td>
+<td>恢复脚本应可 dry-run，且必须先恢复匹配 SSTable snapshot，再恢复 commitlog；只拷 commitlog 不证明 PITR 正确。</td>
+</tr>
+<tr>
+<td><code>commitlog_external_pitr_cutoff_contract</code></td>
+<td><code>CommitLogArchiver</code> 解析 <code>restore_point_in_time</code> 与 <code>precision</code>，见 <code>src/java/org/apache/cassandra/db/commitlog/CommitLogArchiver.java:145-192</code>；<code>CommitLogReplayer.pointInTimeExceeded()</code> 用 mutation timestamp 做 cutoff，见 <code>src/java/org/apache/cassandra/db/commitlog/CommitLogReplayer.java:502-510</code>。</td>
+<td><code>CommitLogArchiverTest.testRestoreInDifferentPrecision()</code> 覆盖 microsecond/millisecond cutoff。</td>
+<td>PITR 截止点受业务 <code>USING TIMESTAMP</code> 影响，不是 replay wall clock；备份 runbook 必须审计 timestamp 单位。</td>
+</tr>
+<tr>
+<td><code>commitlog_external_replay_filter_snapshot_contract</code></td>
+<td><code>CommitLogReplayer.construct()</code> 计算 per-table persisted intervals、truncation/PITR 交互和 <code>snapshot_commitlog_position</code> override，见 <code>src/java/org/apache/cassandra/db/commitlog/CommitLogReplayer.java:116-187</code>；<code>ReplayFilter.create()</code> 解析 <code>cassandra.replayList</code>，见 <code>src/java/org/apache/cassandra/db/commitlog/CommitLogReplayer.java:384-445</code>。</td>
+<td><code>CommitLogTest.testReplayListProperty()</code> 和 archiver tests 覆盖 replay allow-list/PITR baseline。</td>
+<td>PITR rehearsal 需要验证 snapshot 基线、replay list 和 cutoff 组合，不应只证明单节点 replay 方法可调用。</td>
+</tr>
+<tr>
+<td><code>commitlog_external_observability_contract</code></td>
+<td><code>CommitLogMBean</code> 暴露 archive/restore config、active segments、pending archive、CDC block/write repair 开关，见 <code>src/java/org/apache/cassandra/db/commitlog/CommitLogMBean.java:25-100</code>；<code>CommitLogMetrics</code> 暴露 waiting/size/pending/completed metrics。</td>
+<td>JMX/metrics checker 保护 metric wrapper；CommitLog durability checker 保护 MBean token。</td>
+<td>外部 runbook 应同时监控 live commitlog、pending archive、<code>cdc_raw</code> backlog、oldest segment age、CDC write failures 和 replay logs。</td>
+</tr>
+<tr>
+<td><code>commitlog_external_cdc_consumer_gap</code></td>
+<td>当前 checkout 没有 source-owned Debezium/Kafka Connect/commitlog CDC connector、consumer checkpoint 或 sink integration test；只有 core CDC manager/unit tests 和文档。</td>
+<td>本矩阵 checker 扫描 connector/consumer/checkpoint markers；<code>testCDCWriteFailure()</code> 只是删除文件模拟 consumer。</td>
+<td>缺少真实 consumer crash/restart、schema evolution、partial segment 和 duplicate delivery 的端到端证明。</td>
+</tr>
+<tr>
+<td><code>commitlog_external_pitr_rehearsal_gap</code></td>
+<td>当前 checkout 没有 source-owned 对象存储/备份系统 PITR rehearsal、restore dry-run 或跨节点 snapshot+commitlog 演练配置；只有 <code>commitlog_archiving.properties</code> 示例与 unit test。</td>
+<td>本矩阵 checker 扫描 PITR rehearsal/backup-script markers，并允许 core 示例配置存在。</td>
+<td>生产恢复能力仍需外部演练证明：archive script 幂等、对象存储延迟、clock/timestamp audit、跨节点一致性。</td>
+</tr>
+<tr>
+<td><code>commitlog_external_existing_tests_baseline</code></td>
+<td>现有测试覆盖 CDC table option、raw 空间、index、replay rebuild、archive/restore precision、repair CDC 开关和 legacy commitlog reader。</td>
+<td><code>CDCStatementTest</code>、<code>CommitLogSegmentManagerCDCTest</code>、<code>CommitLogArchiverTest</code>、<code>ToggleCDCOnRepairEnabledTest</code>、<code>CommitLogTest</code>、<code>CommitLogReaderTest</code> 是 baseline。</td>
+<td>这些测试证明 Cassandra 内置 contract，不证明外部 connector 或备份系统完整。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="运维判读">运维判读</h2>
+<ul>
+<li>CDC consumer 的安全读取边界是 <code>_cdc.idx</code> offset，不是 commitlog 文件大小。</li>
+<li><code>cdc_block_writes=false</code> 会让 Cassandra 删除旧 raw segment，外部 sink 必须把它视为可能丢事件的运行模式。</li>
+<li>PITR 依赖 SSTable snapshot 基线 + archived commitlog + timestamp cutoff 三者一致。只验证 archive command 执行不等于恢复可用。</li>
+<li><code>archive_command</code> / <code>restore_command</code> 是单命令执行，复杂逻辑必须封装脚本并自己处理锁、幂等、重试和远端存储一致性。</li>
+<li>当前 research 只能重建 Cassandra 暴露的 CDC/PITR contract；外部 connector/backup rehearsal 仍是明确缺口。</li>
+</ul>
+<h2 id="当前缺口">当前缺口</h2>
+<ul>
+<li><code>commitlog_external_cdc_consumer_gap</code>：缺真实外部 CDC consumer/connector integration test，尤其是 checkpoint、crash/restart、schema evolution、partial segment、duplicate delivery。</li>
+<li><code>commitlog_external_pitr_rehearsal_gap</code>：缺真实备份系统 PITR rehearsal，尤其是 snapshot 基线、archive script 幂等、restore dry-run、对象存储延迟、timestamp audit。</li>
+</ul>
+</div></article>
+</main><footer class="site-footer"><div class="shell"><span>杜志旺</span><span>内容迁移自旧版静态博客。</span></div></footer></body></html>
