@@ -1,0 +1,53 @@
+---
+import '../styles/global.css';
+import { site } from '../data/site';
+
+type Props = {
+  title?: string;
+  description?: string;
+};
+
+const pageTitle = Astro.props.title
+  ? `${Astro.props.title} | ${site.title}`
+  : site.title;
+const description = Astro.props.description ?? site.description;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={new URL(Astro.url.pathname, site.url)} />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="brand" href="/" aria-label="首页">
+          <span class="brand-mark">Z</span>
+          <span>{site.title}</span>
+        </a>
+        <nav class="nav" aria-label="主导航">
+          <a href="/">文章</a>
+          <a href="/archives/">归档</a>
+          <a href="/tags/">标签</a>
+          <a href="/rss.xml">RSS</a>
+        </nav>
+      </div>
+    </header>
+    <main class="shell">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="shell">
+        <span>{site.author}</span>
+        <span>内容迁移自旧版静态博客。</span>
+      </div>
+    </footer>
+  </body>
+</html>

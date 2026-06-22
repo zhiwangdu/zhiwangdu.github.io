@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostList from '../components/PostList.astro';
+import { getAllPosts, getTags } from '../lib/posts';
+
+const posts = getAllPosts();
+const tags = getTags(posts);
+---
+
+<BaseLayout>
+  <section class="intro">
+    <p class="eyebrow">技术笔记</p>
+    <h1>Java、后端与计算机基础整理</h1>
+    <p>
+      共 {posts.length} 篇文章，覆盖 Docker、Redis、JVM、数据库、网络和开发工具。
+    </p>
+  </section>
+
+  <section class="tag-strip" aria-label="常用标签">
+    {
+      tags.slice(0, 12).map((tag) => (
+        <a href={`/tags/${tag.slug}/`}>
+          {tag.name}
+          <span>{tag.count}</span>
+        </a>
+      ))
+    }
+  </section>
+
+  <section class="section-heading">
+    <h2>最新文章</h2>
+    <a href="/archives/">查看全部</a>
+  </section>
+  <PostList posts={posts} />
+</BaseLayout>

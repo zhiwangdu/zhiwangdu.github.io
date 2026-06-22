@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PostList from '../../../components/PostList.astro';
+import { getAllPosts } from '../../../lib/posts';
+
+export function getStaticPaths() {
+  const years = [...new Set(getAllPosts().map((post) => String(post.date.getFullYear())))];
+  return years.map((year) => ({ params: { year }, props: { year } }));
+}
+
+const { year } = Astro.props;
+const posts = getAllPosts().filter((post) => String(post.date.getFullYear()) === year);
+---
+
+<BaseLayout title={`${year} 年归档`}>
+  <section class="page-title">
+    <h1>{year} 年归档</h1>
+    <p>{posts.length} 篇文章。</p>
+  </section>
+  <PostList posts={posts} />
+</BaseLayout>
